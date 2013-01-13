@@ -1,4 +1,7 @@
 *.class
+bin/
+bin_test/
+generated/
 
 # Package Files #
 *.jar

@@ -1,0 +1,4 @@
+-sub: *.bnd
+-buildpath: ,\
+    osgi.core;version=4.2.0,\
+    lib/antlr-4.0-rc-1-complete.jar;version=file
