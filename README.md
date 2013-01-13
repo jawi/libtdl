@@ -1,4 +1,5 @@
-libtdl
-======
+# libtdl
 
-Library for the Trigger Definition Language used for the DemonCore SUMP extension.
+Library for parsing and handling the "Trigger Definition Language", as defined
+for use with the DemonCore SUMP extension.
+
