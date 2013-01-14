@@ -1,0 +1,7 @@
+# Core functionality for LibTDL
+-sourcepath: ${project}/src, ${project}/gen
+Export-Package: \
+    nl.lxtreme.libtdl.grammar.adv,\
+    nl.lxtreme.libtdl.grammar.basic,\
+    nl.lxtreme.libtdl.validator.adv,\
+    nl.lxtreme.libtdl.validator.basic

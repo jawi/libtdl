@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="project" default="build">
+	<import file="../cnf/build.xml"/>
+
+    <target name="run-antlr" description="Generate ANTLRv4 grammar files">
+    	<property name="package" value="nl/lxtreme/libtdl/grammar"/>
+
+        <path id="classpath">
+            <pathelement location="lib/antlr-4.0-rc-1-complete.jar" />
+        </path>
+
+        <java dir="src/${package}" fork="true" classname="org.antlr.v4.Tool" classpathref="classpath">
+        	<arg value="-o" />
+        	<arg path="gen/${package}" />
+            <arg value="-listener" />
+            <arg value="-visitor" />
+            <arg value="basic/BasicTdl.g4" />
+            <arg value="adv/AdvTdl.g4" />
+        </java>
+    </target>
+	
+    <target name="clean-antlr" description="Clean ANTLRv4 generated files.">
+        <delete dir="gen/" includeemptydirs="yes" />
+    	<mkdir dir="gen" />
+    </target>
+</project>

@@ -1,4 +1,11 @@
--sub: *.bnd
--buildpath: ,\
+Bundle-License: \
+    http://www.opensource.org/licenses/apache2.0.php; \
+    description="Apache Software License 2.0"; \
+    link=http://www.apache.org/licenses/LICENSE-2.0.html
+Bundle-Copyright: (C) 2013 - J.W. Janssen
+-buildpath: \
+	lib/antlr-4.0-rc-1-complete.jar;version=file,\
     osgi.core;version=4.2.0,\
-    lib/antlr-4.0-rc-1-complete.jar;version=file
+	junit.osgi;version=3.8.2,\
+	org.mockito.mockito-all;version=1.9.0
+-sub: *.bnd
