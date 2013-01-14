@@ -1,5 +1,12 @@
 # Core functionality for LibTDL
 -sourcepath: ${project}/src, ${project}/gen
+Private-Package: \
+    org.abego.treelayout.*,\
+    org.antlr.*,\
+    org.stringtemplate.v4.*
+Import-Package: \
+    !javax.*,\
+    *
 Export-Package: \
     nl.lxtreme.libtdl.grammar.adv,\
     nl.lxtreme.libtdl.grammar.basic,\
