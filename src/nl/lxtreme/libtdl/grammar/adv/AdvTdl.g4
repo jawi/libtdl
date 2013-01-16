@@ -27,9 +27,9 @@ decl
 
 termDecl
     : name=TERM_NAME ASSIGN
-      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number )
+      ( ( MASK EQUALS_TO mask=number ) COMMA ( VALUE EQUALS_TO value=number )
       | ( MASK EQUALS_TO number ) { notifyErrorListeners("missing term value"); } 
-      | ( mask=number '^' value=number )
+      | ( mask=number XOR value=number )
       | ( number ) { notifyErrorListeners("missing term value"); }
       | { notifyErrorListeners("missing mask and value"); }
       )
@@ -61,7 +61,7 @@ edgeTermDecl
 
 edgeDecl
     : name=EDGE_NAME ASSIGN
-      ( ( terms+=edgeTermDecl ( ',' terms+=edgeTermDecl )* )
+      ( ( terms+=edgeTermDecl ( COMMA terms+=edgeTermDecl )* )
       | { notifyErrorListeners("invalid edge definition, needs at least one edge term declaration"); }
       )
     ;
@@ -69,7 +69,7 @@ edgeDecl
 /* STAGE DEFINITION RULES */
 
 stageDef
-    : ( STAGE n=decNumber ':'
+    : ( STAGE n=decNumber COLON
       | STAGE decNumber { notifyErrorListeners("missing colon"); }
       | STAGE { notifyErrorListeners("missing stage ID"); }
       )
@@ -110,11 +110,11 @@ termExpr
     ;
 
 expr
-    : '(' expr ')'
-    | expr '^' expr
-    | expr '&' expr
-    | expr '|' expr
-    | '~' expr
+    : LPAREN expr RPAREN
+    | expr XOR expr
+    | expr AND expr
+    | expr OR expr
+    | NOT expr
     | term=( TERM_NAME | TIMER_NAME | RANGE_NAME | EDGE_NAME )
     ;
 
@@ -130,14 +130,16 @@ decNumber
 
 /* LEXER RULES */
 
-// Merely used for informational purposes; no real value
 COMMENT
-    :   '//' ~('\n' | '\r')* ('\r' | '\n') -> skip
+    :   '//' ~('\n' | '\r')* ('\r' | '\n') -> channel(HIDDEN)
     ;
-    
-// Used for readability; no real value
+
+NL
+    :   ( '\r'? '\n' ) -> channel(HIDDEN)
+    ;
+
 WS
-    :   (' ' | '\t' | '\r' | '\n')+ -> skip
+    :   (' ' | '\t')+ -> channel(HIDDEN)
     ;
 
 ASSIGN      : ':=' ;
@@ -161,6 +163,14 @@ GOTO        : 'goto' ;
 NEXT        : 'next' ;
 ELSE        : 'else' ;
 ON          : 'on' ;
+COMMA       : ',' ;
+COLON       : ':' ;
+NOT         : '~' ;
+XOR         : '^' ;
+AND         : '&' ;
+OR          : '|' ;
+LPAREN      : '(' ;
+RPAREN      : ')' ;
 
 fragment
 BIN_DIGIT

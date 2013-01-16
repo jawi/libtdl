@@ -31,7 +31,7 @@
     	
     	<mkdir dir="${project.gensourcepath}" />
 
-        <java dir="${project.sourcepath}/${basepackage}" fork="true" classname="org.antlr.v4.Tool" classpathref="classpath">
+        <java dir="src/${basepackage}" fork="true" classname="org.antlr.v4.Tool" classpathref="classpath">
         	<arg value="-o" />
         	<arg path="${project.gensourcepath}/${basepackage}" />
         	<arg value="-no-listener" />

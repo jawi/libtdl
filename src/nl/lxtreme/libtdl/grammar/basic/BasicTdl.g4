@@ -30,9 +30,9 @@ decl
 
 termDecl
     : name=TERM_NAME ASSIGN
-      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number )
+      ( ( MASK EQUALS_TO mask=number ) COMMA ( VALUE EQUALS_TO value=number )
       | ( MASK EQUALS_TO number ) { notifyErrorListeners("missing term value"); } 
-      | ( mask=number '^' value=number )
+      | ( mask=number XOR value=number )
       | ( number ) { notifyErrorListeners("missing term value"); }
       | { notifyErrorListeners("missing mask and value"); }
       )
@@ -41,11 +41,11 @@ termDecl
 /* STAGE DEFINITION RULES */
 
 stageDef
-    : ( STAGE n=decNumber ':'
+    : ( STAGE n=decNumber COLON
       | STAGE decNumber { notifyErrorListeners("missing colon"); }
       | STAGE { notifyErrorListeners("missing stage ID"); }
       )
-      ( ACTIVATE activeClause ','
+      ( ACTIVATE activeClause COMMA
       | ACTIVATE activeClause { notifyErrorListeners("missing comma"); }
       | ACTIVATE { notifyErrorListeners("missing activate clause"); }
       | { notifyErrorListeners("missing activate clause"); }
@@ -68,7 +68,7 @@ activeClause
 
 whenAction
     : START CAPTURE 
-      ( DELAY n=decNumber '#'
+      ( DELAY n=decNumber SAMPLES
       | DELAY decNumber { notifyErrorListeners("missing delay unit"); }
       )?
     | ( GOTO NEXT
@@ -77,8 +77,8 @@ whenAction
     ;
 
 expr
-    : ( '~' expr
-      | '~' '~' expr { notifyErrorListeners("missing next"); }
+    : ( NOT expr
+      | NOT NOT expr { notifyErrorListeners("meaningless operation"); }
       )
     | term=TERM_NAME
     ;
@@ -95,14 +95,16 @@ decNumber
 
 /* LEXER RULES */
 
-// Merely used for informational purposes; no real value
 COMMENT
-    :   '//' ~('\n' | '\r')* ('\r' | '\n') -> skip
+    :   '//' ~('\n' | '\r')* ('\r' | '\n') -> channel(HIDDEN)
     ;
-    
-// Used for readability; no real value
+
+NL
+    :   ( '\r'? '\n' ) -> channel(HIDDEN)
+    ;
+
 WS
-    :   (' ' | '\t' | '\r' | '\n')+ -> skip
+    :   (' ' | '\t')+ -> channel(HIDDEN)
     ;
 
 ASSIGN      : ':=' ;
@@ -121,7 +123,11 @@ ON          : 'on' ;
 LEVEL       : 'level' ;
 IMMEDIATELY : 'immediately' ;
 DELAY       : 'delay' ;
-
+NOT         : '~' ;
+XOR         : '^' ;
+SAMPLES     : '#' ;
+COMMA       : ',' ;
+COLON       : ':' ;
 
 fragment
 BIN_DIGIT
