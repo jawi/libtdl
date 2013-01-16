@@ -7,7 +7,7 @@
  */
 package nl.lxtreme.libtdl.validator.adv;
 
-import junit.framework.*;
+import nl.lxtreme.libtdl.*;
 import nl.lxtreme.libtdl.grammar.adv.*;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.ProgContext;
 
@@ -16,55 +16,81 @@ import org.antlr.v4.runtime.*;
 /**
  * Test cases for {@link AdvTdlValidator}.
  */
-public class AdvTdlValidatorTest extends TestCase {
+public class AdvTdlValidatorTest extends BaseTdlTestCase {
     // CONSTANTS
 
     // @formatter:off
-    private static String[] INPUTS = {
-        "define termA as mask = 0b11, value = 0b10", 
-        "define termA as 0b11 ^ 0b10",
-        "define timer1 as 20us", 
-        "define range1 as 10..20",
-        "define edge1 as neither = 0x45, rising = 0x12, both = 0x34, falling = 0x23",
-        "define termA as mask = 1, value = 2\ndefine termB as mask = 3, value = 4",
-        "stage 1: capture a & b when a goto next else b goto 1",
-        "define termA as 1^2 define termA as 2^3",
+    private static String[] VALID_INPUTS = {
+        "termA := mask = 0b11, value = 0b10", 
+        "termA := 0b11 ^ 0b10",
+        "timer1 := 20us", 
+        "range1 := 10..20",
+        "edge1 := neither = 0x45, rising = 0x12, both = 0x34, falling = 0x23",
+        "a := mask = 1, value = 2\ntermB := mask = 3, value = 4",
+        "termA := 2^1 b := 2^0 stage 1: capture a & b when a goto next else on b goto 1",
+    };
+    private static String[] INVALID_INPUTS = {
+        "termA := 2^1 stage 1: capture terma when a goto next else on b goto 1",
+        "a := 1^2 termA := 2^3",
+        "a := 2^1 stage 1: capture a when a start capture else on any goto 1\nstage 1: capture a when a start capture else on any goto 1",
+        "a := 2^1 stage 1: capture a when a occurs 1048576 start capture else on any goto 1",
+        "a := 2^1 stage 1: capture a when a occurs 1 start capture else on any goto 2",
+        "range1 := 1..1",
+    };
+    private static String[][] INVALID_RESULTS = {
+        { "termB is not declared" },
+        { "term termA already declared" },
+        { "stage 1 already defined" },
+        { "invalid occurrence count" },
+        { "undefined stage: 2" },
+        { "lower bound should be less than upper bound" },
     };
     // @formatter:on
 
     // METHODS
 
     /**
-     * @throws Exception
+     * Tests that valid TDL snippets yield no semantic markers.
      */
-    public void testParserOk() throws Exception {
-        for (String input : INPUTS) {
-            AdvTdlValidator validator = new AdvTdlValidator();
-            try {
-                validator.visit(getParseTree(input));
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
+    public void testValidateCorrectInput() throws Exception {
+        for (String tdl : VALID_INPUTS) {
+            clearMarkers();
+
+            createValidator().visit(getParseTree(tdl));
+
+            assertMarkerCount("Input: " + tdl, 0);
         }
     }
 
     /**
-     * @param aInput
-     * @param aExpected
+     * Tests that invalid TDL snippets yield semantic markers.
      */
-    private ProgContext getParseTree(final String input) {
-        AdvTdlParser parser = createParser(input);
-        return parser.prog();
+    public void testValidateIncorrectInput() throws Exception {
+        for (int i = 0; i < INVALID_INPUTS.length; i++) {
+            String tdl = INVALID_INPUTS[i];
+
+            clearMarkers();
+
+            createValidator().visit(getParseTree(tdl));
+
+            assertMarkers("Input: " + tdl, INVALID_RESULTS[i]);
+        }
     }
 
-    /**
-     * @param input
-     * @return
-     */
+    private ProgContext getParseTree(final String input) {
+        return createParser(input).prog();
+    }
+
+    private AdvTdlValidator createValidator() {
+        return new AdvTdlValidator(getProblemReporter());
+    }
+
     private AdvTdlParser createParser(final String input) {
         AdvTdlLexer lexer = new AdvTdlLexer(new ANTLRInputStream(input));
         AdvTdlParser parser = new AdvTdlParser(new CommonTokenStream(lexer));
-        parser.setBuildParseTree(true);
+
+        initializeProblemReporter(lexer, parser);
+
         return parser;
     }
 }

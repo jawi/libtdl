@@ -9,24 +9,8 @@ grammar AdvTdl;
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
 package nl.lxtreme.libtdl.grammar.adv;
-}
 
-@members {
-    private int stageCount = 10;
-
-    private static boolean validRange(String text, long lowerBound, long upperBound) {
-      long result = -1L;
-      try {
-        result = Long.decode(text);
-      } catch (NumberFormatException ignored) {
-        // Ignore invalid numbers...
-      }
-      return ( result >= lowerBound && result <= upperBound );
-    }
-    
-    public void setStageCount(int stages) {
-      stageCount = stages;
-    }
+import nl.lxtreme.libtdl.grammar.*;
 }
 
 /* PARSER RULES */
@@ -38,52 +22,85 @@ prog
 /* DECLARATION RULES */
 
 decl
-    : DEFINE? ( termDecl | timerDecl | rangeDecl | edgeDecl ) WS*
+    : ( termDecl | timerDecl | rangeDecl | edgeDecl ) WS*
     ;
 
 termDecl
     : name=TERM_NAME ASSIGN
-      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number ) 
+      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number )
+      | ( MASK EQUALS_TO number ) { notifyErrorListeners("missing term value"); } 
       | ( mask=number '^' value=number )
+      | ( number ) { notifyErrorListeners("missing term value"); }
+      | { notifyErrorListeners("missing mask and value"); }
       )
     ;
 
 timerDecl
     : name=TIMER_NAME ASSIGN
-      ( value=number { validRange($value.text, 1, 0xFFFFFFFFL) }? unit=TIME_UNIT )
+      ( value=number unit=TIME_UNIT
+      | number { notifyErrorListeners("missing time unit"); }
+      | { notifyErrorListeners("missing time value and unit"); }
+      )
     ;
 
 rangeDecl
     : name=RANGE_NAME ASSIGN
-      ( lowerBound=number '..' upperBound=number ) { Long.decode($lowerBound.text) < Long.decode($upperBound.text) }?
+      ( lowerBound=number '..' upperBound=number
+      | number '..' { notifyErrorListeners("missing upper bound"); }
+      | number { notifyErrorListeners("missing upper bound"); }
+      | { notifyErrorListeners("invalid range definition, needs lower and upper bound"); }
+      )
     ;
 
 edgeTermDecl
-    : ( RISING | FALLING | BOTH | NEITHER ) EQUALS_TO number
+    : ( RISING | FALLING | BOTH | NEITHER ) EQUALS_TO 
+      ( mask=number
+      | { notifyErrorListeners("missing edge value"); }
+      )
     ;
 
 edgeDecl
     : name=EDGE_NAME ASSIGN
-      edgeTermDecl ( ',' edgeTermDecl )*
+      ( ( terms+=edgeTermDecl ( ',' terms+=edgeTermDecl )* )
+      | { notifyErrorListeners("invalid edge definition, needs at least one edge term declaration"); }
+      )
     ;
 
 /* STAGE DEFINITION RULES */
 
 stageDef
-    : STAGE n=decNumber { validRange($n.text, 1, stageCount) }? ':'
-      CAPTURE captureExpr=termExpr
-      WHEN ifExpr=termExpr ( OCCURS occurrence=decNumber { validRange($occurrence.text, 1, 0xFFFFF) }? )? whenClause
-      ELSE elseExpr=termExpr elseClause
+    : ( STAGE n=decNumber ':'
+      | STAGE decNumber { notifyErrorListeners("missing colon"); }
+      | STAGE { notifyErrorListeners("missing stage ID"); }
+      )
+      ( CAPTURE captureExpr=termExpr
+      | CAPTURE { notifyErrorListeners("missing capture expression"); }
+      | { notifyErrorListeners("missing capture clause"); }
+      )
+      ( WHEN ifExpr=termExpr ( OCCURS occurrence=decNumber )? whenAction
+      | WHEN termExpr ( OCCURS decNumber )? { notifyErrorListeners("missing when action"); }
+      | WHEN ( OCCURS decNumber )? { notifyErrorListeners("missing when expression"); }
+      | { notifyErrorListeners("missing when clause"); }
+      )
+      ( ELSE ON elseExpr=termExpr elseAction
+      | ELSE ON termExpr { notifyErrorListeners("missing else action"); }
+      | ELSE ON { notifyErrorListeners("missing else expression"); }
+      | ELSE { notifyErrorListeners("missing on"); }
+      | { notifyErrorListeners("missing else clause"); }
+      )
     ;
 
-whenClause
-    : ( START | STOP | CLEAR ) TIMER_NAME
+whenAction
+    : ( START | STOP | CLEAR ) timer=TIMER_NAME
     | ( START | STOP ) CAPTURE
-    | GOTO NEXT
+    | ( GOTO NEXT
+      | GOTO { notifyErrorListeners("missing next"); }
+      )
     ;
 
-elseClause
-    : GOTO n=decNumber { validRange($n.text, 1, stageCount) }?
+elseAction
+    : GOTO n=decNumber
+    | GOTO { notifyErrorListeners("missing level ID"); }
     ;
 
 termExpr
@@ -98,7 +115,7 @@ expr
     | expr '&' expr
     | expr '|' expr
     | '~' expr
-    | ( TERM_NAME | TIMER_NAME | RANGE_NAME | EDGE_NAME )
+    | term=( TERM_NAME | TIMER_NAME | RANGE_NAME | EDGE_NAME )
     ;
 
 /* SUPPORTING PARSER RULES */
@@ -123,8 +140,7 @@ WS
     :   (' ' | '\t' | '\r' | '\n')+ -> skip
     ;
 
-DEFINE      : 'define' ;
-ASSIGN      : 'as' ;
+ASSIGN      : ':=' ;
 EQUALS_TO   : '=' ;
 MASK        : 'mask' ;
 VALUE       : 'value' ;
@@ -144,6 +160,7 @@ CLEAR       : 'clear' ;
 GOTO        : 'goto' ;
 NEXT        : 'next' ;
 ELSE        : 'else' ;
+ON          : 'on' ;
 
 fragment
 BIN_DIGIT

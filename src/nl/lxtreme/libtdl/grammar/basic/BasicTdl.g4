@@ -9,24 +9,11 @@ grammar BasicTdl;
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
 package nl.lxtreme.libtdl.grammar.basic;
+
+import nl.lxtreme.libtdl.grammar.*;
 }
 
-@members {
-    private int stageCount = 4;
-
-    private static boolean validRange(String text, long lowerBound, long upperBound) {
-      long result = -1L;
-      try {
-        result = Long.decode(text);
-      } catch (NumberFormatException ignored) {
-        // Ignore invalid numbers...
-      }
-      return ( result >= lowerBound && result <= upperBound );
-    }
-    
-    public void setStageCount(int stages) {
-      stageCount = stages;
-    }
+@parser::members {
 }
 
 /* PARSER RULES */
@@ -38,37 +25,62 @@ prog
 /* DECLARATION RULES */
 
 decl
-    : DEFINE? ( termDecl ) WS*
+    : termDecl WS*
     ;
 
 termDecl
     : name=TERM_NAME ASSIGN
-      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number ) 
+      ( ( MASK EQUALS_TO mask=number ) ',' ( VALUE EQUALS_TO value=number )
+      | ( MASK EQUALS_TO number ) { notifyErrorListeners("missing term value"); } 
       | ( mask=number '^' value=number )
+      | ( number ) { notifyErrorListeners("missing term value"); }
+      | { notifyErrorListeners("missing mask and value"); }
       )
     ;
 
 /* STAGE DEFINITION RULES */
 
 stageDef
-    : STAGE n=decNumber { validRange($n.text, 1, stageCount) }? ':'
-      ACTIVATE activeClause ','
-      WHEN expr whenClause
+    : ( STAGE n=decNumber ':'
+      | STAGE decNumber { notifyErrorListeners("missing colon"); }
+      | STAGE { notifyErrorListeners("missing stage ID"); }
+      )
+      ( ACTIVATE activeClause ','
+      | ACTIVATE activeClause { notifyErrorListeners("missing comma"); }
+      | ACTIVATE { notifyErrorListeners("missing activate clause"); }
+      | { notifyErrorListeners("missing activate clause"); }
+      )
+      ( WHEN expr whenAction
+      | WHEN expr { notifyErrorListeners("missing when action"); }
+      | WHEN { notifyErrorListeners("missing when expression"); }
+      | { notifyErrorListeners("missing when clause"); }
+      )
     ;
 
 activeClause
-    : ( ON n=decNumber { validRange($n.text, 1, stageCount-1) }? )
+    : ( ON LEVEL n=decNumber
+      | ON LEVEL { notifyErrorListeners("missing level ID"); }
+      | ON { notifyErrorListeners("missing level"); }
+      | { notifyErrorListeners("missing on level"); } 
+      )
     | IMMEDIATELY
     ;
 
-whenClause
-    : START CAPTURE ( DELAY n=decNumber { validRange($n.text, 1, 0xFFFF) }? '#' )?
-    | GOTO NEXT
+whenAction
+    : START CAPTURE 
+      ( DELAY n=decNumber '#'
+      | DELAY decNumber { notifyErrorListeners("missing delay unit"); }
+      )?
+    | ( GOTO NEXT
+      | GOTO { notifyErrorListeners("missing next"); }
+      )
     ;
 
 expr
-    : '~' expr
-    | TERM_NAME
+    : ( '~' expr
+      | '~' '~' expr { notifyErrorListeners("missing next"); }
+      )
+    | term=TERM_NAME
     ;
 
 /* SUPPORTING PARSER RULES */
@@ -93,8 +105,7 @@ WS
     :   (' ' | '\t' | '\r' | '\n')+ -> skip
     ;
 
-DEFINE      : 'define' ;
-ASSIGN      : 'as' ;
+ASSIGN      : ':=' ;
 EQUALS_TO   : '=' ;
 MASK        : 'mask' ;
 VALUE       : 'value' ;
@@ -107,6 +118,7 @@ GOTO        : 'goto' ;
 NEXT        : 'next' ;
 ACTIVATE    : 'activate' ;
 ON          : 'on' ;
+LEVEL       : 'level' ;
 IMMEDIATELY : 'immediately' ;
 DELAY       : 'delay' ;
 

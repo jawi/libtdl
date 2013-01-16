@@ -9,11 +9,8 @@
 package nl.lxtreme.libtdl.grammar.basic;
 
 import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
 
 public interface BasicTdlVisitor<T> extends ParseTreeVisitor<T> {
-	T visitWhenClause(BasicTdlParser.WhenClauseContext ctx);
-
 	T visitTermDecl(BasicTdlParser.TermDeclContext ctx);
 
 	T visitProg(BasicTdlParser.ProgContext ctx);
@@ -27,6 +24,8 @@ public interface BasicTdlVisitor<T> extends ParseTreeVisitor<T> {
 	T visitExpr(BasicTdlParser.ExprContext ctx);
 
 	T visitActiveClause(BasicTdlParser.ActiveClauseContext ctx);
+
+	T visitWhenAction(BasicTdlParser.WhenActionContext ctx);
 
 	T visitDecl(BasicTdlParser.DeclContext ctx);
 }

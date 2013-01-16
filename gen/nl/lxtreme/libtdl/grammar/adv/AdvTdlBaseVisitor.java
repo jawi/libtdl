@@ -9,19 +9,17 @@
 package nl.lxtreme.libtdl.grammar.adv;
 
 import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements AdvTdlVisitor<T> {
 	@Override public T visitEdgeDecl(AdvTdlParser.EdgeDeclContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitElseAction(AdvTdlParser.ElseActionContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitTermExpr(AdvTdlParser.TermExprContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitDecNumber(AdvTdlParser.DecNumberContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitTimerDecl(AdvTdlParser.TimerDeclContext ctx) { return visitChildren(ctx); }
-
-	@Override public T visitElseClause(AdvTdlParser.ElseClauseContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitNumber(AdvTdlParser.NumberContext ctx) { return visitChildren(ctx); }
 
@@ -33,11 +31,11 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 
 	@Override public T visitTermDecl(AdvTdlParser.TermDeclContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitWhenClause(AdvTdlParser.WhenClauseContext ctx) { return visitChildren(ctx); }
-
 	@Override public T visitEdgeTermDecl(AdvTdlParser.EdgeTermDeclContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitStageDef(AdvTdlParser.StageDefContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitWhenAction(AdvTdlParser.WhenActionContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitDecl(AdvTdlParser.DeclContext ctx) { return visitChildren(ctx); }
 }

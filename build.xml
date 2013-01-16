@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="project" default="build">
 	<import file="../cnf/build.xml"/>
+	
+	<property name="project.gensourcepath" value="gen" />
+
+    <!--
+         COMPILE
+         Compile the sources - overridden to include the generated sources. 
+    -->
+    <target name="compile" depends="dependencies" if="project.sourcepath">
+        <mkdir dir="${project.output}"/>
+        <javac fork="yes" executable="${javac}" destdir="${project.output}" classpath="${project.buildpath}" bootclasspath="${project.bootclasspath}" deprecation="true" listfiles="true" target="${javac.target}" source="${javac.source}" debug="${javac.debug}" includeAntRuntime="no" verbose="${verbose}">
+        	<src path="${project.sourcepath}" />
+            <src path="${project.gensourcepath}" />
+    	</javac>
+        <copy todir="${project.output}" verbose="${verbose}" preservelastmodified="true">
+            <fileset dir="${project.sourcepath}">
+                <exclude name="**/*.java" />
+                <exclude name="**/*.class" />
+            </fileset>
+        </copy>
+    </target>
 
     <target name="run-antlr" description="Generate ANTLRv4 grammar files">
-    	<property name="package" value="nl/lxtreme/libtdl/grammar"/>
+    	<property name="basepackage" value="nl/lxtreme/libtdl/grammar"/>
 
         <path id="classpath">
             <pathelement location="lib/antlr-4.0-rc-1-complete.jar" />
         </path>
+    	
+    	<mkdir dir="${project.gensourcepath}" />
 
-        <java dir="src/${package}" fork="true" classname="org.antlr.v4.Tool" classpathref="classpath">
+        <java dir="${project.sourcepath}/${basepackage}" fork="true" classname="org.antlr.v4.Tool" classpathref="classpath">
         	<arg value="-o" />
-        	<arg path="gen/${package}" />
-            <arg value="-listener" />
+        	<arg path="${project.gensourcepath}/${basepackage}" />
+        	<arg value="-no-listener" />
             <arg value="-visitor" />
             <arg value="basic/BasicTdl.g4" />
             <arg value="adv/AdvTdl.g4" />
         </java>
     </target>
-	
+
     <target name="clean-antlr" description="Clean ANTLRv4 generated files.">
-        <delete dir="gen/" includeemptydirs="yes" />
-    	<mkdir dir="gen" />
+        <delete dir="${project.gensourcepath}/" includeemptydirs="yes" />
     </target>
 </project>

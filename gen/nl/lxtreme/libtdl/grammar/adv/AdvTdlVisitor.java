@@ -9,18 +9,17 @@
 package nl.lxtreme.libtdl.grammar.adv;
 
 import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
 
 public interface AdvTdlVisitor<T> extends ParseTreeVisitor<T> {
 	T visitEdgeDecl(AdvTdlParser.EdgeDeclContext ctx);
+
+	T visitElseAction(AdvTdlParser.ElseActionContext ctx);
 
 	T visitTermExpr(AdvTdlParser.TermExprContext ctx);
 
 	T visitDecNumber(AdvTdlParser.DecNumberContext ctx);
 
 	T visitTimerDecl(AdvTdlParser.TimerDeclContext ctx);
-
-	T visitElseClause(AdvTdlParser.ElseClauseContext ctx);
 
 	T visitNumber(AdvTdlParser.NumberContext ctx);
 
@@ -32,11 +31,11 @@ public interface AdvTdlVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitTermDecl(AdvTdlParser.TermDeclContext ctx);
 
-	T visitWhenClause(AdvTdlParser.WhenClauseContext ctx);
-
 	T visitEdgeTermDecl(AdvTdlParser.EdgeTermDeclContext ctx);
 
 	T visitStageDef(AdvTdlParser.StageDefContext ctx);
+
+	T visitWhenAction(AdvTdlParser.WhenActionContext ctx);
 
 	T visitDecl(AdvTdlParser.DeclContext ctx);
 }
