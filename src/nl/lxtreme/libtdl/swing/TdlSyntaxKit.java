@@ -65,7 +65,7 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
 
     // VARIABLES
 
-    private final TdlLexer m_lexer;
+    private final TdlHelper m_lexer;
     private final TdlStyleManager m_styleManager;
 
     // CONSTRUCTORS
@@ -76,7 +76,7 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
      * @param lexer
      *            the token source/lexer to use, cannot be <code>null</code>.
      */
-    public TdlSyntaxKit(TdlLexer lexer) {
+    public TdlSyntaxKit(TdlHelper lexer) {
         m_lexer = lexer;
         m_styleManager = new TdlStyleManager();
     }

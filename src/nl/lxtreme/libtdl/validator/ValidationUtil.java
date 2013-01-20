@@ -9,6 +9,8 @@ package nl.lxtreme.libtdl.validator;
 
 import nl.lxtreme.libtdl.grammar.*;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Category;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.MarkerBuilder;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Type;
 
 import org.antlr.v4.runtime.*;
@@ -108,16 +110,25 @@ public final class ValidationUtil {
      *         value (not inside the given range, or otherwise invalid).
      */
     public static Long validateValue(ParserRuleContext ctx, long lower, long upper, String msg, ProblemReporter reporter) {
-        Long value = decode(ctx.getText());
+        String text = null;
+        if (ctx != null) {
+            text = ctx.getText();
+        }
+        Long value = decode(text);
         if (value == null) {
             return null;
         }
 
         if (!inRange(value.longValue(), lower, upper)) {
-            int line = ctx.getStart().getLine();
-            int column = ctx.getStart().getCharPositionInLine();
+            int offset = ctx.getStart().getStartIndex();
+            int length = ctx.getStop().getStopIndex() - offset;
 
-            reporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder.setCategory(Category.SEMANTIC).setType(Type.ERROR)
+                    .setLocation(offset, length, ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine())
+                    .setDescription(msg).build();
+
+            reporter.report(marker);
             return null;
         }
 

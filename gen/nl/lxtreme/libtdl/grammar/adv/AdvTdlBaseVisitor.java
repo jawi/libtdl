@@ -8,7 +8,11 @@
  */
 package nl.lxtreme.libtdl.grammar.adv;
 
+import nl.lxtreme.libtdl.grammar.*;
+
 import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements AdvTdlVisitor<T> {
 	@Override public T visitEdgeDecl(AdvTdlParser.EdgeDeclContext ctx) { return visitChildren(ctx); }

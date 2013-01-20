@@ -27,7 +27,7 @@ public class TestEditor extends JFrame {
 
         setPreferredSize(new Dimension(640, 480));
 
-        TdlLexer lexer = new TdlLexer(TdlDialect.ADVANCED);
+        TdlHelper lexer = new TdlHelper(TdlDialect.ADVANCED);
         TdlSyntaxKit syntaxKit = new TdlSyntaxKit(lexer);
 
         JEditorPane editor = new JEditorPane();
@@ -49,7 +49,7 @@ public class TestEditor extends JFrame {
             "\n" + 
             "// this is comment\n" + 
             "stage 2:\n" + 
-            "  capture c\n" + 
+            "  capture termD\n" + 
             "  when edge1 start timer1\n" + 
             "  else on any goto 1\n";
         // @formatter:on

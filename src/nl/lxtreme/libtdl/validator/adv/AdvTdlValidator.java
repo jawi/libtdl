@@ -11,6 +11,8 @@ import java.util.*;
 
 import nl.lxtreme.libtdl.grammar.*;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Category;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.MarkerBuilder;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Type;
 import nl.lxtreme.libtdl.grammar.adv.*;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.EdgeDeclContext;
@@ -34,6 +36,7 @@ public class AdvTdlValidator extends AdvTdlBaseVisitor<AdvTdlValidator> {
     // CONSTANTS
 
     private static final int DEFAULT_STAGE_COUNT = 10;
+
     private static final long MAX_INT_VALUE = (1L << 32) - 1L;
     private static final long MAX_TIMER_VALUE = 0xFFFFFFFFL;
     private static final long MAX_OCCURRANCE_COUNT = 0xFFFFFL;
@@ -116,8 +119,11 @@ public class AdvTdlValidator extends AdvTdlBaseVisitor<AdvTdlValidator> {
 
         for (Map.Entry<Integer, Object> entry : m_stages.entrySet()) {
             if (entry.getValue() == null) {
-                m_problemReporter.report(-1, -1, Type.ERROR, Category.SEMANTIC, "undefined stage: " + entry.getKey(),
-                        null);
+                MarkerBuilder builder = new MarkerBuilder();
+                Marker marker = builder.setCategory(Category.SEMANTIC).setType(Type.ERROR).setLocation(-1, -1, -1, -1)
+                        .setDescription("undefined stage: " + entry.getKey()).build();
+
+                m_problemReporter.report(marker);
             }
         }
 
@@ -185,22 +191,36 @@ public class AdvTdlValidator extends AdvTdlBaseVisitor<AdvTdlValidator> {
     private void declare(ParserRuleContext context, String name, Object value) {
         name = normalizeName(name);
         if (m_declarations.put(name, value) != null) {
-            int line = context.getStart().getLine();
-            int column = context.getStart().getCharPositionInLine();
+            int offset = context.getStart().getStartIndex();
+            int length = context.getStop().getStopIndex() - offset;
             String msg = "term " + name + " already declared";
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder
+                    .setCategory(Category.SEMANTIC)
+                    .setType(Type.ERROR)
+                    .setLocation(offset, length, context.getStart().getLine(),
+                            context.getStart().getCharPositionInLine()).setDescription(msg).build();
+
+            m_problemReporter.report(marker);
         }
     }
 
     private void define(ParserRuleContext context, int stageNo, Object value) {
         Integer stage = Integer.valueOf(stageNo);
         if (m_stages.put(stage, value) != null) {
-            int line = context.getStart().getLine();
-            int column = context.getStart().getCharPositionInLine();
+            int offset = context.getStart().getStartIndex();
+            int length = context.getStop().getStopIndex() - offset;
             String msg = "stage " + stageNo + " already defined";
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder
+                    .setCategory(Category.SEMANTIC)
+                    .setType(Type.ERROR)
+                    .setLocation(offset, length, context.getStart().getLine(),
+                            context.getStart().getCharPositionInLine()).setDescription(msg).build();
+
+            m_problemReporter.report(marker);
         }
     }
 
@@ -216,11 +236,16 @@ public class AdvTdlValidator extends AdvTdlBaseVisitor<AdvTdlValidator> {
     private void validateDeclaredTerm(Token term) {
         String name = normalizeName(term.getText());
         if (!m_declarations.containsKey(name)) {
-            int line = term.getLine();
-            int column = term.getCharPositionInLine();
+            int offset = term.getStartIndex();
+            int length = term.getStopIndex() - offset;
             String msg = name + " is not declared";
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder.setCategory(Category.SEMANTIC).setType(Type.ERROR)
+                    .setLocation(offset, length, term.getLine(), term.getCharPositionInLine()).setDescription(msg)
+                    .build();
+
+            m_problemReporter.report(marker);
         }
     }
 
@@ -232,10 +257,15 @@ public class AdvTdlValidator extends AdvTdlBaseVisitor<AdvTdlValidator> {
         Long lowerBound = ValidationUtil.decode(lower.getText());
         Long upperBound = ValidationUtil.decode(upper.getText());
         if (lowerBound.compareTo(upperBound) >= 0) {
-            int line = lower.getStart().getLine();
-            int column = lower.getStart().getCharPositionInLine();
+            int offset = lower.getStart().getStartIndex();
+            int length = lower.getStop().getStopIndex() - offset;
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder.setCategory(Category.SEMANTIC).setType(Type.ERROR)
+                    .setLocation(offset, length, lower.getStart().getLine(), lower.getStart().getCharPositionInLine())
+                    .setDescription(msg).build();
+
+            m_problemReporter.report(marker);
         }
     }
 }

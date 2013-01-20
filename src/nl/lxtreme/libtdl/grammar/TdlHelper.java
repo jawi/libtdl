@@ -11,15 +11,20 @@ import java.util.*;
 
 import javax.swing.text.*;
 
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
 import nl.lxtreme.libtdl.grammar.adv.*;
 import nl.lxtreme.libtdl.grammar.basic.*;
+import nl.lxtreme.libtdl.validator.adv.*;
+import nl.lxtreme.libtdl.validator.basic.*;
 
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
 /**
- * Provides a lexer-facade capable of handling both TDL dialects.
+ * Provides a parser/lexer-facade capable of handling both TDL dialects, useful
+ * for front-end editors.
  */
-public class TdlLexer {
+public class TdlHelper {
     // INNER TYPES
 
     /**
@@ -28,6 +33,11 @@ public class TdlLexer {
      */
     public static interface TdlToken {
         // METHODS
+
+        /**
+         * @return a shallow clone of this token, never <code>null</code>.
+         */
+        TdlToken clone();
 
         /**
          * @return the length of the text of this token, >= 0.
@@ -43,6 +53,11 @@ public class TdlLexer {
          * @return the exact type of this token, never <code>null</code>.
          */
         TdlTokenType getType();
+
+        /**
+         * @return a list of problem markers, never <code>null</code>.
+         */
+        List<Marker> getMarkers();
     }
 
     /**
@@ -78,23 +93,46 @@ public class TdlLexer {
         private final int m_offset;
         private final int m_length;
         private final TdlTokenType m_type;
+        private final List<Marker> m_markers;
 
         // CONSTRUCTORS
 
         /**
+         * Creates a new {@link TdlTokenImpl} instance as copy of the given
+         * token, except for its problem markers.
+         */
+        public TdlTokenImpl(TdlToken token) {
+            m_type = token.getType();
+            m_offset = token.getOffset();
+            m_length = token.getLength();
+            m_markers = new ArrayList<Marker>();
+        }
+
+        /**
          * Creates a new {@link TdlTokenImpl} instance.
          */
-        public TdlTokenImpl(TdlTokenType type, int offset, int length) {
+        public TdlTokenImpl(TdlTokenType type, int offset, int length, String text) {
             m_type = type;
             m_offset = offset;
             m_length = length;
+            m_markers = new ArrayList<Marker>();
         }
 
         // METHODS
 
         @Override
+        public TdlToken clone() {
+            return new TdlTokenImpl(this);
+        }
+
+        @Override
         public int getLength() {
             return m_length;
+        }
+
+        @Override
+        public List<Marker> getMarkers() {
+            return m_markers;
         }
 
         @Override
@@ -122,37 +160,27 @@ public class TdlLexer {
     private final TdlDialect m_dialect;
     private final TdlProblemReporter m_problemReporter;
     private final Lexer m_lexer;
+    private final Parser m_parser;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlLexer} instance.
+     * Creates a new {@link TdlHelper} instance.
      * 
      * @param dialect
      *            the TDL dialect to use, cannot be <code>null</code>.
      */
-    public TdlLexer(TdlDialect dialect) {
-        this(dialect, null);
-    }
-
-    /**
-     * Creates a new {@link TdlLexer} instance.
-     * 
-     * @param dialect
-     *            the TDL dialect to use, cannot be <code>null</code>;
-     * @param input
-     *            the input to parse, can be <code>null</code>.
-     */
-    public TdlLexer(TdlDialect dialect, CharStream input) {
+    public TdlHelper(TdlDialect dialect) {
         if (dialect == null) {
             throw new IllegalArgumentException("Invalid dialect: cannot be null!");
         }
 
         m_dialect = dialect;
-        m_lexer = createLexer(input);
+        m_lexer = createLexer();
+        m_parser = createParser();
 
         m_problemReporter = new TdlProblemReporter();
-        m_problemReporter.installOn(m_lexer);
+        m_problemReporter.installOn(m_lexer, m_parser);
     }
 
     // METHODS
@@ -218,20 +246,61 @@ public class TdlLexer {
     }
 
     /**
+     * Validates the current token stream and reports any errors to the
+     * contained problem reporter.
+     */
+    public void validate() {
+        reset();
+        m_parser.setInputStream(getTokenStream());
+
+        ParserRuleContext context;
+        AbstractParseTreeVisitor<?> visitor;
+
+        switch (m_dialect) {
+            case BASIC:
+                context = ((BasicTdlParser) m_parser).prog();
+                visitor = new BasicTdlValidator(m_problemReporter);
+                break;
+            case ADVANCED:
+                context = ((AdvTdlParser) m_parser).prog();
+                visitor = new AdvTdlValidator(m_problemReporter);
+                break;
+            default:
+                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+        }
+
+        visitor.visit(context);
+    }
+
+    /**
      * Factory method for creating a new {@link Lexer} instance based on the
      * used dialect.
      * 
-     * @param input
-     *            the character stream to create a lexer for, cannot be
-     *            <code>null</code>.
      * @return a new {@link Lexer} instance, never <code>null</code>.
      */
-    protected Lexer createLexer(CharStream input) {
+    protected Lexer createLexer() {
         switch (m_dialect) {
             case BASIC:
-                return new BasicTdlLexer(input);
+                return new BasicTdlLexer(null);
             case ADVANCED:
-                return new AdvTdlLexer(input);
+                return new AdvTdlLexer(null);
+            default:
+                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+        }
+    }
+
+    /**
+     * Factory method for creating a new {@link Parser} instance based on the
+     * used dialect.
+     * 
+     * @return a new {@link Parser} instance, never <code>null</code>.
+     */
+    protected Parser createParser() {
+        switch (m_dialect) {
+            case BASIC:
+                return new BasicTdlParser(null);
+            case ADVANCED:
+                return new AdvTdlParser(null);
             default:
                 throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
         }
@@ -259,7 +328,7 @@ public class TdlLexer {
 
             TdlTokenType type = convertTokenType(ctoken.getType());
 
-            tokens.add(new TdlTokenImpl(type, offset, length));
+            tokens.add(new TdlTokenImpl(type, offset, length, ctoken.getText()));
         }
 
         return tokens;
@@ -287,10 +356,8 @@ public class TdlLexer {
                     return TdlTokenType.ASSIGN;
 
                 case AdvTdlLexer.AND:
-                case AdvTdlLexer.ANY:
                 case AdvTdlLexer.LPAREN:
                 case AdvTdlLexer.RPAREN:
-                case AdvTdlLexer.NOP:
                 case AdvTdlLexer.NOT:
                 case AdvTdlLexer.OR:
                 case AdvTdlLexer.XOR:
@@ -315,7 +382,9 @@ public class TdlLexer {
                 case AdvTdlLexer.WHEN:
                     return TdlTokenType.KEYWORD;
 
+                case AdvTdlLexer.ANY:
                 case AdvTdlLexer.EDGE_NAME:
+                case AdvTdlLexer.NOP:
                 case AdvTdlLexer.RANGE_NAME:
                 case AdvTdlLexer.TERM_NAME:
                 case AdvTdlLexer.TIMER_NAME:

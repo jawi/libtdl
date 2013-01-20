@@ -13,6 +13,8 @@ import java.util.*;
 
 import nl.lxtreme.libtdl.grammar.*;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Category;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.grammar.ProblemReporter.MarkerBuilder;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Type;
 import nl.lxtreme.libtdl.grammar.basic.*;
 import nl.lxtreme.libtdl.grammar.basic.BasicTdlParser.ActiveClauseContext;
@@ -85,11 +87,16 @@ public class BasicTdlValidator extends BasicTdlBaseVisitor<BasicTdlValidator> {
             Token term = ctx.term;
             String name = normalizeName(term.getText());
             if (!m_declarations.containsKey(name)) {
-                int line = term.getLine();
-                int column = term.getCharPositionInLine();
+                int offset = ctx.getStart().getStartIndex();
+                int length = ctx.getStop().getStopIndex() - offset;
                 String msg = name + " is not declared";
 
-                m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+                MarkerBuilder builder = new MarkerBuilder();
+                Marker marker = builder.setCategory(Category.SEMANTIC).setType(Type.ERROR)
+                        .setLocation(offset, length, ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine())
+                        .setDescription(msg).build();
+
+                m_problemReporter.report(marker);
             }
         }
         return super.visitExpr(ctx);
@@ -124,22 +131,36 @@ public class BasicTdlValidator extends BasicTdlBaseVisitor<BasicTdlValidator> {
     private void declare(ParserRuleContext context, String name, Object value) {
         name = normalizeName(name);
         if (m_declarations.put(name, value) != null) {
-            int line = context.getStart().getLine();
-            int column = context.getStart().getCharPositionInLine();
+            int offset = context.getStart().getStartIndex();
+            int length = context.getStop().getStopIndex() - offset;
             String msg = "term " + name + " already declared";
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder
+                    .setCategory(Category.SEMANTIC)
+                    .setType(Type.ERROR)
+                    .setLocation(offset, length, context.getStart().getLine(),
+                            context.getStart().getCharPositionInLine()).setDescription(msg).build();
+
+            m_problemReporter.report(marker);
         }
     }
 
     private void define(ParserRuleContext context, int stageNo, Object value) {
         Integer stage = Integer.valueOf(stageNo);
         if (m_stages.put(stage, value) != null) {
-            int line = context.getStart().getLine();
-            int column = context.getStart().getCharPositionInLine();
+            int offset = context.getStart().getStartIndex();
+            int length = context.getStop().getStopIndex() - offset;
             String msg = "stage " + stageNo + " already defined";
 
-            m_problemReporter.report(line, column, Type.ERROR, Category.SEMANTIC, msg, null);
+            MarkerBuilder builder = new MarkerBuilder();
+            Marker marker = builder
+                    .setCategory(Category.SEMANTIC)
+                    .setType(Type.ERROR)
+                    .setLocation(offset, length, context.getStart().getLine(),
+                            context.getStart().getCharPositionInLine()).setDescription(msg).build();
+
+            m_problemReporter.report(marker);
         }
     }
 

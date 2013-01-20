@@ -15,7 +15,7 @@ import java.util.List;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-import nl.lxtreme.libtdl.grammar.TdlLexer.TdlToken;
+import nl.lxtreme.libtdl.grammar.TdlHelper.TdlToken;
 import nl.lxtreme.libtdl.swing.TdlStyleManager.TokenStyle;
 
 /**
@@ -24,8 +24,8 @@ import nl.lxtreme.libtdl.swing.TdlStyleManager.TokenStyle;
 public class TdlSyntaxView extends PlainView {
     // CONSTANTS
 
-    private static final BasicStroke DASHED_STROKE = new BasicStroke(2.0f /* width */, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 1.0f /* miterLimit */, new float[] { 4f, 2f }, 0.0f);
+    private static final BasicStroke DASHED_STROKE = new BasicStroke(1.5f /* width */, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_MITER, 1.0f /* miterLimit */, new float[] { 3f, 1f }, 0.0f);
 
     // VARIABLES
 
@@ -134,9 +134,16 @@ public class TdlSyntaxView extends PlainView {
                 int offset = token.getOffset();
                 int length = token.getLength();
 
+                if (offset > pos) {
+                    doc.getText(pos, offset - pos, segment);
+                    // System.out.println("1. DRAW @ " + x + "," + y + " [" +
+                    // segment + "]");
+                    x = drawToken(canvas, segment, x, y, pos, getRenderer(token));
+                }
+
                 doc.getText(offset, length, segment);
-                // System.out.println("DRAW @ " + x + "," + y + ": " +
-                // token.getType() + " [" + segment + "]");
+                // System.out.println("2. DRAW @ " + x + "," + y + " [" +
+                // segment + "]");
                 x = drawToken(canvas, segment, x, y, pos, getRenderer(token));
 
                 pos = offset + length;
@@ -145,8 +152,8 @@ public class TdlSyntaxView extends PlainView {
             if (pos < endPos) {
                 // Draw all unrecognized text in the default style...
                 doc.getText(pos, endPos - pos, segment);
-                // System.out.println("DRAW @ " + x + "," + y + ": [" + segment
-                // + "]");
+                // System.out.println("3. DRAW @ " + x + "," + y + ": [" +
+                // segment + "]");
                 x = drawToken(canvas, segment, x, y, pos, getDefaultStyle());
             }
         } catch (BadLocationException e) {
@@ -171,17 +178,18 @@ public class TdlSyntaxView extends PlainView {
 
         Font font = graphics.getFont().deriveFont(fontStyle);
         graphics.setFont(font);
+        graphics.setColor(color);
 
         FontMetrics fm = graphics.getFontMetrics();
         int w = Utilities.getTabbedTextWidth(segment, fm, 0, this, startOffset);
+        int h = (y + fm.getDescent()) - 2;
 
-        graphics.setColor(color);
         int result = Utilities.drawTabbedText(segment, x, y, graphics, this, startOffset);
 
         if ((fontStyle & ERROR_STYLE) != 0) {
             graphics.setColor(Color.RED);
             graphics.setStroke(DASHED_STROKE);
-            graphics.drawLine(x, (y + fm.getDescent()) - 1, x + w, (y + fm.getDescent()) - 1);
+            graphics.drawLine(x, h, x + w, h);
         }
 
         return result;
@@ -205,6 +213,10 @@ public class TdlSyntaxView extends PlainView {
      * @return a token renderer, never <code>null</code>.
      */
     private TokenStyle getRenderer(TdlToken token) {
-        return m_styleManager.getStyle(token.getType());
+        TokenStyle style = m_styleManager.getStyle(token.getType());
+        if (!token.getMarkers().isEmpty()) {
+            style = style.derive(style.getFontStyle() | ERROR_STYLE);
+        }
+        return style;
     }
 }

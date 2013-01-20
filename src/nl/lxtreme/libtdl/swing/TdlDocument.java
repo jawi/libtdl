@@ -7,16 +7,18 @@
  */
 package nl.lxtreme.libtdl.swing;
 
+import java.awt.event.*;
 import java.util.*;
 
+import javax.swing.Timer;
 import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.undo.*;
 
 import nl.lxtreme.libtdl.grammar.*;
 import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
-import nl.lxtreme.libtdl.grammar.TdlLexer.TdlToken;
-import nl.lxtreme.libtdl.grammar.TdlLexer.TdlTokenType;
+import nl.lxtreme.libtdl.grammar.TdlHelper.TdlToken;
+import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
 
 /**
  * Provides a custom {@link Document} for handling TDL texts.
@@ -28,7 +30,7 @@ public class TdlDocument extends PlainDocument {
      * Facade for throttling the number of parsing actions when typing into the
      * document.
      */
-    final class DocumentParser {
+    final class DocumentParser implements ActionListener {
         // CONSTANTS
 
         /**
@@ -40,9 +42,28 @@ public class TdlDocument extends PlainDocument {
 
         // VARIABLES
 
+        private final javax.swing.Timer m_timer;
         private volatile long m_startMillis = System.currentTimeMillis();
 
+        // CONSTRUCTORS
+
+        /**
+         * Creates a new {@link DocumentParser} instance.
+         */
+        public DocumentParser() {
+            m_timer = new Timer(IDLE_DELAY_MS, this);
+            m_timer.setRepeats(false);
+            m_timer.setCoalesce(true);
+        }
+
         // METHODS
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            System.out.println("PARSE EVENT!");
+            doParseText(true /* includeValidation */);
+            m_startMillis = System.currentTimeMillis();
+        }
 
         /**
          * Parses the current contents of this document and creates a list of
@@ -54,6 +75,14 @@ public class TdlDocument extends PlainDocument {
                 doParseText(false /* includeValidation */);
             }
             m_startMillis = now;
+        }
+
+        public void scheduleParse() {
+            if (m_timer.isRunning()) {
+                m_timer.restart();
+            } else {
+                m_timer.start();
+            }
         }
     }
 
@@ -161,7 +190,7 @@ public class TdlDocument extends PlainDocument {
         }
 
         public List<Marker> getMarkers() {
-            return Collections.unmodifiableList(m_markers);
+            return new ArrayList<Marker>(m_markers);
         }
 
         @Override
@@ -177,7 +206,7 @@ public class TdlDocument extends PlainDocument {
 
     // VARIABLES
 
-    private final TdlLexer m_lexer;
+    private final TdlHelper m_tdlHelper;
     private final ProblemCollector m_problems;
     private final DocumentParser m_parser;
     private final UndoManager m_undoMgr;
@@ -192,14 +221,14 @@ public class TdlDocument extends PlainDocument {
      * @param lexer
      *            the lexer to use, cannot be <code>null</code>.
      */
-    public TdlDocument(TdlLexer lexer) {
-        m_lexer = lexer;
+    public TdlDocument(TdlHelper lexer) {
+        m_tdlHelper = lexer;
         m_problems = new ProblemCollector();
         m_undoMgr = new CompoundUndoManager();
 
         m_parser = new DocumentParser();
 
-        m_lexer.addProblemListener(m_problems);
+        m_tdlHelper.addProblemListener(m_problems);
 
         // Common initialization...
         putProperty(PlainDocument.tabSizeAttribute, 4);
@@ -247,7 +276,7 @@ public class TdlDocument extends PlainDocument {
             for (int i = 0, size = tokens.size(); i < size; i++) {
                 TdlToken token = tokens.get(i);
                 if (token.getType() == TdlTokenType.WS) {
-                    spaceCount++;
+                    // spaceCount++;
                 } else {
                     onlyWS = false;
                     spaceCount = 0;
@@ -275,6 +304,18 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
+     * @return the problem markers, never <code>null</code>.
+     */
+    public Collection<Integer> getProblemMarkerLines() {
+        List<Marker> markers = m_problems.getMarkers();
+        Set<Integer> result = new HashSet<Integer>();
+        for (Marker marker : markers) {
+            result.add(marker.getLine());
+        }
+        return result;
+    }
+
+    /**
      * Returns a subset of (parsed) tokens.
      * 
      * @param startPos
@@ -294,13 +335,27 @@ public class TdlDocument extends PlainDocument {
 
         List<TdlToken> result = new ArrayList<TdlToken>();
 
+        List<Marker> markers = m_problems.getMarkers();
+
         for (int i = 0; i < tokens.size(); i++) {
             TdlToken token = tokens.get(i);
 
             int startIdx = token.getOffset();
+            int endIdx = startIdx + token.getLength();
 
-            if ((startIdx >= startPos) && (startIdx < endPos)) {
-                result.add(token);
+            if ((startIdx >= startPos) && (endIdx <= endPos)) {
+                TdlToken newToken = token.clone();
+
+                for (Marker marker : markers) {
+                    int mStartIdx = marker.getOffset();
+                    int mEndIdx = mStartIdx + marker.getLength();
+
+                    if ((mStartIdx >= startIdx) && (mEndIdx <= endIdx)) {
+                        newToken.getMarkers().add(marker);
+                    }
+                }
+
+                result.add(newToken);
             }
         }
 
@@ -317,12 +372,15 @@ public class TdlDocument extends PlainDocument {
             String text = getText(0, getLength());
 
             synchronized (this) {
-                m_problems.clear();
-                m_tokens = m_lexer.tokenize(text);
-            }
+                if (includeValidation) {
+                    m_problems.clear();
+                }
 
-            if (includeValidation) {
-                // TODO
+                m_tokens = m_tdlHelper.tokenize(text);
+
+                if (includeValidation) {
+                    m_tdlHelper.validate();
+                }
             }
         } catch (BadLocationException exception) {
             // Ignore
@@ -331,25 +389,25 @@ public class TdlDocument extends PlainDocument {
 
     @Override
     protected void fireChangedUpdate(DocumentEvent event) {
-        m_parser.parseText();
+        m_parser.scheduleParse();
         super.fireChangedUpdate(event);
     }
 
     @Override
     protected void fireInsertUpdate(DocumentEvent event) {
-        m_parser.parseText();
+        m_parser.scheduleParse();
         super.fireInsertUpdate(event);
     }
 
     @Override
     protected void fireRemoveUpdate(DocumentEvent event) {
-        m_parser.parseText();
+        m_parser.scheduleParse();
         super.fireRemoveUpdate(event);
     }
 
     @Override
     protected void fireUndoableEditUpdate(UndoableEditEvent event) {
-        m_parser.parseText();
+        m_parser.scheduleParse();
         super.fireUndoableEditUpdate(event);
     }
 

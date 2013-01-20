@@ -9,6 +9,7 @@ package nl.lxtreme.libtdl.swing;
 
 import java.awt.*;
 import java.beans.*;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -63,7 +64,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
         m_editorPane.addPropertyChangeListener(this);
 
         int lineCount = 0;
-        Document document = m_editorPane.getDocument();
+        Document document = getDocument();
         if (document != null) {
             document.addDocumentListener(this);
             lineCount = getLineCount(document);
@@ -109,7 +110,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
     @Override
     public void removeNotify() {
         m_editorPane.removePropertyChangeListener(this);
-        Document document = m_editorPane.getDocument();
+        Document document = getDocument();
         if (document != null) {
             document.removeDocumentListener(this);
         }
@@ -147,6 +148,9 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
         canvas.setColor(Color.GRAY);
         canvas.setFont(m_editorPane.getFont());
 
+        TdlDocument document = getDocument();
+        Collection<Integer> markerLines = document.getProblemMarkerLines();
+
         FontMetrics fm = canvas.getFontMetrics();
 
         int ch = fm.getHeight();
@@ -160,8 +164,23 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
             int x = w - fm.stringWidth(text) - MARGIN_RIGHT - insets.right;
 
+            if (markerLines.contains(lineNum + 1)) {
+                canvas.setColor(Color.RED);
+            } else {
+                canvas.setColor(Color.GRAY);
+            }
+
             canvas.drawString(text, x, y);
         }
+    }
+
+    /**
+     * Returns the document.
+     * 
+     * @return the document being edited, never <code>null</code>.
+     */
+    private TdlDocument getDocument() {
+        return (TdlDocument) m_editorPane.getDocument();
     }
 
     /**

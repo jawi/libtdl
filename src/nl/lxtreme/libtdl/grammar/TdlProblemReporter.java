@@ -76,8 +76,7 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
     }
 
     @Override
-    public void report(int line, int column, Type type, Category category, String description, Exception cause) {
-        Marker marker = new Marker(line, column, type, category, description, cause);
+    public void report(Marker marker) {
         List<ProblemListener> listeners = getListeners();
         for (ProblemListener listener : listeners) {
             listener.add(marker);
@@ -87,10 +86,10 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
     @Override
     public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet ambigAlts,
             ATNConfigSet configs) {
-        int line = -1;
-        int column = -1;
-        String details = "Ambiguity found [" + startIndex + ".." + stopIndex + "]";
-        Marker marker = new Marker(line, column, Type.WARNING, Category.AMBIGUITY, details);
+        MarkerBuilder builder = new MarkerBuilder();
+        Marker marker = builder.setCategory(Category.AMBIGUITY).setType(Type.WARNING)
+                .setLocation(startIndex, stopIndex - startIndex, -1, -1)
+                .setDescription("Ambiguity found [" + startIndex + ".." + stopIndex + "]").build();
 
         List<ProblemListener> listeners = getListeners();
         for (ProblemListener listener : listeners) {
@@ -114,7 +113,16 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
             String msg, RecognitionException e) {
-        Marker marker = new Marker(line, charPositionInLine, Type.ERROR, Category.SYNTAX, msg, e);
+        int offset = -1;
+        int length = -1;
+        if (offendingSymbol instanceof Token) {
+            offset = ((Token) offendingSymbol).getStartIndex();
+            length = ((Token) offendingSymbol).getStopIndex() - offset;
+        }
+
+        MarkerBuilder builder = new MarkerBuilder();
+        Marker marker = builder.setCategory(Category.SYNTAX).setType(Type.ERROR)
+                .setLocation(offset, length, line, charPositionInLine).setDescription(msg).setCause(e).build();
 
         List<ProblemListener> listeners = getListeners();
         for (ProblemListener listener : listeners) {

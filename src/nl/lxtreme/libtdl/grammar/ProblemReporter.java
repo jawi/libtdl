@@ -33,6 +33,8 @@ public interface ProblemReporter {
     public static final class Marker {
         // VARIABLES
 
+        private final int m_offset;
+        private final int m_length;
         private final int m_line;
         private final int m_column;
         private final Type m_type;
@@ -45,20 +47,23 @@ public interface ProblemReporter {
         /**
          * Creates a new {@link Marker} instance.
          */
-        public Marker(int line, int column, Type type, Category category, String description) {
-            this(line, column, type, category, description, null);
-        }
-
-        /**
-         * Creates a new {@link Marker} instance.
-         */
-        public Marker(int line, int column, Type type, Category category, String description, Exception cause) {
+        Marker(int offset, int length, int line, int column, Type type, Category category, String description,
+                Exception cause) {
+            m_offset = offset;
+            m_length = length;
             m_line = line;
             m_column = column;
             m_type = type;
             m_category = category;
             m_description = description;
             m_cause = cause;
+        }
+
+        /**
+         * Creates a new {@link Marker} instance.
+         */
+        Marker(Type type, Category category, String description) {
+            this(-1, -1, -1, -1, type, category, description, null);
         }
 
         // METHODS
@@ -76,10 +81,10 @@ public interface ProblemReporter {
             }
 
             Marker other = (Marker) obj;
-            if (m_column != other.m_column) {
+            if (m_offset != other.m_offset) {
                 return false;
             }
-            if (m_line != other.m_line) {
+            if (m_length != other.m_length) {
                 return false;
             }
             if (m_type != other.m_type) {
@@ -113,8 +118,8 @@ public interface ProblemReporter {
         }
 
         /**
-         * @return the column index (1-based) or <tt>-1</tt> if no column index
-         *         is available.
+         * @return the column on which the problem occurred, or <tt>-1</tt> if
+         *         no column is available.
          */
         public int getColumn() {
             return m_column;
@@ -128,11 +133,26 @@ public interface ProblemReporter {
         }
 
         /**
-         * @return the line number (1-based) or <tt>-1</tt> if no line number is
-         *         available.
+         * @return the length or <tt>-1</tt> if no length is available.
+         */
+        public int getLength() {
+            return m_length;
+        }
+
+        /**
+         * @return the line on which the problem occurred, or <tt>-1</tt> if no
+         *         line is available.
          */
         public int getLine() {
             return m_line;
+        }
+
+        /**
+         * @return the offset from the start or <tt>-1</tt> if no offset is
+         *         available.
+         */
+        public int getOffset() {
+            return m_offset;
         }
 
         /**
@@ -149,10 +169,12 @@ public interface ProblemReporter {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = (prime * result) + ((m_category == null) ? 0 : m_category.hashCode());
-            result = (prime * result) + m_column;
-            result = (prime * result) + ((m_description == null) ? 0 : m_description.hashCode());
+            result = (prime * result) + m_offset;
+            result = (prime * result) + m_length;
             result = (prime * result) + m_line;
+            result = (prime * result) + m_column;
+            result = (prime * result) + ((m_category == null) ? 0 : m_category.hashCode());
+            result = (prime * result) + ((m_description == null) ? 0 : m_description.hashCode());
             result = (prime * result) + ((m_type == null) ? 0 : m_type.hashCode());
             return result;
         }
@@ -163,10 +185,83 @@ public interface ProblemReporter {
         @Override
         @SuppressWarnings("boxing")
         public String toString() {
-            if ((m_line > 0) && (m_column > 0)) {
-                return String.format("%s %s at %d:%d: %s", m_category, m_type, m_line, m_column, m_description);
+            if ((m_line >= 0) && (m_column >= 0)) {
+                return String.format("%s %s: (%d..%d) %s", m_category, m_type, m_line, m_column, m_description);
             }
             return String.format("%s %s: %s", m_category, m_type, m_description);
+        }
+    }
+
+    public static final class MarkerBuilder {
+        // VARIABLES
+
+        private int m_offset = -1;
+        private int m_length = -1;
+        private int m_line = -1;
+        private int m_column = -1;
+        private Category m_category = Category.OTHER;
+        private Type m_type = Type.WARNING;
+        private String m_description = "";
+        private Exception m_cause = null;
+
+        // METHODS
+
+        /**
+         * @return
+         */
+        public Marker build() {
+            return new Marker(m_offset, m_length, m_line, m_column, m_type, m_category, m_description, m_cause);
+        }
+
+        /**
+         * @param offset
+         * @param length
+         * @param line
+         * @param column
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setLocation(int offset, int length, int line, int column) {
+            m_offset = offset;
+            m_length = length;
+            m_line = line;
+            m_column = column;
+            return this;
+        }
+
+        /**
+         * @param cause
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setCause(Exception cause) {
+            m_cause = cause;
+            return this;
+        }
+
+        /**
+         * @param description
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setDescription(String description) {
+            m_description = description;
+            return this;
+        }
+
+        /**
+         * @param category
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setCategory(Category category) {
+            m_category = category;
+            return this;
+        }
+
+        /**
+         * @param type
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setType(Type type) {
+            m_type = type;
+            return this;
         }
     }
 
@@ -179,29 +274,16 @@ public interface ProblemReporter {
     void addListener(ProblemListener aListener);
 
     /**
-     * Reports a problem in the snippet at the given location.
-     * 
-     * @param line
-     *            the line number (1-based) on which the problem is found. A
-     *            value of <tt>-1</tt> indicates that no line number is
-     *            available;
-     * @param column
-     *            the column number (1-based) on which the problem is found. A
-     *            value of <tt>-1</tt> indicates that no column is available;
-     * @param type
-     *            the type of the problem, whether it is an warning or error;
-     * @param category
-     *            the category of the problem;
-     * @param description
-     *            a plain-text description of the problem;
-     * @param cause
-     *            the (optional) cause of the problem, can be <code>null</code>.
-     */
-    void report(int line, int column, Type type, Category category, String description, Exception cause);
-
-    /**
      * @param aListener
      *            the listener to remove, cannot be <code>null</code>.
      */
     void removeListener(ProblemListener aListener);
+
+    /**
+     * Reports a problem in the snippet.
+     * 
+     * @param marker
+     *            the marker to report, cannot be <code>null</code>.
+     */
+    void report(Marker marker);
 }

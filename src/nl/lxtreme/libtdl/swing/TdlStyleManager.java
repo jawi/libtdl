@@ -7,12 +7,12 @@
  */
 package nl.lxtreme.libtdl.swing;
 
-import static nl.lxtreme.libtdl.grammar.TdlLexer.TdlTokenType.*;
+import static nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType.*;
 
 import java.awt.*;
 import java.util.*;
 
-import nl.lxtreme.libtdl.grammar.TdlLexer.TdlTokenType;
+import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
 
 /**
  * Denotes a manager for keeping token styles.
@@ -24,6 +24,20 @@ public class TdlStyleManager {
      * Represents how a token should be rendered.
      */
     public static interface TokenStyle {
+        // METHODS
+
+        /**
+         * @param altStyle
+         * @return
+         */
+        TokenStyle derive(int altStyle);
+
+        /**
+         * @param altColor
+         * @return
+         */
+        TokenStyle derive(Color altColor);
+
         /**
          * @return the color to render the token in, may be <code>null</code> to
          *         use
@@ -79,17 +93,23 @@ public class TdlStyleManager {
             m_fontStyle = fontStlye;
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        // METHODS
+
+        @Override
+        public TokenStyle derive(Color altColor) {
+            return new TokenStyleImpl(altColor, m_fontStyle);
+        }
+
+        @Override
+        public TokenStyle derive(int altStyle) {
+            return new TokenStyleImpl(m_color, altStyle);
+        }
+
         @Override
         public Color getColor() {
             return m_color;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int getFontStyle() {
             return m_fontStyle;
@@ -114,15 +134,15 @@ public class TdlStyleManager {
 
         Color lead = new Color(25, 25, 25);
         Color iron = new Color(76, 76, 76);
-        Color midnight = new Color(0, 0, 128);
+        Color midnight = new Color(0, 0, 192);
         Color maroon = new Color(128, 0, 64);
         Color aluminium = new Color(153, 153, 153);
 
         // define(new TokenStyleImpl(Color.RED, ERROR_STYLE), ERROR_TOKEN);
 
         define(new TokenStyleImpl(aluminium, Font.ITALIC), COMMENT);
-        define(new TokenStyleImpl(iron), NUMERIC, UNIT);
-        define(new TokenStyleImpl(midnight, Font.BOLD), TERM);
+        define(new TokenStyleImpl(iron), NUMERIC, UNIT, EXPRESSION);
+        define(new TokenStyleImpl(midnight, Font.PLAIN), TERM);
         define(new TokenStyleImpl(maroon, Font.BOLD), KEYWORD);
         define(new TokenStyleImpl(lead), TEXT);
     }
