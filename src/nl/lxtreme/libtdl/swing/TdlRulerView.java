@@ -8,13 +8,15 @@
 package nl.lxtreme.libtdl.swing;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.beans.*;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
+
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
 
 /**
  * Provides a ruler component for showing the line numbers and other kind of
@@ -149,7 +151,6 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
         canvas.setFont(m_editorPane.getFont());
 
         TdlDocument document = getDocument();
-        Collection<Integer> markerLines = document.getProblemMarkerLines();
 
         FontMetrics fm = canvas.getFontMetrics();
 
@@ -164,7 +165,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
             int x = w - fm.stringWidth(text) - MARGIN_RIGHT - insets.right;
 
-            if (markerLines.contains(lineNum + 1)) {
+            if (document.hasProblemMarkers(lineNum + 1)) {
                 canvas.setColor(Color.RED);
             } else {
                 canvas.setColor(Color.GRAY);
@@ -172,6 +173,30 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
             canvas.drawString(text, x, y);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        TdlDocument document = getDocument();
+
+        // convert mouse Y-coordinates to a line number
+        FontMetrics fm = m_editorPane.getFontMetrics(m_editorPane.getFont());
+        int charHeight = fm.getHeight();
+
+        int lineNo = (event.getY() / charHeight) + 1;
+
+        if (document.hasProblemMarkers(lineNo)) {
+            StringBuilder tt = new StringBuilder();
+            for (Marker m : document.getProblemMarkers(lineNo)) {
+                tt.append(m.toString()).append("\n");
+            }
+            return tt.toString();
+        }
+
+        return super.getToolTipText(event);
     }
 
     /**

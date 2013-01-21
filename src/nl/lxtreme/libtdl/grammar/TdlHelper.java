@@ -45,19 +45,25 @@ public class TdlHelper {
         int getLength();
 
         /**
+         * @return a list of problem markers, never <code>null</code>.
+         */
+        List<Marker> getMarkers();
+
+        /**
          * @return the offset of this token in the document, >= 0.
          */
         int getOffset();
 
         /**
+         * @return the text for this token in the document, never
+         *         <code>null</code>.
+         */
+        String getText();
+
+        /**
          * @return the exact type of this token, never <code>null</code>.
          */
         TdlTokenType getType();
-
-        /**
-         * @return a list of problem markers, never <code>null</code>.
-         */
-        List<Marker> getMarkers();
     }
 
     /**
@@ -92,6 +98,7 @@ public class TdlHelper {
 
         private final int m_offset;
         private final int m_length;
+        private final String m_text;
         private final TdlTokenType m_type;
         private final List<Marker> m_markers;
 
@@ -102,9 +109,10 @@ public class TdlHelper {
          * token, except for its problem markers.
          */
         public TdlTokenImpl(TdlToken token) {
-            m_type = token.getType();
             m_offset = token.getOffset();
             m_length = token.getLength();
+            m_text = token.getText();
+            m_type = token.getType();
             m_markers = new ArrayList<Marker>();
         }
 
@@ -112,9 +120,10 @@ public class TdlHelper {
          * Creates a new {@link TdlTokenImpl} instance.
          */
         public TdlTokenImpl(TdlTokenType type, int offset, int length, String text) {
-            m_type = type;
             m_offset = offset;
             m_length = length;
+            m_text = text;
+            m_type = type;
             m_markers = new ArrayList<Marker>();
         }
 
@@ -141,6 +150,11 @@ public class TdlHelper {
         }
 
         @Override
+        public String getText() {
+            return m_text;
+        }
+
+        @Override
         public TdlTokenType getType() {
             return m_type;
         }
@@ -154,6 +168,22 @@ public class TdlHelper {
     // CONSTANTS
 
     private static final int EOF = Recognizer.EOF;
+    private static final ProblemReporter NULL_REPORTER = new ProblemReporter() {
+        @Override
+        public void addListener(ProblemListener aListener) {
+            // Nop
+        }
+
+        @Override
+        public void removeListener(ProblemListener aListener) {
+            // Nop
+        }
+
+        @Override
+        public void report(Marker marker) {
+            // Nop
+        }
+    };
 
     // VARIABLES
 
@@ -194,6 +224,28 @@ public class TdlHelper {
     }
 
     /**
+     * Returns the definition for the term with the given name,
+     * 
+     * @param name
+     *            the name of the term to get the definition for, cannot be
+     *            <code>null</code>.
+     * @return the definition for the given term, or <code>null</code> if no
+     *         definition was found.
+     */
+    public String getTermDefinition(String name) {
+        reset();
+
+        AbstractParseTreeVisitor<?> validator = createValidator(NULL_REPORTER);
+        if (validator instanceof AdvTdlValidator) {
+            return ((AdvTdlValidator) validator).getTermDefinition(name);
+        } else if (validator instanceof BasicTdlValidator) {
+            return ((BasicTdlValidator) validator).getTermDefinition(name);
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the dialect used by this lexer.
      * 
      * @return the dialect, never <code>null</code>.
@@ -203,27 +255,11 @@ public class TdlHelper {
     }
 
     /**
-     * Returns a token stream based on this lexer.
-     * 
-     * @return a new {@link TokenStream} for this lexer.
-     */
-    public TokenStream getTokenStream() {
-        return new CommonTokenStream(m_lexer);
-    }
-
-    /**
      * @param listener
      *            the listener to remove, cannot be <code>null</code>.
      */
     public void removeProblemListener(ProblemListener listener) {
         m_problemReporter.removeListener(listener);
-    }
-
-    /**
-     * Resets this lexer to its initial state.
-     */
-    public void reset() {
-        m_lexer.reset();
     }
 
     /**
@@ -251,25 +287,8 @@ public class TdlHelper {
      */
     public void validate() {
         reset();
-        m_parser.setInputStream(getTokenStream());
 
-        ParserRuleContext context;
-        AbstractParseTreeVisitor<?> visitor;
-
-        switch (m_dialect) {
-            case BASIC:
-                context = ((BasicTdlParser) m_parser).prog();
-                visitor = new BasicTdlValidator(m_problemReporter);
-                break;
-            case ADVANCED:
-                context = ((AdvTdlParser) m_parser).prog();
-                visitor = new AdvTdlValidator(m_problemReporter);
-                break;
-            default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
-        }
-
-        visitor.visit(context);
+        createValidator(m_problemReporter);
     }
 
     /**
@@ -304,6 +323,49 @@ public class TdlHelper {
             default:
                 throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
         }
+    }
+
+    /**
+     * Creates the validator for the current dialect and returns it after having
+     * visited it.
+     * 
+     * @return the visited validator.
+     */
+    protected AbstractParseTreeVisitor<?> createValidator(ProblemReporter problemReporter) {
+        ParserRuleContext context;
+        AbstractParseTreeVisitor<? extends AbstractParseTreeVisitor<?>> visitor;
+
+        switch (m_dialect) {
+            case BASIC:
+                context = ((BasicTdlParser) m_parser).prog();
+                visitor = new BasicTdlValidator(problemReporter);
+                break;
+            case ADVANCED:
+                context = ((AdvTdlParser) m_parser).prog();
+                visitor = new AdvTdlValidator(problemReporter);
+                break;
+            default:
+                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+        }
+        visitor.visit(context);
+        return visitor;
+    }
+
+    /**
+     * Returns a token stream based on this lexer.
+     * 
+     * @return a new {@link TokenStream} for this lexer.
+     */
+    protected TokenStream getTokenStream() {
+        return new CommonTokenStream(m_lexer);
+    }
+
+    /**
+     * Resets this lexer to its initial state.
+     */
+    protected void reset() {
+        m_lexer.reset();
+        m_parser.setInputStream(getTokenStream());
     }
 
     /**

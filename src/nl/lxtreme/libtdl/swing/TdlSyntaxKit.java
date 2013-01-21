@@ -127,35 +127,40 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
      */
     @Override
     public void install(final JEditorPane editorPane) {
-        super.install(editorPane);
+        final ToolTipManager tooltipMgr = ToolTipManager.sharedInstance();
 
-        // Create the ruler...
-        editorPane.addHierarchyListener(new HierarchyListener() {
-            @Override
-            public void hierarchyChanged(HierarchyEvent event) {
-                if (event.getChanged() == editorPane) {
-                    boolean parentChanged = (event.getChangeFlags() & HierarchyEvent.PARENT_CHANGED) != 0;
-                    if (parentChanged) {
-                        JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class,
-                                editorPane);
-                        if (scrollPane != null) {
-                            scrollPane.setRowHeaderView(new TdlRulerView(editorPane));
-                        }
-                    }
-                }
-            }
-        });
+        // Enable tool tips on the editor pane...
+        tooltipMgr.registerComponent(editorPane);
 
         // Set the default font...
-        Font font = new Font(Font.MONOSPACED, Font.PLAIN, 14);
-
-        editorPane.setFont(font);
+        editorPane.setFont(m_styleManager.getEditorFont());
         editorPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
         Keymap child = addKeymap(KEYMAP_NAME, getKeymap(DEFAULT_KEYMAP));
         fillKeymap(child);
 
         editorPane.setKeymap(child);
+
+        // Create the ruler dynamically when the editor is embedded inside a
+        // scroll pane...
+        editorPane.addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent event) {
+                if (event.getChanged() == editorPane) {
+                    boolean parentChanged = (event.getChangeFlags() & HierarchyEvent.PARENT_CHANGED) != 0;
+                    if (parentChanged) {
+                        Container scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane.class, editorPane);
+                        if (scrollPane != null) {
+                            TdlRulerView rulerView = new TdlRulerView(editorPane);
+                            // Enable tool tips on the ruler...
+                            tooltipMgr.registerComponent(rulerView);
+
+                            ((JScrollPane) scrollPane).setRowHeaderView(rulerView);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**

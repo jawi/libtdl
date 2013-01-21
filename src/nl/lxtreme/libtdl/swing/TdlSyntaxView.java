@@ -14,8 +14,11 @@ import java.util.List;
 
 import javax.swing.event.*;
 import javax.swing.text.*;
+import javax.swing.text.Position.Bias;
 
+import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
 import nl.lxtreme.libtdl.grammar.TdlHelper.TdlToken;
+import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
 import nl.lxtreme.libtdl.swing.TdlStyleManager.TokenStyle;
 
 /**
@@ -49,11 +52,54 @@ public class TdlSyntaxView extends PlainView {
     // METHODS
 
     /**
-     * {@inheritDoc}
+     * Overridden in order to return the {@link TdlDocument} immediately.
      */
     @Override
     public TdlDocument getDocument() {
         return (TdlDocument) super.getDocument();
+    }
+
+    /**
+     * Overridden in order to return the tooltip text for any problem markers
+     * (if any).
+     */
+    @Override
+    public String getToolTipText(float x, float y, Shape allocation) {
+        Bias[] bias = new Bias[] { Bias.Forward };
+        int pos = viewToModel(x, y, allocation, bias);
+
+        StringBuilder sb = new StringBuilder();
+
+        TdlDocument document = getDocument();
+        Element element = document.getParagraphElement(pos);
+        if (element != null) {
+            int startPos = element.getStartOffset();
+            int endPos = element.getEndOffset();
+
+            List<TdlToken> tokens = document.getTokens(startPos, endPos);
+            for (TdlToken token : tokens) {
+                int startIdx = token.getOffset();
+                int endIdx = startIdx + token.getLength();
+
+                // narrow down to the requested location...
+                if ((pos >= startIdx) && (pos <= endIdx)) {
+                    List<Marker> markers = token.getMarkers();
+                    if (!markers.isEmpty()) {
+                        for (Marker marker : markers) {
+                            sb.append(marker.toString()).append("\n");
+                        }
+                    } else if (token.getType() == TdlTokenType.TERM) {
+                        sb.append(document.getTermDefinition(token.getText()));
+                    }
+                }
+            }
+        }
+
+        if (sb.length() == 0) {
+            return super.getToolTipText(x, y, allocation);
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -182,11 +228,11 @@ public class TdlSyntaxView extends PlainView {
 
         FontMetrics fm = graphics.getFontMetrics();
         int w = Utilities.getTabbedTextWidth(segment, fm, 0, this, startOffset);
-        int h = (y + fm.getDescent()) - 2;
 
         int result = Utilities.drawTabbedText(segment, x, y, graphics, this, startOffset);
-
         if ((fontStyle & ERROR_STYLE) != 0) {
+            int h = (y + fm.getDescent()) - 2;
+
             graphics.setColor(Color.RED);
             graphics.setStroke(DASHED_STROKE);
             graphics.drawLine(x, h, x + w, h);

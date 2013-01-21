@@ -32,7 +32,6 @@ public class TestEditor extends JFrame {
 
         JEditorPane editor = new JEditorPane();
         editor.setEditorKit(syntaxKit);
-        editor.getCaret().setBlinkRate(0);
 
         // @formatter:off
         String text =

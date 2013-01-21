@@ -27,66 +27,6 @@ public class TdlDocument extends PlainDocument {
     // INNER TYPES
 
     /**
-     * Facade for throttling the number of parsing actions when typing into the
-     * document.
-     */
-    final class DocumentParser implements ActionListener {
-        // CONSTANTS
-
-        /**
-         * Delay between consecutive edits in milliseconds where edits are added
-         * together. If the delay is greater than this, then separate undo
-         * operations are done, otherwise they are combined.
-         */
-        public static final int IDLE_DELAY_MS = 300;
-
-        // VARIABLES
-
-        private final javax.swing.Timer m_timer;
-        private volatile long m_startMillis = System.currentTimeMillis();
-
-        // CONSTRUCTORS
-
-        /**
-         * Creates a new {@link DocumentParser} instance.
-         */
-        public DocumentParser() {
-            m_timer = new Timer(IDLE_DELAY_MS, this);
-            m_timer.setRepeats(false);
-            m_timer.setCoalesce(true);
-        }
-
-        // METHODS
-
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            System.out.println("PARSE EVENT!");
-            doParseText(true /* includeValidation */);
-            m_startMillis = System.currentTimeMillis();
-        }
-
-        /**
-         * Parses the current contents of this document and creates a list of
-         * tokens out of it.
-         */
-        public void parseText() {
-            long now = System.currentTimeMillis();
-            if ((now - m_startMillis) > IDLE_DELAY_MS) {
-                doParseText(false /* includeValidation */);
-            }
-            m_startMillis = now;
-        }
-
-        public void scheduleParse() {
-            if (m_timer.isRunning()) {
-                m_timer.restart();
-            } else {
-                m_timer.start();
-            }
-        }
-    }
-
-    /**
      * Provides a more usable undo manager, based on code from <a
      * href="http://jsyntaxpane.googlecode.com">JSyntaxKit</a>.
      */
@@ -176,27 +116,111 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
+     * Facade for throttling the number of parsing actions when typing into the
+     * document.
+     */
+    final class DocumentParser implements ActionListener {
+        // CONSTANTS
+
+        /**
+         * Delay between consecutive edits in milliseconds where edits are added
+         * together. If the delay is greater than this, then separate undo
+         * operations are done, otherwise they are combined.
+         */
+        public static final int IDLE_DELAY_MS = 300;
+
+        // VARIABLES
+
+        private final javax.swing.Timer m_timer;
+        private volatile long m_startMillis = 0L;
+
+        // CONSTRUCTORS
+
+        /**
+         * Creates a new {@link DocumentParser} instance.
+         */
+        public DocumentParser() {
+            m_timer = new Timer(IDLE_DELAY_MS, this);
+            m_timer.setRepeats(false);
+            m_timer.setCoalesce(true);
+        }
+
+        // METHODS
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            System.out.println("PARSE EVENT!");
+            doParseText(true /* includeValidation */);
+            m_startMillis = System.currentTimeMillis();
+        }
+
+        /**
+         * Parses the current contents of this document and creates a list of
+         * tokens out of it.
+         */
+        public void parseText() {
+            long now = System.currentTimeMillis();
+            if ((now - m_startMillis) > IDLE_DELAY_MS) {
+                doParseText(false /* includeValidation */);
+            }
+            m_startMillis = now;
+
+            scheduleParse();
+        }
+
+        public void scheduleParse() {
+            if (m_timer.isRunning()) {
+                m_timer.restart();
+            } else {
+                m_timer.start();
+            }
+        }
+    }
+
+    /**
      * Small container for collecting problem markers.
      */
     static class ProblemCollector implements ProblemListener {
         // VARIABLES
 
-        private final List<Marker> m_markers = new ArrayList<Marker>();
+        private final Map<Integer, List<Marker>> m_markers = new HashMap<Integer, List<Marker>>();
 
         // METHODS
+
+        @Override
+        public void add(Marker marker) {
+            System.out.printf("%s%n", marker);
+
+            List<Marker> markers = m_markers.get(marker.getLine());
+            if (markers == null) {
+                markers = new ArrayList<Marker>();
+                m_markers.put(marker.getLine(), markers);
+            }
+            markers.add(marker);
+        }
 
         public void clear() {
             m_markers.clear();
         }
 
-        public List<Marker> getMarkers() {
-            return new ArrayList<Marker>(m_markers);
+        public List<Marker> getAllMarkers() {
+            List<Marker> result = new ArrayList<Marker>();
+            for (List<Marker> markers : m_markers.values()) {
+                result.addAll(markers);
+            }
+            return result;
         }
 
-        @Override
-        public void add(Marker marker) {
-            System.out.printf("%s%n", marker);
-            m_markers.add(marker);
+        public List<Marker> getMarkers(int lineNo) {
+            List<Marker> markers = m_markers.get(lineNo);
+            if (markers == null) {
+                return Collections.emptyList();
+            }
+            return new ArrayList<Marker>(markers);
+        }
+
+        public boolean hasMarkers(int lineNo) {
+            return m_markers.containsKey(lineNo);
         }
     }
 
@@ -247,6 +271,19 @@ public class TdlDocument extends PlainDocument {
     }
 
     // METHODS
+
+    /**
+     * Returns the definition for the term with the given name,
+     * 
+     * @param name
+     *            the name of the term to get the definition for, cannot be
+     *            <code>null</code>.
+     * @return the definition for the given term, or <code>null</code> if no
+     *         definition was found.
+     */
+    public String getTermDefinition(String name) {
+        return m_tdlHelper.getTermDefinition(name);
+    }
 
     /**
      * Returns the number of spaces at the beginning of the line denoted by the
@@ -304,15 +341,13 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
-     * @return the problem markers, never <code>null</code>.
+     * Returns the problem markers as map, in which each key represents the line
+     * number at which the problem marker(s) occur.
+     * 
+     * @return the map with problem markers, never <code>null</code>.
      */
-    public Collection<Integer> getProblemMarkerLines() {
-        List<Marker> markers = m_problems.getMarkers();
-        Set<Integer> result = new HashSet<Integer>();
-        for (Marker marker : markers) {
-            result.add(marker.getLine());
-        }
-        return result;
+    public List<Marker> getProblemMarkers(int lineNo) {
+        return m_problems.getMarkers(lineNo);
     }
 
     /**
@@ -335,7 +370,7 @@ public class TdlDocument extends PlainDocument {
 
         List<TdlToken> result = new ArrayList<TdlToken>();
 
-        List<Marker> markers = m_problems.getMarkers();
+        List<Marker> markers = m_problems.getAllMarkers();
 
         for (int i = 0; i < tokens.size(); i++) {
             TdlToken token = tokens.get(i);
@@ -360,6 +395,15 @@ public class TdlDocument extends PlainDocument {
         }
 
         return result;
+    }
+
+    /**
+     * @param lineNo
+     * @return <code>true</code> if there are problem markers on the given line,
+     *         <code>false</code> otherwise.
+     */
+    public boolean hasProblemMarkers(int lineNo) {
+        return m_problems.hasMarkers(lineNo);
     }
 
     /**

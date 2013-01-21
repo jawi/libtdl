@@ -64,6 +64,23 @@ public class BasicTdlValidator extends BasicTdlBaseVisitor<BasicTdlValidator> {
     // METHODS
 
     /**
+     * Returns the definition for the term with the given name,
+     * 
+     * @param name
+     *            the name of the term to get the definition for, cannot be
+     *            <code>null</code>.
+     * @return the definition for the given term, or <code>null</code> if no
+     *         definition was found.
+     */
+    public String getTermDefinition(String name) {
+        Object result = m_declarations.get(normalizeName(name));
+        if (result instanceof ParserRuleContext) {
+            return ((ParserRuleContext) result).getText();
+        }
+        return null;
+    }
+
+    /**
      * Sets the number of stages that this validator should check for.
      * 
      * @param stages

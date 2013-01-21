@@ -27,16 +27,16 @@ public class TdlStyleManager {
         // METHODS
 
         /**
-         * @param altStyle
-         * @return
-         */
-        TokenStyle derive(int altStyle);
-
-        /**
          * @param altColor
          * @return
          */
         TokenStyle derive(Color altColor);
+
+        /**
+         * @param altStyle
+         * @return
+         */
+        TokenStyle derive(int altStyle);
 
         /**
          * @return the color to render the token in, may be <code>null</code> to
@@ -123,6 +123,7 @@ public class TdlStyleManager {
     // VARIABLES
 
     private final Map<Integer, TokenStyle> m_styles;
+    private final Font m_editorFont;
 
     // CONSTRUCTORS
 
@@ -145,6 +146,8 @@ public class TdlStyleManager {
         define(new TokenStyleImpl(midnight, Font.PLAIN), TERM);
         define(new TokenStyleImpl(maroon, Font.BOLD), KEYWORD);
         define(new TokenStyleImpl(lead), TEXT);
+
+        m_editorFont = new Font(Font.MONOSPACED, Font.PLAIN, 14);
     }
 
     // METHODS
@@ -168,6 +171,15 @@ public class TdlStyleManager {
      */
     public TokenStyle getDefaultStyle() {
         return getStyle(TEXT);
+    }
+
+    /**
+     * Returns the font for the editor.
+     * 
+     * @return the font used in the editor, never <code>null</code>.
+     */
+    public Font getEditorFont() {
+        return m_editorFont;
     }
 
     /**
