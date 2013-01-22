@@ -11,8 +11,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import nl.lxtreme.libtdl.grammar.*;
-
 /**
  * 
  */
@@ -27,8 +25,7 @@ public class TestEditor extends JFrame {
 
         setPreferredSize(new Dimension(640, 480));
 
-        TdlHelper lexer = new TdlHelper(TdlDialect.ADVANCED);
-        TdlSyntaxKit syntaxKit = new TdlSyntaxKit(lexer);
+        TdlSyntaxKit syntaxKit = new TdlSyntaxKit();
 
         JEditorPane editor = new JEditorPane();
         editor.setEditorKit(syntaxKit);

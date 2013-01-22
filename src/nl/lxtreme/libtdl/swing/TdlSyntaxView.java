@@ -16,9 +16,9 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.Position.Bias;
 
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
-import nl.lxtreme.libtdl.grammar.TdlHelper.TdlToken;
-import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
+import nl.lxtreme.libtdl.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.TdlHelper.TdlToken;
+import nl.lxtreme.libtdl.TdlHelper.TdlTokenType;
 import nl.lxtreme.libtdl.swing.TdlStyleManager.TokenStyle;
 
 /**
@@ -65,21 +65,21 @@ public class TdlSyntaxView extends PlainView {
      */
     @Override
     public String getToolTipText(float x, float y, Shape allocation) {
-        Bias[] bias = new Bias[] { Bias.Forward };
-        int pos = viewToModel(x, y, allocation, bias);
-
-        StringBuilder sb = new StringBuilder();
-
         TdlDocument document = getDocument();
+
+        int pos = viewToModel(x, y, allocation, new Bias[] { Bias.Forward });
+
         Element element = document.getParagraphElement(pos);
         if (element != null) {
+            StringBuilder sb = new StringBuilder();
+
             int startPos = element.getStartOffset();
             int endPos = element.getEndOffset();
 
             List<TdlToken> tokens = document.getTokens(startPos, endPos);
             for (TdlToken token : tokens) {
-                int startIdx = token.getOffset();
-                int endIdx = startIdx + token.getLength();
+                int startIdx = token.getStartOffset();
+                int endIdx = token.getStopOffset();
 
                 // narrow down to the requested location...
                 if ((pos >= startIdx) && (pos <= endIdx)) {
@@ -89,17 +89,20 @@ public class TdlSyntaxView extends PlainView {
                             sb.append(marker.toString()).append("\n");
                         }
                     } else if (token.getType() == TdlTokenType.TERM) {
-                        sb.append(document.getTermDefinition(token.getText()));
+                        String termDefinition = document.getTermDefinition(token.getText());
+                        if (termDefinition != null) {
+                            sb.append(termDefinition);
+                        }
                     }
                 }
             }
+
+            if (sb.length() > 0) {
+                return sb.toString();
+            }
         }
 
-        if (sb.length() == 0) {
-            return super.getToolTipText(x, y, allocation);
-        }
-
-        return sb.toString();
+        return super.getToolTipText(x, y, allocation);
     }
 
     /**
@@ -177,7 +180,7 @@ public class TdlSyntaxView extends PlainView {
             int pos = startPos;
 
             for (TdlToken token : tokens) {
-                int offset = token.getOffset();
+                int offset = token.getStartOffset();
                 int length = token.getLength();
 
                 if (offset > pos) {

@@ -15,7 +15,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import nl.lxtreme.libtdl.grammar.*;
+import nl.lxtreme.libtdl.*;
 
 /**
  * Provides a custom syntax kit for highlighting TDL constructs.
@@ -65,19 +65,14 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
 
     // VARIABLES
 
-    private final TdlHelper m_lexer;
     private final TdlStyleManager m_styleManager;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlSyntaxKit} instance for the given token source.
-     * 
-     * @param lexer
-     *            the token source/lexer to use, cannot be <code>null</code>.
+     * Creates a new {@link TdlSyntaxKit} instance.
      */
-    public TdlSyntaxKit(TdlHelper lexer) {
-        m_lexer = lexer;
+    public TdlSyntaxKit() {
         m_styleManager = new TdlStyleManager();
     }
 
@@ -119,7 +114,7 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
      */
     @Override
     public Document createDefaultDocument() {
-        return new TdlDocument(m_lexer);
+        return new TdlDocument(TdlDialect.ADVANCED);
     }
 
     /**

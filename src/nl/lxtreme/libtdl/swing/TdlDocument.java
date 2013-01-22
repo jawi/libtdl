@@ -15,10 +15,11 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.undo.*;
 
+import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.TdlHelper.TdlToken;
+import nl.lxtreme.libtdl.TdlHelper.TdlTokenType;
 import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
-import nl.lxtreme.libtdl.grammar.TdlHelper.TdlToken;
-import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
 
 /**
  * Provides a custom {@link Document} for handling TDL texts.
@@ -116,64 +117,38 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
-     * Facade for throttling the number of parsing actions when typing into the
-     * document.
+     * Small container for collecting term definitions.
      */
-    final class DocumentParser implements ActionListener {
-        // CONSTANTS
-
-        /**
-         * Delay between consecutive edits in milliseconds where edits are added
-         * together. If the delay is greater than this, then separate undo
-         * operations are done, otherwise they are combined.
-         */
-        public static final int IDLE_DELAY_MS = 300;
-
+    static class TermDefinitionCollector implements TermDefinitionListener {
         // VARIABLES
 
-        private final javax.swing.Timer m_timer;
-        private volatile long m_startMillis = 0L;
-
-        // CONSTRUCTORS
-
-        /**
-         * Creates a new {@link DocumentParser} instance.
-         */
-        public DocumentParser() {
-            m_timer = new Timer(IDLE_DELAY_MS, this);
-            m_timer.setRepeats(false);
-            m_timer.setCoalesce(true);
-        }
+        private final Map<String, String> m_definitions = new HashMap<String, String>();
 
         // METHODS
 
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            System.out.println("PARSE EVENT!");
-            doParseText(true /* includeValidation */);
-            m_startMillis = System.currentTimeMillis();
+        /**
+         * Clears all definitions from this collector.
+         */
+        public void clear() {
+            m_definitions.clear();
         }
 
         /**
-         * Parses the current contents of this document and creates a list of
-         * tokens out of it.
+         * @param name
+         * @return the definition for the term with the given name, or
+         *         <code>null</code> if not defined.
          */
-        public void parseText() {
-            long now = System.currentTimeMillis();
-            if ((now - m_startMillis) > IDLE_DELAY_MS) {
-                doParseText(false /* includeValidation */);
+        public String getDefinition(String name) {
+            String def = m_definitions.get(ValidationUtil.normalizeName(name));
+            if (def == null) {
+                return null;
             }
-            m_startMillis = now;
-
-            scheduleParse();
+            return def;
         }
 
-        public void scheduleParse() {
-            if (m_timer.isRunning()) {
-                m_timer.restart();
-            } else {
-                m_timer.start();
-            }
+        @Override
+        public void termDeclared(String name, String definition) {
+            m_definitions.put(name, definition);
         }
     }
 
@@ -189,8 +164,6 @@ public class TdlDocument extends PlainDocument {
 
         @Override
         public void add(Marker marker) {
-            System.out.printf("%s%n", marker);
-
             List<Marker> markers = m_markers.get(marker.getLine());
             if (markers == null) {
                 markers = new ArrayList<Marker>();
@@ -224,35 +197,81 @@ public class TdlDocument extends PlainDocument {
         }
     }
 
+    /**
+     * Facade for throttling the number of parsing actions when typing into the
+     * document.
+     */
+    final class ThrottlingDocumentParser implements ActionListener {
+        // CONSTANTS
+
+        /**
+         * Delay between consecutive edits in milliseconds where edits are added
+         * together. If the delay is greater than this, then separate undo
+         * operations are done, otherwise they are combined.
+         */
+        public static final int IDLE_DELAY_MS = 300;
+
+        // VARIABLES
+
+        private final javax.swing.Timer m_timer;
+
+        // CONSTRUCTORS
+
+        /**
+         * Creates a new {@link ThrottlingDocumentParser} instance.
+         */
+        public ThrottlingDocumentParser() {
+            m_timer = new Timer(IDLE_DELAY_MS, this);
+            m_timer.setInitialDelay(0);
+            m_timer.setRepeats(false);
+            m_timer.setCoalesce(true);
+        }
+
+        // METHODS
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            parseText();
+        }
+
+        public void scheduleParse() {
+            if (m_timer.isRunning()) {
+                m_timer.restart();
+            } else {
+                m_timer.start();
+            }
+        }
+    }
+
     // CONSTANTS
 
     private static final int DEFAULT_TAB_SIZE = 4;
 
     // VARIABLES
 
-    private final TdlHelper m_tdlHelper;
     private final ProblemCollector m_problems;
-    private final DocumentParser m_parser;
+    private final TermDefinitionCollector m_definitions;
+    private final ThrottlingDocumentParser m_parser;
     private final UndoManager m_undoMgr;
 
-    private List<TdlToken> m_tokens;
+    private volatile TdlHelper m_tdlHelper;
+    private volatile List<TdlToken> m_tokens;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlDocument} instance for the given lexer.
+     * Creates a new {@link TdlDocument} instance for the given dialect.
      * 
-     * @param lexer
-     *            the lexer to use, cannot be <code>null</code>.
+     * @param dialect
+     *            the dialect to use, cannot be <code>null</code>.
      */
-    public TdlDocument(TdlHelper lexer) {
-        m_tdlHelper = lexer;
+    public TdlDocument(TdlDialect dialect) {
+        m_definitions = new TermDefinitionCollector();
         m_problems = new ProblemCollector();
         m_undoMgr = new CompoundUndoManager();
+        m_parser = new ThrottlingDocumentParser();
 
-        m_parser = new DocumentParser();
-
-        m_tdlHelper.addProblemListener(m_problems);
+        setDialect(dialect);
 
         // Common initialization...
         putProperty(PlainDocument.tabSizeAttribute, 4);
@@ -271,19 +290,6 @@ public class TdlDocument extends PlainDocument {
     }
 
     // METHODS
-
-    /**
-     * Returns the definition for the term with the given name,
-     * 
-     * @param name
-     *            the name of the term to get the definition for, cannot be
-     *            <code>null</code>.
-     * @return the definition for the given term, or <code>null</code> if no
-     *         definition was found.
-     */
-    public String getTermDefinition(String name) {
-        return m_tdlHelper.getTermDefinition(name);
-    }
 
     /**
      * Returns the number of spaces at the beginning of the line denoted by the
@@ -347,7 +353,25 @@ public class TdlDocument extends PlainDocument {
      * @return the map with problem markers, never <code>null</code>.
      */
     public List<Marker> getProblemMarkers(int lineNo) {
-        return m_problems.getMarkers(lineNo);
+        readLock();
+        try {
+            return m_problems.getMarkers(lineNo);
+        } finally {
+            readUnlock();
+        }
+    }
+
+    /**
+     * Returns the definition for the term with the given name,
+     * 
+     * @param name
+     *            the name of the term to get the definition for, cannot be
+     *            <code>null</code>.
+     * @return the definition for the given term, or <code>null</code> if no
+     *         definition was found.
+     */
+    public String getTermDefinition(String name) {
+        return m_definitions.getDefinition(name);
     }
 
     /**
@@ -361,22 +385,27 @@ public class TdlDocument extends PlainDocument {
      */
     public List<TdlToken> getTokens(int startPos, int endPos) {
         final List<TdlToken> tokens;
-        synchronized (this) {
+        final List<Marker> markers;
+
+        readLock();
+        try {
             tokens = (m_tokens == null) ? null : new ArrayList<TdlToken>(m_tokens);
+            markers = m_problems.getAllMarkers();
+        } finally {
+            readUnlock();
         }
+
         if (tokens == null) {
             return Collections.emptyList();
         }
 
         List<TdlToken> result = new ArrayList<TdlToken>();
 
-        List<Marker> markers = m_problems.getAllMarkers();
-
         for (int i = 0; i < tokens.size(); i++) {
             TdlToken token = tokens.get(i);
 
-            int startIdx = token.getOffset();
-            int endIdx = startIdx + token.getLength();
+            int startIdx = token.getStartOffset();
+            int endIdx = token.getStopOffset();
 
             if ((startIdx >= startPos) && (endIdx <= endPos)) {
                 TdlToken newToken = token.clone();
@@ -398,33 +427,63 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
+     * Returns whether or not the given line number contains any problem
+     * markers.
+     * 
      * @param lineNo
+     *            the (1-based) line number to test.
      * @return <code>true</code> if there are problem markers on the given line,
      *         <code>false</code> otherwise.
      */
     public boolean hasProblemMarkers(int lineNo) {
-        return m_problems.hasMarkers(lineNo);
+        readLock();
+        try {
+            return m_problems.hasMarkers(lineNo);
+        } finally {
+            readUnlock();
+        }
     }
 
     /**
-     * @param includeValidation
-     *            <code>true</code> to include validation of the text,
-     *            <code>false</code> to only split it up in tokens.
+     * Sets the dialect this document should use.
+     * 
+     * @param dialect
+     *            the dialect, never <code>null</code>.
      */
-    final void doParseText(boolean includeValidation) {
-        try {
-            String text = getText(0, getLength());
+    public void setDialect(TdlDialect dialect) {
+        if (m_tdlHelper != null) {
+            m_tdlHelper.removeProblemListener(m_problems);
+            m_tdlHelper.removeTermDeclarationListener(m_definitions);
+        }
+        m_tdlHelper = new TdlHelper(dialect);
+        m_tdlHelper.addProblemListener(m_problems);
+        m_tdlHelper.addTermDeclarationListener(m_definitions);
+    }
 
-            synchronized (this) {
-                if (includeValidation) {
-                    m_problems.clear();
-                }
+    /**
+     * Parses the current text of this document, tokenizes it and validates it.
+     */
+    final void parseText() {
+        try {
+            String text;
+
+            readLock();
+            try {
+                text = getText(0, getLength());
+            } finally {
+                readUnlock();
+            }
+
+            writeLock();
+            try {
+                m_problems.clear();
+                m_definitions.clear();
 
                 m_tokens = m_tdlHelper.tokenize(text);
 
-                if (includeValidation) {
-                    m_tdlHelper.validate();
-                }
+                m_tdlHelper.validate();
+            } finally {
+                writeUnlock();
             }
         } catch (BadLocationException exception) {
             // Ignore

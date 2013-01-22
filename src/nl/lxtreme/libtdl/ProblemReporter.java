@@ -5,7 +5,9 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl;
+
+import org.antlr.v4.runtime.*;
 
 /**
  * Provides a generic callback for reporting problems with a TDL-snippet.
@@ -225,6 +227,19 @@ public interface ProblemReporter {
             m_length = length;
             m_line = line;
             m_column = column;
+            return this;
+        }
+
+        /**
+         * @param context
+         *            the context to use for the location information.
+         * @return this builder, never <code>null</code>.
+         */
+        public MarkerBuilder setLocation(ParserRuleContext context) {
+            m_offset = context.getStart().getStartIndex();
+            m_length = context.getStop().getStopIndex() - m_offset;
+            m_line = context.getStart().getLine();
+            m_column = context.getStart().getCharPositionInLine();
             return this;
         }
 

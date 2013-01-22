@@ -7,19 +7,18 @@
  */
 package nl.lxtreme.libtdl.grammar;
 
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.*;
 
 /**
- * Provides a listener for problems in a TDL-snippet.
+ * Represents a container for all stage definitions.
  */
-public interface ProblemListener {
+public interface ITdlStages extends Iterable<ITdlTriggerStage>, TdlWritable {
     // METHODS
 
     /**
-     * Adds a given problem marker to this listener.
+     * Returns the number of contained definitions.
      * 
-     * @param marker
-     *            the problem marker to add, cannot be <code>null</code>.
+     * @return the number of definitions, >= 0.
      */
-    void add(Marker marker);
+    int size();
 }

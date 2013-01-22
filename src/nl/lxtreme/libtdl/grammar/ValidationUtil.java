@@ -5,13 +5,13 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.validator;
+package nl.lxtreme.libtdl.grammar;
 
-import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Category;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.MarkerBuilder;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Type;
+import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.ProblemReporter.Category;
+import nl.lxtreme.libtdl.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.ProblemReporter.MarkerBuilder;
+import nl.lxtreme.libtdl.ProblemReporter.Type;
 
 import org.antlr.v4.runtime.*;
 
@@ -72,6 +72,15 @@ public final class ValidationUtil {
         }
 
         return null;
+    }
+
+    public static String normalizeName(String name) {
+        if (name.length() == 1) {
+            return "term" + name.toUpperCase();
+        } else if (name.startsWith("term") && (name.length() > 4)) {
+            return "term" + name.substring(4).toUpperCase();
+        }
+        return name.toLowerCase();
     }
 
     /**

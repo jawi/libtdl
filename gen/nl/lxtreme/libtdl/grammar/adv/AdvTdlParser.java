@@ -464,6 +464,7 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class EdgeTermDeclContext extends ParserRuleContext {
+		public Token name;
 		public NumberContext mask;
 		public TerminalNode BOTH() { return getToken(AdvTdlParser.BOTH, 0); }
 		public TerminalNode NEITHER() { return getToken(AdvTdlParser.NEITHER, 0); }
@@ -492,9 +493,10 @@ public class AdvTdlParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(103);
+			((EdgeTermDeclContext)_localctx).name = _input.LT(1);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << RISING) | (1L << FALLING) | (1L << BOTH) | (1L << NEITHER))) != 0)) ) {
-			_errHandler.recoverInline(this);
+				((EdgeTermDeclContext)_localctx).name = (Token)_errHandler.recoverInline(this);
 			}
 			consume();
 			setState(104); match(EQUALS_TO);
@@ -830,7 +832,8 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class WhenActionContext extends ParserRuleContext {
-		public Token timer;
+		public Token action;
+		public Token name;
 		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
 		public TerminalNode START() { return getToken(AdvTdlParser.START, 0); }
 		public TerminalNode NEXT() { return getToken(AdvTdlParser.NEXT, 0); }
@@ -860,12 +863,13 @@ public class AdvTdlParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(184);
+				((WhenActionContext)_localctx).action = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << START) | (1L << STOP) | (1L << CLEAR))) != 0)) ) {
-				_errHandler.recoverInline(this);
+					((WhenActionContext)_localctx).action = (Token)_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(185); ((WhenActionContext)_localctx).timer = match(TIMER_NAME);
+				setState(185); ((WhenActionContext)_localctx).name = match(TIMER_NAME);
 				}
 				break;
 
@@ -873,12 +877,13 @@ public class AdvTdlParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(186);
+				((WhenActionContext)_localctx).action = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==START || _la==STOP) ) {
-				_errHandler.recoverInline(this);
+					((WhenActionContext)_localctx).action = (Token)_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(187); match(CAPTURE);
+				setState(187); ((WhenActionContext)_localctx).name = match(CAPTURE);
 				}
 				break;
 
@@ -968,6 +973,7 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class TermExprContext extends ParserRuleContext {
+		public Token e;
 		public TerminalNode ANY() { return getToken(AdvTdlParser.ANY, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -993,13 +999,13 @@ public class AdvTdlParser extends Parser {
 			case NOP:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(202); match(NOP);
+				setState(202); ((TermExprContext)_localctx).e = match(NOP);
 				}
 				break;
 			case ANY:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(203); match(ANY);
+				setState(203); ((TermExprContext)_localctx).e = match(ANY);
 				}
 				break;
 			case NOT:
@@ -1030,6 +1036,9 @@ public class AdvTdlParser extends Parser {
 
 	public static class ExprContext extends ParserRuleContext {
 		public int _p;
+		public ExprContext lhs;
+		public Token op;
+		public ExprContext rhs;
 		public Token term;
 		public TerminalNode RPAREN() { return getToken(AdvTdlParser.RPAREN, 0); }
 		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
@@ -1076,14 +1085,14 @@ public class AdvTdlParser extends Parser {
 			switch (_input.LA(1)) {
 			case NOT:
 				{
-				setState(208); match(NOT);
-				setState(209); expr(2);
+				setState(208); ((ExprContext)_localctx).op = match(NOT);
+				setState(209); ((ExprContext)_localctx).rhs = expr(5);
 				}
 				break;
 			case LPAREN:
 				{
-				setState(210); match(LPAREN);
-				setState(211); expr(0);
+				setState(210); ((ExprContext)_localctx).op = match(LPAREN);
+				setState(211); ((ExprContext)_localctx).lhs = expr(0);
 				setState(212); match(RPAREN);
 				}
 				break;
@@ -1118,33 +1127,36 @@ public class AdvTdlParser extends Parser {
 					case 1:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(217);
-						if (!(5 >= _localctx._p)) throw new FailedPredicateException(this, "5 >= $_p");
-						setState(218); match(XOR);
-						setState(219); expr(6);
+						if (!(4 >= _localctx._p)) throw new FailedPredicateException(this, "4 >= $_p");
+						setState(218); ((ExprContext)_localctx).op = match(AND);
+						setState(219); ((ExprContext)_localctx).rhs = expr(5);
 						}
 						break;
 
 					case 2:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(220);
-						if (!(4 >= _localctx._p)) throw new FailedPredicateException(this, "4 >= $_p");
-						setState(221); match(AND);
-						setState(222); expr(5);
+						if (!(3 >= _localctx._p)) throw new FailedPredicateException(this, "3 >= $_p");
+						setState(221); ((ExprContext)_localctx).op = match(XOR);
+						setState(222); ((ExprContext)_localctx).rhs = expr(4);
 						}
 						break;
 
 					case 3:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(223);
-						if (!(3 >= _localctx._p)) throw new FailedPredicateException(this, "3 >= $_p");
-						setState(224); match(OR);
-						setState(225); expr(4);
+						if (!(2 >= _localctx._p)) throw new FailedPredicateException(this, "2 >= $_p");
+						setState(224); ((ExprContext)_localctx).op = match(OR);
+						setState(225); ((ExprContext)_localctx).rhs = expr(3);
 						}
 						break;
 					}
@@ -1250,11 +1262,11 @@ public class AdvTdlParser extends Parser {
 	}
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return 5 >= _localctx._p;
+		case 0: return 4 >= _localctx._p;
 
-		case 1: return 4 >= _localctx._p;
+		case 1: return 3 >= _localctx._p;
 
-		case 2: return 3 >= _localctx._p;
+		case 2: return 2 >= _localctx._p;
 		}
 		return true;
 	}
@@ -1331,8 +1343,8 @@ public class AdvTdlParser extends Parser {
 		"\u00d1\5\34\0\0\u00d1\u00d8\3\26\13\0\u00d2\u00d3\5 \0\0\u00d3\u00d4\3"+
 		"\26\13\0\u00d4\u00d5\5!\0\0\u00d5\u00d8\1\0\0\0\u00d6\u00d8\7\3\0\0\u00d7"+
 		"\u00cf\1\0\0\0\u00d7\u00d2\1\0\0\0\u00d7\u00d6\1\0\0\0\u00d8\u00e4\1\0"+
-		"\0\0\u00d9\u00da\4\13\0\1\u00da\u00db\5\35\0\0\u00db\u00e3\3\26\13\0\u00dc"+
-		"\u00dd\4\13\1\1\u00dd\u00de\5\36\0\0\u00de\u00e3\3\26\13\0\u00df\u00e0"+
+		"\0\0\u00d9\u00da\4\13\0\1\u00da\u00db\5\36\0\0\u00db\u00e3\3\26\13\0\u00dc"+
+		"\u00dd\4\13\1\1\u00dd\u00de\5\35\0\0\u00de\u00e3\3\26\13\0\u00df\u00e0"+
 		"\4\13\2\1\u00e0\u00e1\5\37\0\0\u00e1\u00e3\3\26\13\0\u00e2\u00d9\1\0\0"+
 		"\0\u00e2\u00dc\1\0\0\0\u00e2\u00df\1\0\0\0\u00e3\u00e6\1\0\0\0\u00e4\u00e2"+
 		"\1\0\0\0\u00e4\u00e5\1\0\0\0\u00e5\27\1\0\0\0\u00e6\u00e4\1\0\0\0\u00e7"+

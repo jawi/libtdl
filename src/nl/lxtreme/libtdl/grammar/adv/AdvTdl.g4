@@ -53,7 +53,7 @@ rangeDecl
     ;
 
 edgeTermDecl
-    : ( RISING | FALLING | BOTH | NEITHER ) EQUALS_TO 
+    : name=( RISING | FALLING | BOTH | NEITHER ) EQUALS_TO 
       ( mask=number
       | { notifyErrorListeners("missing edge value"); }
       )
@@ -91,8 +91,8 @@ stageDef
     ;
 
 whenAction
-    : ( START | STOP | CLEAR ) timer=TIMER_NAME
-    | ( START | STOP ) CAPTURE
+    : action=( START | STOP | CLEAR ) name=TIMER_NAME
+    | action=( START | STOP ) name=CAPTURE
     | ( GOTO NEXT
       | GOTO { notifyErrorListeners("missing next"); }
       )
@@ -104,17 +104,17 @@ elseAction
     ;
 
 termExpr
-    : NOP
-    | ANY 
+    : e=NOP
+    | e=ANY 
     | expr
     ;
 
 expr
-    : LPAREN expr RPAREN
-    | expr XOR expr
-    | expr AND expr
-    | expr OR expr
-    | NOT expr
+    : op=LPAREN lhs=expr RPAREN
+    | op=NOT rhs=expr
+    | lhs=expr op=AND rhs=expr
+    | lhs=expr op=XOR rhs=expr
+    | lhs=expr op=OR rhs=expr
     | term=( TERM_NAME | TIMER_NAME | RANGE_NAME | EDGE_NAME )
     ;
 

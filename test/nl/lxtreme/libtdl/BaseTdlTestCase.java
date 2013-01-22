@@ -10,8 +10,7 @@ package nl.lxtreme.libtdl;
 import java.util.*;
 
 import junit.framework.*;
-import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.ProblemReporter.Marker;
 
 import org.antlr.v4.runtime.*;
 

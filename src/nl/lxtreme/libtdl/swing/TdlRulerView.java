@@ -16,7 +16,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-import nl.lxtreme.libtdl.grammar.ProblemReporter.Marker;
+import nl.lxtreme.libtdl.ProblemReporter.Marker;
 
 /**
  * Provides a ruler component for showing the line numbers and other kind of

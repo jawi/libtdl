@@ -5,16 +5,15 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.validator.adv;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import nl.lxtreme.libtdl.*;
-import nl.lxtreme.libtdl.grammar.adv.*;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.ProgContext;
 
 import org.antlr.v4.runtime.*;
 
 /**
- * Test cases for {@link AdvTdlValidator}.
+ * Test cases for {@link AdvTdlSemanticAnalyzer}.
  */
 public class AdvTdlValidatorTest extends BaseTdlTestCase {
     // CONSTANTS
@@ -81,8 +80,8 @@ public class AdvTdlValidatorTest extends BaseTdlTestCase {
         return createParser(input).prog();
     }
 
-    private AdvTdlValidator createValidator() {
-        return new AdvTdlValidator(getProblemReporter());
+    private AdvTdlSemanticAnalyzer createValidator() {
+        return new AdvTdlSemanticAnalyzer(getProblemReporter());
     }
 
     private AdvTdlParser createParser(final String input) {

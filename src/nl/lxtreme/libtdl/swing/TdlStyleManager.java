@@ -7,12 +7,12 @@
  */
 package nl.lxtreme.libtdl.swing;
 
-import static nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType.*;
+import static nl.lxtreme.libtdl.TdlHelper.TdlTokenType.*;
 
 import java.awt.*;
 import java.util.*;
 
-import nl.lxtreme.libtdl.grammar.TdlHelper.TdlTokenType;
+import nl.lxtreme.libtdl.TdlHelper.TdlTokenType;
 
 /**
  * Denotes a manager for keeping token styles.
