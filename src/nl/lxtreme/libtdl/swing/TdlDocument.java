@@ -316,7 +316,6 @@ public class TdlDocument extends PlainDocument {
     private final TermDefinitionCollector m_definitions;
     private final ThrottlingDocumentParser m_parser;
     private final UndoManager m_undoMgr;
-    private final TdlHelper m_tdlHelper;
 
     private volatile List<TdlToken> m_tokens;
 
@@ -331,10 +330,6 @@ public class TdlDocument extends PlainDocument {
         m_problems = new ProblemCollector();
         m_undoMgr = new CompoundUndoManager();
         m_parser = new ThrottlingDocumentParser();
-
-        m_tdlHelper = new TdlHelper(m_config);
-        m_tdlHelper.addProblemListener(m_problems);
-        m_tdlHelper.addTermDeclarationListener(m_definitions);
 
         // Common initialization...
         putProperty(PlainDocument.tabSizeAttribute, 4);
@@ -353,6 +348,20 @@ public class TdlDocument extends PlainDocument {
     }
 
     // METHODS
+
+    /**
+     * Returns all available problem markers.
+     * 
+     * @return a list with all problem markers.
+     */
+    public List<Marker> getAllProblemMarkers() {
+        readLock();
+        try {
+            return m_problems.getAllMarkers();
+        } finally {
+            readUnlock();
+        }
+    }
 
     /**
      * Returns the number of spaces at the beginning of the line denoted by the
@@ -410,10 +419,11 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
-     * Returns the problem markers as map, in which each key represents the line
-     * number at which the problem marker(s) occur.
+     * Returns the problem markers at the given line.
      * 
-     * @return the map with problem markers, never <code>null</code>.
+     * @param lineNo
+     *            the line number to get the problem markers for.
+     * @return the list with problem markers, never <code>null</code>.
      */
     public List<Marker> getProblemMarkers(int lineNo) {
         readLock();
@@ -508,6 +518,13 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
+     * Reparses the entire text of the current document.
+     */
+    public void reparse() {
+        parseText();
+    }
+
+    /**
      * Sets whether or not DDR mode is to be used.
      * 
      * @param ddrMode
@@ -516,6 +533,7 @@ public class TdlDocument extends PlainDocument {
      */
     public void setDdrMode(boolean ddrMode) {
         m_config.setDdrMode(ddrMode);
+        m_parser.scheduleParse();
     }
 
     /**
@@ -526,6 +544,7 @@ public class TdlDocument extends PlainDocument {
      */
     public void setDialect(TdlDialect dialect) {
         m_config.setDialect(dialect);
+        m_parser.scheduleParse();
     }
 
     /**
@@ -536,6 +555,7 @@ public class TdlDocument extends PlainDocument {
      */
     public void setMaxChannels(int maxChannels) {
         m_config.setMaxChannels(maxChannels);
+        m_parser.scheduleParse();
     }
 
     /**
@@ -546,6 +566,7 @@ public class TdlDocument extends PlainDocument {
      */
     public void setMaxStages(int maxStages) {
         m_config.setMaxStages(maxStages);
+        m_parser.scheduleParse();
     }
 
     /**
@@ -554,10 +575,12 @@ public class TdlDocument extends PlainDocument {
     final void parseText() {
         try {
             String text;
+            int p0 = 0, p1;
 
             readLock();
             try {
-                text = getText(0, getLength());
+                p1 = getLength();
+                text = getText(p0, p1);
             } finally {
                 readUnlock();
             }
@@ -567,12 +590,18 @@ public class TdlDocument extends PlainDocument {
                 m_problems.clear();
                 m_definitions.clear();
 
-                m_tokens = m_tdlHelper.tokenize(text);
+                TdlHelper helper = new TdlHelper(m_config);
+                helper.addProblemListener(m_problems);
+                helper.addTermDeclarationListener(m_definitions);
 
-                m_tdlHelper.validate();
+                m_tokens = helper.tokenize(text);
+
+                helper.validate();
             } finally {
                 writeUnlock();
             }
+
+            fireChangedUpdate(new DefaultDocumentEvent(p0, p1 - p0, DocumentEvent.EventType.CHANGE));
         } catch (BadLocationException exception) {
             // Ignore
         }

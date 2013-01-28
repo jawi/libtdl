@@ -8,8 +8,11 @@
 package nl.lxtreme.libtdl.swing;
 
 import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
+
+import nl.lxtreme.libtdl.*;
 
 /**
  * 
@@ -27,7 +30,7 @@ public class TestEditor extends JFrame {
 
         TdlSyntaxKit syntaxKit = new TdlSyntaxKit();
 
-        JEditorPane editor = new JEditorPane();
+        final JEditorPane editor = new JEditorPane();
         editor.setEditorKit(syntaxKit);
 
         // @formatter:off
@@ -52,7 +55,32 @@ public class TestEditor extends JFrame {
 
         editor.setText(text);
 
-        getContentPane().add(new JScrollPane(editor));
+        JComboBox dialect = new JComboBox(new TdlDialect[] { TdlDialect.BASIC, TdlDialect.ADVANCED });
+        dialect.setSelectedIndex(1);
+        dialect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource();
+
+                TdlDocument doc = (TdlDocument) editor.getDocument();
+                doc.setDialect((TdlDialect) cb.getSelectedItem());
+
+                doc.reparse();
+            }
+        });
+
+        TdlProblemView problemView = new TdlProblemView(editor);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setTopComponent(new JScrollPane(editor));
+        splitPane.setBottomComponent(new JScrollPane(problemView));
+        splitPane.setDividerLocation(300);
+
+        JPanel cp = new JPanel(new BorderLayout());
+        cp.add(dialect, BorderLayout.NORTH);
+        cp.add(splitPane, BorderLayout.CENTER);
+
+        getContentPane().add(cp);
     }
 
     /**
