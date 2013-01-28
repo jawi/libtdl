@@ -7,14 +7,14 @@
  */
 package nl.lxtreme.libtdl;
 
+import static nl.lxtreme.libtdl.grammar.TdlFactory.*;
+
 import java.util.*;
 
 import javax.swing.text.*;
 
 import nl.lxtreme.libtdl.ProblemReporter.Marker;
 import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.adv.*;
-import nl.lxtreme.libtdl.grammar.basic.*;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -23,7 +23,7 @@ import org.antlr.v4.runtime.tree.*;
  * Provides a parser/lexer-facade capable of handling both TDL dialects, useful
  * for front-ends, like editors.
  */
-public class TdlHelper {
+public final class TdlHelper {
     // INNER TYPES
 
     /**
@@ -202,9 +202,9 @@ public class TdlHelper {
 
         m_problemReporter = new TdlProblemReporter();
 
-        m_lexer = createLexer();
-        m_parser = createParser();
-        m_analyzer = createAnalyzer();
+        m_lexer = createLexer(m_config);
+        m_parser = createParser(m_config);
+        m_analyzer = createAnalyzer(m_config, m_problemReporter);
 
         m_problemReporter.installOn(m_lexer, m_parser);
     }
@@ -263,86 +263,6 @@ public class TdlHelper {
     }
 
     /**
-     * Factory method for creating a new {@link Lexer} instance based on the
-     * used dialect.
-     * 
-     * @return a new {@link Lexer} instance, never <code>null</code>.
-     */
-    protected Lexer createLexer() {
-        TdlDialect dialect = m_config.getDialect();
-        switch (dialect) {
-            case BASIC:
-                return new BasicTdlLexer(null);
-            case ADVANCED:
-                return new AdvTdlLexer(null);
-            default:
-                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
-        }
-    }
-
-    /**
-     * Factory method for creating a new {@link Parser} instance based on the
-     * used dialect.
-     * 
-     * @return a new {@link Parser} instance, never <code>null</code>.
-     */
-    protected Parser createParser() {
-        TdlDialect dialect = m_config.getDialect();
-        switch (dialect) {
-            case BASIC:
-                return new BasicTdlParser(null);
-            case ADVANCED:
-                return new AdvTdlParser(null);
-            default:
-                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
-        }
-    }
-
-    /**
-     * Factory method for creating a new validator instance based on the
-     * used dialect.
-     * 
-     * @return a new validator instance, never <code>null</code>.
-     */
-    protected SemanticAnalyzer<?> createAnalyzer() {
-        TdlDialect dialect = m_config.getDialect();
-        switch (dialect) {
-            case BASIC:
-                return new BasicTdlSemanticAnalyzer(m_config, m_problemReporter);
-            case ADVANCED:
-                return new AdvTdlSemanticAnalyzer(m_config, m_problemReporter);
-            default:
-                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
-        }
-    }
-
-    /**
-     * Returns the current context as parse tree.
-     * 
-     * @return a parse tree, never <code>null</code>.
-     */
-    protected ParseTree getParseTree() {
-        TdlDialect dialect = m_config.getDialect();
-        switch (dialect) {
-            case BASIC:
-                return ((BasicTdlParser) m_parser).prog();
-            case ADVANCED:
-                return ((AdvTdlParser) m_parser).prog();
-            default:
-                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
-        }
-    }
-
-    /**
-     * Returns a token stream based on this lexer.
-     * 
-     * @return a new {@link TokenStream} for this lexer.
-     */
-    protected TokenStream getTokenStream() {
-        return new CommonTokenStream(m_lexer);
-    }
-
-    /**
      * Resets this lexer to its initial state.
      */
     protected void reset() {
@@ -372,7 +292,7 @@ public class TdlHelper {
             int offset = startIdx;
             int length = (stopIdx + 1) - startIdx;
 
-            TdlTokenType type = convertTokenType(ctoken.getType());
+            TdlTokenType type = TdlTokenFactory.convertTokenType(m_config, ctoken.getType());
 
             tokens.add(new TdlTokenImpl(type, offset, length, ctoken.getText()));
         }
@@ -381,151 +301,21 @@ public class TdlHelper {
     }
 
     /**
-     * Regards the given token type (from ANTLR) as being from the "advanced"
-     * dialect and converts it to a generic {@link TdlTokenType}.
+     * Returns the current context as parse tree.
      * 
-     * @param tokenType
-     *            the "advanced" token type to convert.
-     * @return a {@link TdlTokenType} corresponding to the given token type,
-     *         never <code>null</code>.
+     * @return a parse tree, never <code>null</code>.
      */
-    private TdlTokenType convertAdvTokenType(int tokenType) {
-        switch (tokenType) {
-            case AdvTdlLexer.COMMENT:
-                return TdlTokenType.COMMENT;
-
-            case AdvTdlLexer.WS:
-            case AdvTdlLexer.NL:
-                return TdlTokenType.WS;
-
-            case AdvTdlLexer.ASSIGN:
-                return TdlTokenType.ASSIGN;
-
-            case AdvTdlLexer.AND:
-            case AdvTdlLexer.LPAREN:
-            case AdvTdlLexer.RPAREN:
-            case AdvTdlLexer.NOT:
-            case AdvTdlLexer.OR:
-            case AdvTdlLexer.XOR:
-                return TdlTokenType.EXPRESSION;
-
-            case AdvTdlLexer.BOTH:
-            case AdvTdlLexer.CAPTURE:
-            case AdvTdlLexer.CLEAR:
-            case AdvTdlLexer.ELSE:
-            case AdvTdlLexer.FALLING:
-            case AdvTdlLexer.GOTO:
-            case AdvTdlLexer.MASK:
-            case AdvTdlLexer.NEITHER:
-            case AdvTdlLexer.NEXT:
-            case AdvTdlLexer.OCCURS:
-            case AdvTdlLexer.ON:
-            case AdvTdlLexer.RISING:
-            case AdvTdlLexer.STAGE:
-            case AdvTdlLexer.START:
-            case AdvTdlLexer.STOP:
-            case AdvTdlLexer.VALUE:
-            case AdvTdlLexer.WHEN:
-                return TdlTokenType.KEYWORD;
-
-            case AdvTdlLexer.ANY:
-            case AdvTdlLexer.EDGE_NAME:
-            case AdvTdlLexer.NOP:
-            case AdvTdlLexer.RANGE_NAME:
-            case AdvTdlLexer.TERM_NAME:
-            case AdvTdlLexer.TIMER_NAME:
-                return TdlTokenType.TERM;
-
-            case AdvTdlLexer.TIME_UNIT:
-                return TdlTokenType.UNIT;
-
-            case AdvTdlLexer.BIN_LITERAL:
-            case AdvTdlLexer.HEX_LITERAL:
-            case AdvTdlLexer.OCT_LITERAL:
-            case AdvTdlLexer.DEC_LITERAL:
-                return TdlTokenType.NUMERIC;
-
-            default:
-                return TdlTokenType.TEXT;
-        }
+    private ParseTree getParseTree() {
+        return TdlFactory.getParseTree(m_config, m_parser);
     }
 
     /**
-     * Regards the given token type (from ANTLR) as being from the "advanced"
-     * dialect and converts it to a generic {@link TdlTokenType}.
+     * Returns a token stream based on this lexer.
      * 
-     * @param tokenType
-     *            the "basic" token type to convert.
-     * @return a {@link TdlTokenType} corresponding to the given token type,
-     *         never <code>null</code>.
+     * @return a new {@link TokenStream} for this lexer.
      */
-    private TdlTokenType convertBasicTokenType(int tokenType) {
-        switch (tokenType) {
-            case BasicTdlLexer.COMMENT:
-                return TdlTokenType.COMMENT;
-
-            case BasicTdlLexer.WS:
-            case BasicTdlLexer.NL:
-                return TdlTokenType.WS;
-
-            case BasicTdlLexer.ASSIGN:
-                return TdlTokenType.ASSIGN;
-
-            case BasicTdlLexer.XOR:
-            case BasicTdlLexer.NOT:
-                return TdlTokenType.EXPRESSION;
-
-            case BasicTdlLexer.ACTIVATE:
-            case BasicTdlLexer.CAPTURE:
-            case BasicTdlLexer.DELAY:
-            case BasicTdlLexer.GOTO:
-            case BasicTdlLexer.IMMEDIATELY:
-            case BasicTdlLexer.LEVEL:
-            case BasicTdlLexer.MASK:
-            case BasicTdlLexer.NEXT:
-            case BasicTdlLexer.ON:
-            case BasicTdlLexer.STAGE:
-            case BasicTdlLexer.START:
-            case BasicTdlLexer.STOP:
-            case BasicTdlLexer.VALUE:
-            case BasicTdlLexer.WHEN:
-                return TdlTokenType.KEYWORD;
-
-            case BasicTdlLexer.TERM_NAME:
-                return TdlTokenType.TERM;
-
-            case BasicTdlLexer.TIME_UNIT:
-            case BasicTdlLexer.SAMPLES:
-                return TdlTokenType.UNIT;
-
-            case BasicTdlLexer.BIN_LITERAL:
-            case BasicTdlLexer.HEX_LITERAL:
-            case BasicTdlLexer.OCT_LITERAL:
-            case BasicTdlLexer.DEC_LITERAL:
-                return TdlTokenType.NUMERIC;
-
-            default:
-                return TdlTokenType.TEXT;
-        }
-    }
-
-    /**
-     * Converts a given token type (from ANTLR) to a more concrete
-     * {@link TdlTokenType}.
-     * 
-     * @param tokenType
-     *            the ANTLR token type to convert.
-     * @return the corresponding {@link TdlTokenType}, never <code>null</code>.
-     */
-    private TdlTokenType convertTokenType(int tokenType) {
-        TdlDialect dialect = m_config.getDialect();
-        if (dialect == TdlDialect.ADVANCED) {
-            return convertAdvTokenType(tokenType);
-        } else if (dialect == TdlDialect.BASIC) {
-            return convertBasicTokenType(tokenType);
-        } else {
-            throw new RuntimeException("Invalid/unknown dialect: " + dialect);
-        }
+    private TokenStream getTokenStream() {
+        return new CommonTokenStream(m_lexer);
     }
 
     /**

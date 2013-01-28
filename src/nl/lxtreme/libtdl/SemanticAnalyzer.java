@@ -5,9 +5,7 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
-
-import nl.lxtreme.libtdl.*;
+package nl.lxtreme.libtdl;
 
 import org.antlr.v4.runtime.tree.*;
 

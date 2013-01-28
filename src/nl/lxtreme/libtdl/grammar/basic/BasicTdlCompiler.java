@@ -12,8 +12,8 @@ import static nl.lxtreme.libtdl.grammar.Util.*;
 import java.io.*;
 
 import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.Compiler;
 import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.Compiler;
 import nl.lxtreme.libtdl.grammar.basic.BasicTdlParser.ActiveClauseContext;
 import nl.lxtreme.libtdl.grammar.basic.BasicTdlParser.ExprContext;
 import nl.lxtreme.libtdl.grammar.basic.BasicTdlParser.StageDefContext;

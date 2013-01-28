@@ -19,7 +19,6 @@ import nl.lxtreme.libtdl.*;
 import nl.lxtreme.libtdl.ProblemReporter.Marker;
 import nl.lxtreme.libtdl.TdlHelper.TdlToken;
 import nl.lxtreme.libtdl.TdlHelper.TdlTokenType;
-import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides a custom {@link Document} for handling TDL texts.
@@ -246,7 +245,7 @@ public class TdlDocument extends PlainDocument {
          *         <code>null</code> if not defined.
          */
         public String getDefinition(String name) {
-            String def = m_definitions.get(Util.normalizeName(name));
+            String def = m_definitions.get(normalizeName(name));
             if (def == null) {
                 return null;
             }
@@ -256,6 +255,21 @@ public class TdlDocument extends PlainDocument {
         @Override
         public void termDeclared(String name, String definition) {
             m_definitions.put(name, definition);
+        }
+
+        /**
+         * @param name
+         *            the name of the term to normalize, cannot be
+         *            <code>null</code>.
+         * @return a normalized name, never <code>null</code>.
+         */
+        private String normalizeName(String name) {
+            if (name.length() == 1) {
+                return "term" + name.toUpperCase();
+            } else if (name.startsWith("term") && (name.length() > 4)) {
+                return "term" + name.substring(4).toUpperCase();
+            }
+            return name.toLowerCase();
         }
     }
 

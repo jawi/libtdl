@@ -13,8 +13,8 @@ import java.io.*;
 import java.util.*;
 
 import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.Compiler;
 import nl.lxtreme.libtdl.grammar.*;
-import nl.lxtreme.libtdl.grammar.Compiler;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.EdgeDeclContext;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.EdgeTermDeclContext;
 import nl.lxtreme.libtdl.grammar.adv.AdvTdlParser.ElseActionContext;

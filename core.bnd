@@ -9,6 +9,7 @@ Private-Package: \
     nl.lxtreme.libtdl.grammar.basic
 Import-Package: \
     !javax.*,\
+    !org.antlr.*,\
     *
 Export-Package: \
     org.antlr.v4.runtime,\
