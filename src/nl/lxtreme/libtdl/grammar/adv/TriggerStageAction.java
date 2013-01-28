@@ -5,14 +5,14 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import org.antlr.v4.runtime.*;
 
 /**
  * Denotes an action that is performed in a trigger stage.
  */
-public class TdlTriggerStageAction {
+class TriggerStageAction {
     // CONSTANTS
 
     private static final int ELSE_BITOFFSET = 20;
@@ -29,7 +29,7 @@ public class TdlTriggerStageAction {
 
     private int m_waitCount;
     private int m_occurrenceCount;
-    private boolean m_lastState;
+    private boolean m_endState;
     private boolean m_setTrigger;
     private int m_startTimer;
     private int m_clearTimer;
@@ -39,12 +39,12 @@ public class TdlTriggerStageAction {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTriggerStageAction} instance.
+     * Creates a new {@link TriggerStageAction} instance.
      */
-    public TdlTriggerStageAction() {
+    public TriggerStageAction() {
         m_waitCount = -1;
         m_occurrenceCount = 1;
-        m_lastState = false;
+        m_endState = false;
         m_setTrigger = false;
         m_startTimer = 0;
         m_stopTimer = 0;
@@ -61,7 +61,7 @@ public class TdlTriggerStageAction {
      */
     public int encodeValue() {
         int result = (m_elseState << ELSE_BITOFFSET) | m_occurrenceCount;
-        if (m_lastState) {
+        if (m_endState) {
             result |= LASTSTATE;
         }
         if (m_setTrigger) {
@@ -131,10 +131,14 @@ public class TdlTriggerStageAction {
     }
 
     /**
-     * @return the lastState
+     * Returns whether the action is an end state, causing the capture to be
+     * started.
+     * 
+     * @return <code>true</code> if the trigger stage is an end-stage,
+     *         <code>false</code> otherwise.
      */
-    public boolean isLastState() {
-        return m_lastState;
+    public boolean isEndState() {
+        return m_endState;
     }
 
     /**
@@ -164,8 +168,8 @@ public class TdlTriggerStageAction {
      * @param lastState
      *            the lastState to set
      */
-    public void setLastState(boolean lastState) {
-        m_lastState = lastState;
+    public void setEndState(boolean lastState) {
+        m_endState = lastState;
     }
 
     /**
@@ -218,9 +222,9 @@ public class TdlTriggerStageAction {
             sb.append(" start timer").append(m_startTimer);
         } else if (m_stopTimer > 0) {
             sb.append(" stop timer").append(m_stopTimer);
-        } else if (m_setTrigger && m_lastState) {
+        } else if (m_setTrigger && m_endState) {
             sb.append(" start capture");
-        } else if (!m_setTrigger && m_lastState) {
+        } else if (!m_setTrigger && m_endState) {
             sb.append(" stop capture");
         }
         return sb.toString().trim();

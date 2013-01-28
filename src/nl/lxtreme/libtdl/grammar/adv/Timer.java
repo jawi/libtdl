@@ -5,16 +5,16 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides a timer definition.
  */
-public class TdlTimerDefinition extends AbstractTdlDefinition {
+class Timer extends AbstractDefinition {
     // CONSTANTS
 
     private static final int MAX_TIMERS = 2;
@@ -28,9 +28,9 @@ public class TdlTimerDefinition extends AbstractTdlDefinition {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTermDefinition}.
+     * Creates a new {@link Term}.
      */
-    public TdlTimerDefinition(int index, long time, String timeUnit) {
+    public Timer(int index, long time, String timeUnit) {
         super(Type.TIMER);
 
         m_index = index % MAX_TIMERS;
@@ -38,9 +38,9 @@ public class TdlTimerDefinition extends AbstractTdlDefinition {
     }
 
     /**
-     * Creates a new {@link TdlTermDefinition}.
+     * Creates a new {@link Term}.
      */
-    public TdlTimerDefinition(String name, long time, String timeUnit) {
+    public Timer(String name, long time, String timeUnit) {
         this(toIndex(name), time, timeUnit);
     }
 
@@ -128,8 +128,8 @@ public class TdlTimerDefinition extends AbstractTdlDefinition {
         long time = getTime() / 10;
 
         outputStream.writeSelect(0x38 + (getIndex() * 2));
-        outputStream.writeChain((int) (time & MASK_32BIT));
+        outputStream.writeData((int) (time & MASK_32BIT));
         outputStream.writeSelect(0x39 + (getIndex() * 2));
-        outputStream.writeChain((int) (time >> 32));
+        outputStream.writeData((int) (time >> 32));
     }
 }

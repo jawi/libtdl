@@ -9,6 +9,7 @@ package nl.lxtreme.libtdl;
 
 import java.io.*;
 
+import nl.lxtreme.libtdl.grammar.Compiler;
 import nl.lxtreme.libtdl.grammar.adv.*;
 import nl.lxtreme.libtdl.grammar.basic.*;
 
@@ -21,18 +22,21 @@ import org.antlr.v4.runtime.tree.*;
 public class TdlCompiler {
     // VARIABLES
 
-    private final TdlDialect m_dialect;
+    private final TdlConfig m_config;
 
     // CONSTRUCTORS
 
     /**
      * Creates a new {@link TdlCompiler} instance.
+     * 
+     * @param config
+     *            the configuration to use, cannot be <code>null</code>.
      */
-    public TdlCompiler(TdlDialect dialect) {
-        if (dialect == null) {
-            throw new IllegalArgumentException("Dialect cannot be null!");
+    public TdlCompiler(TdlConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Config cannot be null!");
         }
-        m_dialect = dialect;
+        m_config = config;
     }
 
     // METHODS
@@ -49,7 +53,7 @@ public class TdlCompiler {
      * @throws IOException
      *             in case of I/O problems compiling the input text.
      */
-    public void compile(String input, TdlOutputStream outputStream) throws IOException {
+    public void compile(String input, OutputStream outputStream) throws IOException {
         Lexer lexer = createLexer(input);
         Parser parser = createParser(lexer);
 
@@ -65,13 +69,14 @@ public class TdlCompiler {
      * @return a new {@link Lexer} instance, never <code>null</code>.
      */
     protected Lexer createLexer(String input) {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return new BasicTdlLexer(new ANTLRInputStream(input));
             case ADVANCED:
                 return new AdvTdlLexer(new ANTLRInputStream(input));
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -82,13 +87,32 @@ public class TdlCompiler {
      * @return a new {@link Parser} instance, never <code>null</code>.
      */
     protected Parser createParser(Lexer lexer) {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return new BasicTdlParser(new CommonTokenStream(lexer));
             case ADVANCED:
                 return new AdvTdlParser(new CommonTokenStream(lexer));
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
+        }
+    }
+
+    /**
+     * Factory method for creating a new {@link Compiler} instance based on the
+     * used dialect.
+     * 
+     * @return a new {@link Compiler} instance, never <code>null</code>.
+     */
+    protected Compiler<?> createCompiler() {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
+            case BASIC:
+                return new BasicTdlCompiler(m_config);
+            case ADVANCED:
+                return new AdvTdlCompiler(m_config);
+            default:
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -98,13 +122,14 @@ public class TdlCompiler {
      * @return a parse tree, never <code>null</code>.
      */
     protected ParseTree getParseTree(Parser parser) {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return ((BasicTdlParser) parser).prog();
             case ADVANCED:
                 return ((AdvTdlParser) parser).prog();
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -120,25 +145,9 @@ public class TdlCompiler {
      * @throws IOException
      *             in case of I/O problems writing to the given output stream.
      */
-    private void compile(ParseTree tree, TdlOutputStream outputStream) throws IOException {
-        try {
-            switch (m_dialect) {
-                case BASIC:
-                    new BasicTdlCompiler(outputStream).visit(tree);
-                    break;
-                case ADVANCED:
-                    new AdvTdlCompiler(outputStream).visit(tree);
-                    break;
-                default:
-                    throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
-            }
-        } catch (RuntimeException exception) {
-            Throwable cause = exception.getCause();
-            if (cause instanceof IOException) {
-                throw (IOException) cause;
-            } else {
-                throw exception;
-            }
-        }
+    private void compile(ParseTree tree, OutputStream outputStream) throws IOException {
+        final Compiler<?> comp = createCompiler();
+        comp.visit(tree);
+        comp.write(outputStream);
     }
 }

@@ -117,38 +117,64 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
-     * Small container for collecting term definitions.
+     * Provides an implementation of {@link TdlConfig} that is mutable.
      */
-    static class TermDefinitionCollector implements TermDefinitionListener {
+    static class MutableConfig implements TdlConfig {
         // VARIABLES
 
-        private final Map<String, String> m_definitions = new HashMap<String, String>();
+        private TdlDialect m_dialect = TdlDialect.ADVANCED;
+        private int m_maxStages = 10;
+        private int m_maxChannels = 32;
+        private boolean m_ddrMode = false;
 
         // METHODS
 
-        /**
-         * Clears all definitions from this collector.
-         */
-        public void clear() {
-            m_definitions.clear();
-        }
-
-        /**
-         * @param name
-         * @return the definition for the term with the given name, or
-         *         <code>null</code> if not defined.
-         */
-        public String getDefinition(String name) {
-            String def = m_definitions.get(ValidationUtil.normalizeName(name));
-            if (def == null) {
-                return null;
-            }
-            return def;
+        @Override
+        public TdlDialect getDialect() {
+            return m_dialect;
         }
 
         @Override
-        public void termDeclared(String name, String definition) {
-            m_definitions.put(name, definition);
+        public int getMaxChannels() {
+            return m_maxChannels;
+        }
+
+        @Override
+        public int getMaxStages() {
+            return m_maxStages;
+        }
+
+        @Override
+        public boolean isDdrMode() {
+            return m_ddrMode;
+        }
+
+        public void setDdrMode(boolean ddrMode) {
+            m_ddrMode = ddrMode;
+        }
+
+        public void setDialect(TdlDialect dialect) {
+            if (dialect == null) {
+                throw new IllegalArgumentException("Dialect cannot be null!");
+            }
+            m_dialect = dialect;
+        }
+
+        public void setMaxChannels(int maxChannels) {
+            if (maxChannels <= 0) {
+                throw new IllegalArgumentException("Max channels should be greater than 0!");
+            }
+            if (maxChannels >= 32) {
+                throw new IllegalArgumentException("Max channels should be less than 32!");
+            }
+            m_maxChannels = maxChannels;
+        }
+
+        public void setMaxStages(int maxStages) {
+            if (maxStages <= 0) {
+                throw new IllegalArgumentException("Max stages should be greater than 0!");
+            }
+            m_maxStages = maxStages;
         }
     }
 
@@ -194,6 +220,42 @@ public class TdlDocument extends PlainDocument {
 
         public boolean hasMarkers(int lineNo) {
             return m_markers.containsKey(lineNo);
+        }
+    }
+
+    /**
+     * Small container for collecting term definitions.
+     */
+    static class TermDefinitionCollector implements TermDefinitionListener {
+        // VARIABLES
+
+        private final Map<String, String> m_definitions = new HashMap<String, String>();
+
+        // METHODS
+
+        /**
+         * Clears all definitions from this collector.
+         */
+        public void clear() {
+            m_definitions.clear();
+        }
+
+        /**
+         * @param name
+         * @return the definition for the term with the given name, or
+         *         <code>null</code> if not defined.
+         */
+        public String getDefinition(String name) {
+            String def = m_definitions.get(Util.normalizeName(name));
+            if (def == null) {
+                return null;
+            }
+            return def;
+        }
+
+        @Override
+        public void termDeclared(String name, String definition) {
+            m_definitions.put(name, definition);
         }
     }
 
@@ -249,29 +311,30 @@ public class TdlDocument extends PlainDocument {
 
     // VARIABLES
 
+    private final MutableConfig m_config;
     private final ProblemCollector m_problems;
     private final TermDefinitionCollector m_definitions;
     private final ThrottlingDocumentParser m_parser;
     private final UndoManager m_undoMgr;
+    private final TdlHelper m_tdlHelper;
 
-    private volatile TdlHelper m_tdlHelper;
     private volatile List<TdlToken> m_tokens;
 
     // CONSTRUCTORS
 
     /**
      * Creates a new {@link TdlDocument} instance for the given dialect.
-     * 
-     * @param dialect
-     *            the dialect to use, cannot be <code>null</code>.
      */
-    public TdlDocument(TdlDialect dialect) {
+    public TdlDocument() {
+        m_config = new MutableConfig();
         m_definitions = new TermDefinitionCollector();
         m_problems = new ProblemCollector();
         m_undoMgr = new CompoundUndoManager();
         m_parser = new ThrottlingDocumentParser();
 
-        setDialect(dialect);
+        m_tdlHelper = new TdlHelper(m_config);
+        m_tdlHelper.addProblemListener(m_problems);
+        m_tdlHelper.addTermDeclarationListener(m_definitions);
 
         // Common initialization...
         putProperty(PlainDocument.tabSizeAttribute, 4);
@@ -445,19 +508,44 @@ public class TdlDocument extends PlainDocument {
     }
 
     /**
-     * Sets the dialect this document should use.
+     * Sets whether or not DDR mode is to be used.
+     * 
+     * @param ddrMode
+     *            <code>true</code> if DDR mode should be enabled,
+     *            <code>false</code> otherwise.
+     */
+    public void setDdrMode(boolean ddrMode) {
+        m_config.setDdrMode(ddrMode);
+    }
+
+    /**
+     * Sets the dialect for this document.
      * 
      * @param dialect
-     *            the dialect, never <code>null</code>.
+     *            the dialect to set, cannot be <code>null</code>.
      */
     public void setDialect(TdlDialect dialect) {
-        if (m_tdlHelper != null) {
-            m_tdlHelper.removeProblemListener(m_problems);
-            m_tdlHelper.removeTermDeclarationListener(m_definitions);
-        }
-        m_tdlHelper = new TdlHelper(dialect);
-        m_tdlHelper.addProblemListener(m_problems);
-        m_tdlHelper.addTermDeclarationListener(m_definitions);
+        m_config.setDialect(dialect);
+    }
+
+    /**
+     * Sets the maximum number of channels.
+     * 
+     * @param maxChannels
+     *            the maximum number of channels, > 0 && < 32.
+     */
+    public void setMaxChannels(int maxChannels) {
+        m_config.setMaxChannels(maxChannels);
+    }
+
+    /**
+     * Sets the maximum number of stages.
+     * 
+     * @param maxStages
+     *            the maximum number of trigger stages supported, > 0 && < 32.
+     */
+    public void setMaxStages(int maxStages) {
+        m_config.setMaxStages(maxStages);
     }
 
     /**

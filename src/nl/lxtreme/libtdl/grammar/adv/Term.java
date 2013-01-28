@@ -5,16 +5,16 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides a term definition.
  */
-public class TdlTermDefinition extends AbstractTdlDefinition {
+class Term extends AbstractDefinition {
     // CONSTANTS
 
     private static final int MAX_TERMS = 10;
@@ -28,16 +28,16 @@ public class TdlTermDefinition extends AbstractTdlDefinition {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTermDefinition} instance.
+     * Creates a new {@link Term} instance.
      */
-    public TdlTermDefinition(String termName, long value, long mask) {
+    public Term(String termName, long value, long mask) {
         this(toIndex(termName), value, mask);
     }
 
     /**
-     * Creates a new {@link TdlTermDefinition} instance.
+     * Creates a new {@link Term} instance.
      */
-    public TdlTermDefinition(int index, long value, long mask) {
+    public Term(int index, long value, long mask) {
         super(Type.TERM);
 
         m_index = index % MAX_TERMS;
@@ -142,9 +142,9 @@ public class TdlTermDefinition extends AbstractTdlDefinition {
         // 128
         // bits.
         outputStream.writeSelect(0x20 + getIndex());
-        outputStream.writeChain(lutvalue3);
-        outputStream.writeChain(lutvalue2);
-        outputStream.writeChain(lutvalue1);
-        outputStream.writeChain(lutvalue0);
+        outputStream.writeData(lutvalue3);
+        outputStream.writeData(lutvalue2);
+        outputStream.writeData(lutvalue1);
+        outputStream.writeData(lutvalue0);
     }
 }

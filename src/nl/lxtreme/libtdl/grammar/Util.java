@@ -16,15 +16,15 @@ import nl.lxtreme.libtdl.ProblemReporter.Type;
 import org.antlr.v4.runtime.*;
 
 /**
- * Provide some utility methods used during validation.
+ * Provide some utility methods used during compilation and validation.
  */
-public final class ValidationUtil {
+public final class Util {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link ValidationUtil} instance.
+     * Creates a new {@link Util} instance.
      */
-    private ValidationUtil() {
+    private Util() {
         // Not used.
     }
 
@@ -74,6 +74,12 @@ public final class ValidationUtil {
         return null;
     }
 
+    /**
+     * @param name
+     *            the name of the term to normalize, cannot be <code>null</code>
+     *            .
+     * @return a normalized name, never <code>null</code>.
+     */
     public static String normalizeName(String name) {
         if (name.length() == 1) {
             return "term" + name.toUpperCase();

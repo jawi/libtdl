@@ -5,16 +5,16 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides the definition of a trigger stage.
  */
-public class TdlTriggerStage implements ITdlTriggerStage {
+class TriggerStage implements TdlWritable {
     // CONSTANTS
 
     private static final int STATENUM_MASK = 0xF;
@@ -23,34 +23,30 @@ public class TdlTriggerStage implements ITdlTriggerStage {
     // VARIABLES
 
     private final int m_index;
-    private final boolean m_basic;
 
-    private final TdlTriggerStageAction m_action;
-    private final TdlTriggerSum m_capture;
-    private final TdlTriggerSum m_else;
-    private final TdlTriggerSum m_if;
+    private final TriggerStageAction m_action;
+    private final TriggerSum m_capture;
+    private final TriggerSum m_else;
+    private final TriggerSum m_if;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTriggerStage} instance.
+     * Creates a new {@link TriggerStage} instance.
      * 
      * @param index
      *            the index of this trigger stage, > 0;
-     * @param basic
-     *            <code>true</code> to denote that this trigger stage is a
-     *            "basic"
-     *            trigger stage, <code>false</code> to denote it as an advanced
-     *            trigger stage.
+     * @param ddrMode
+     *            <code>true</code> if DDR-mode is enabled, <code>false</code>
+     *            otherwise.
      */
-    public TdlTriggerStage(int index, boolean basic) {
+    public TriggerStage(int index, boolean ddrMode) {
         m_index = (index - 1) & STATENUM_MASK;
-        m_basic = basic;
 
-        m_action = new TdlTriggerStageAction();
-        m_capture = new TdlTriggerSum();
-        m_else = new TdlTriggerSum();
-        m_if = new TdlTriggerSum();
+        m_action = new TriggerStageAction();
+        m_capture = new TriggerSum();
+        m_else = new TriggerSum();
+        m_if = new TriggerSum();
     }
 
     // METHODS
@@ -58,47 +54,36 @@ public class TdlTriggerStage implements ITdlTriggerStage {
     /**
      * @return the action of this trigger stage
      */
-    public TdlTriggerStageAction getAction() {
+    public TriggerStageAction getAction() {
         return m_action;
     }
 
     /**
-     * {@inheritDoc}
+     * @return the capture expression, never <code>null</code>.
      */
-    @Override
-    public TdlTriggerSum getCapture() {
+    public TriggerSum getCapture() {
         return m_capture;
     }
 
     /**
-     * {@inheritDoc}
+     * @return the else expression, never <code>null</code>.
      */
-    @Override
-    public TdlTriggerSum getElse() {
+    public TriggerSum getElse() {
         return m_else;
     }
 
     /**
-     * {@inheritDoc}
+     * @return the if expression, never <code>null</code>.
      */
-    @Override
-    public TdlTriggerSum getIf() {
+    public TriggerSum getIf() {
         return m_if;
     }
 
     /**
-     * {@inheritDoc}
+     * @return the index of this stage, > 0.
      */
-    @Override
     public int getIndex() {
         return m_index;
-    }
-
-    /**
-     * @return the basic
-     */
-    public boolean isBasic() {
-        return m_basic;
     }
 
     /**
@@ -139,6 +124,6 @@ public class TdlTriggerStage implements ITdlTriggerStage {
     @Override
     public void write(TdlOutputStream outputStream) throws IOException {
         outputStream.writeSelect(getIndex());
-        outputStream.writeChain(m_action.encodeValue());
+        outputStream.writeData(m_action.encodeValue());
     }
 }

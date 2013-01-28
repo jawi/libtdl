@@ -5,32 +5,38 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
-import java.util.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
- * Provides a default implementation for {@link ITdlStages}.
+ * Provides a container for up to 16 {@link TriggerStage}s.
  */
-public class TdlTriggerStages implements ITdlStages {
+class TriggerStages implements TdlWritable {
     // CONSTANTS
 
-    private static final int STAGE_COUNT = 16;
+    private static final int CHAIN_OFFSET = 0x40;
 
     // VARIABLES
 
-    private final ITdlTriggerStage[] m_stages;
+    private final TriggerStage[] m_stages;
+    private final boolean m_ddrMode;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTriggerStages} instance.
+     * Creates a new {@link TriggerStages} instance.
+     * 
+     * @param maxStages
+     *            the maximum number of stages;
+     * @param ddrMode
+     *            <code>true</code> if DDR mode is enabled.
      */
-    public TdlTriggerStages() {
-        m_stages = new ITdlTriggerStage[STAGE_COUNT];
+    public TriggerStages(int maxStages, boolean ddrMode) {
+        m_stages = new TriggerStage[maxStages];
+        m_ddrMode = ddrMode;
     }
 
     // METHODS
@@ -41,7 +47,7 @@ public class TdlTriggerStages implements ITdlStages {
      * @param stage
      *            the trigger stage to add, cannot be <code>null</code>.
      */
-    public void add(ITdlTriggerStage stage) {
+    public void add(TriggerStage stage) {
         int idx = stage.getIndex();
         if (m_stages[idx] != null) {
             throw new RuntimeException("Trying to overwrite stage: " + idx);
@@ -50,21 +56,14 @@ public class TdlTriggerStages implements ITdlStages {
     }
 
     /**
-     * @see java.lang.Iterable#iterator()
+     * Creates a new {@link TriggerStage} instance.
+     * 
+     * @param index
+     *            the index of the trigger stage, >= 0.
+     * @return a new trigger stage instance, never <code>null</code>.
      */
-    @Override
-    public Iterator<ITdlTriggerStage> iterator() {
-        defineLastStage();
-        List<ITdlTriggerStage> stages = Arrays.asList(m_stages);
-        return stages.iterator();
-    }
-
-    /**
-     * @see nl.lxtreme.libtdl.grammar.triggerstage.ITdlStages#size()
-     */
-    @Override
-    public int size() {
-        return STAGE_COUNT;
+    public TriggerStage createStage(int index) {
+        return new TriggerStage(index, m_ddrMode);
     }
 
     /**
@@ -75,14 +74,14 @@ public class TdlTriggerStages implements ITdlStages {
         defineLastStage();
 
         // Pass 1: write all stages
-        for (ITdlTriggerStage stage : m_stages) {
+        for (TriggerStage stage : m_stages) {
             if (stage != null) {
                 stage.write(outputStream);
             }
         }
 
         // Pass 2: write all trigger sums of each stage
-        for (ITdlTriggerStage stage : m_stages) {
+        for (TriggerStage stage : m_stages) {
             if (stage != null) {
                 writeTriggerSums(outputStream, stage);
             }
@@ -90,18 +89,24 @@ public class TdlTriggerStages implements ITdlStages {
     }
 
     /**
-     * Marks the last found stage as being 'last'.
+     * Ensures that at least one state is defined as 'last'; which is the last
+     * defined stage. If at least one stage defines a 'set trigger' action, this
+     * method will not do anything.
      */
     private void defineLastStage() {
-        ITdlTriggerStage lastStage = null;
-        for (ITdlTriggerStage stage : m_stages) {
+        boolean triggerSet = false;
+
+        TriggerStage lastStage = null;
+        for (TriggerStage stage : m_stages) {
             if (stage != null) {
+                triggerSet = stage.getAction().isSetTrigger();
+
                 lastStage = stage;
             }
         }
 
-        if (lastStage != null) {
-            ((TdlTriggerStage) lastStage).getAction().setLastState(true);
+        if ((lastStage != null) && !triggerSet) {
+            lastStage.getAction().setEndState(true);
         }
     }
 
@@ -110,8 +115,8 @@ public class TdlTriggerStages implements ITdlStages {
      * @param stage
      * @throws IOException
      */
-    private void writeTriggerSums(TdlOutputStream outputStream, ITdlTriggerStage stage) throws IOException {
-        int offset = 0x40 + (stage.getIndex() * 4);
+    private void writeTriggerSums(TdlOutputStream outputStream, TriggerStage stage) throws IOException {
+        int offset = CHAIN_OFFSET + (stage.getIndex() * 4);
 
         outputStream.writeSelect(offset + 0);
         stage.getIf().write(outputStream);

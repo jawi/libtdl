@@ -5,17 +5,17 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 import java.util.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
- * Mutable implementation of {@link ITdlDefinitions}.
+ * Denotes a set of {@link TermDefinition}s.
  */
-public class TdlDefinitions implements ITdlDefinitions {
+class Definitions implements TdlWritable {
     // CONSTANTS
 
     // 10 terms, 2 ranges, 2 edges and 2 timers
@@ -28,15 +28,15 @@ public class TdlDefinitions implements ITdlDefinitions {
 
     // VARIABLES
 
-    private final AbstractTdlDefinition[] m_entries;
+    private final TermDefinition[] m_entries;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new, empty, {@link TdlDefinitions} instance.
+     * Creates a new, empty, {@link Definitions} instance.
      */
-    public TdlDefinitions() {
-        m_entries = new AbstractTdlDefinition[DEF_COUNT];
+    public Definitions() {
+        m_entries = new TermDefinition[DEF_COUNT];
     }
 
     // METHODS
@@ -48,7 +48,7 @@ public class TdlDefinitions implements ITdlDefinitions {
      * @param values
      */
     public void addEdgeDefinition(String name, Map<String, Long> values) {
-        TdlEdgeDefinition edgeDef = new TdlEdgeDefinition(name, values);
+        Edge edgeDef = new Edge(name, values);
 
         int idx = EDGE_OFFSET + edgeDef.getIndex();
         if (m_entries[idx] != null) {
@@ -66,7 +66,7 @@ public class TdlDefinitions implements ITdlDefinitions {
      * @param upper
      */
     public void addRangeDefinition(String name, long lower, long upper) {
-        TdlRangeDefinition rangeDef = new TdlRangeDefinition(name, lower, upper);
+        Range rangeDef = new Range(name, lower, upper);
 
         int idx = RANGE_OFFSET + rangeDef.getIndex();
         if (m_entries[idx] != null) {
@@ -84,7 +84,7 @@ public class TdlDefinitions implements ITdlDefinitions {
      * @param mask
      */
     public void addTermDefinition(String name, long value, long mask) {
-        TdlTermDefinition termDef = new TdlTermDefinition(name, value, mask);
+        Term termDef = new Term(name, value, mask);
 
         int idx = TERM_OFFSET + termDef.getIndex();
         if (m_entries[idx] != null) {
@@ -102,7 +102,7 @@ public class TdlDefinitions implements ITdlDefinitions {
      * @param unit
      */
     public void addTimerDefinition(String name, long time, String unit) {
-        TdlTimerDefinition timerDef = new TdlTimerDefinition(name, time, unit);
+        Timer timerDef = new Timer(name, time, unit);
 
         int idx = TIMER_OFFSET + timerDef.getIndex();
         if (m_entries[idx] != null) {
@@ -118,8 +118,9 @@ public class TdlDefinitions implements ITdlDefinitions {
      * @return the term definition with the given name, or <code>null</code> if
      *         not found/defined.
      */
-    public TdlDefinition get(String name) {
-        for (TdlDefinition entry : m_entries) {
+    public TermDefinition get(String name) {
+        name = Util.normalizeName(name);
+        for (TermDefinition entry : m_entries) {
             if (entry == null) {
                 continue;
             }
@@ -131,32 +132,12 @@ public class TdlDefinitions implements ITdlDefinitions {
     }
 
     /**
-     * Returns an iterator on the current set of {@link AbstractTdlDefinition}s.
-     * 
-     * @return a new {@link Iterator} instance, never <code>null</code>.
-     */
-    @Override
-    public Iterator<AbstractTdlDefinition> iterator() {
-        fillDummyEntries();
-        List<AbstractTdlDefinition> values = Arrays.asList(m_entries);
-        return values.iterator();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int size() {
-        return DEF_COUNT;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public void write(TdlOutputStream outputStream) throws IOException {
         fillDummyEntries();
-        for (AbstractTdlDefinition definition : m_entries) {
+        for (TermDefinition definition : m_entries) {
             definition.write(outputStream);
         }
     }
@@ -168,15 +149,15 @@ public class TdlDefinitions implements ITdlDefinitions {
      *            the index of the dummy entry.
      * @return a dummy entry, never <code>null</code>.
      */
-    private AbstractTdlDefinition createDummyEntry(int index) {
+    private TermDefinition createDummyEntry(int index) {
         if (index < EDGE_OFFSET) {
-            return new TdlTermDefinition(index, 0, 0);
+            return new Term(index, 0, 0);
         } else if (index < RANGE_OFFSET) {
-            return new TdlEdgeDefinition(index - EDGE_OFFSET, Collections.<String, Long> emptyMap());
+            return new Edge(index - EDGE_OFFSET, Collections.<String, Long> emptyMap());
         } else if (index < TIMER_OFFSET) {
-            return new TdlRangeDefinition(index - RANGE_OFFSET, 0, 0);
+            return new Range(index - RANGE_OFFSET, 0, 0);
         } else {
-            return new TdlTimerDefinition(index - TIMER_OFFSET, 0, "ns");
+            return new Timer(index - TIMER_OFFSET, 0, "ns");
         }
     }
 

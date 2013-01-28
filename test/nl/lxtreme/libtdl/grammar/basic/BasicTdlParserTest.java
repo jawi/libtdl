@@ -30,8 +30,8 @@ public class BasicTdlParserTest extends BaseTdlTestCase {
         "(prog (decl (termDecl termA := mask = (number 0b11) , value = (number 0b10))) <EOF>)",
         "(prog (decl (termDecl termA := (number 0b11) ^ (number 0b10))) <EOF>)",
         "(prog (decl (termDecl termA := mask = (number 1) , value = (number 2))) (decl (termDecl termB := mask = (number 3) , value = (number 4))) <EOF>)",
-        "(prog (stageDef stage (decNumber 1) : activate (activeClause immediately) , when (expr a) (whenAction goto next)) <EOF>)",
-        "(prog (stageDef stage (decNumber 1) : activate (activeClause on level (decNumber 1)) , when (expr b) (whenAction start capture delay (decNumber 5) #)) <EOF>)",
+        "(prog (stageDef stage (decNumber 1) : activate (activeClause immediately) , when (termExpr (expr a)) (whenAction goto next)) <EOF>)",
+        "(prog (stageDef stage (decNumber 1) : activate (activeClause on level (decNumber 1)) , when (termExpr (expr b)) (whenAction start capture delay (decNumber 5) #)) <EOF>)",
     };
     private static final String[] INVALID_INPUTS = {
         "termA",

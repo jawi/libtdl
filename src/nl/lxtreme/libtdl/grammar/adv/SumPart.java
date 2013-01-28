@@ -5,12 +5,12 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 /**
  * Denotes a part of a trigger sum, that can be an input or an operation.
  */
-public interface ITdlSumPart {
+interface SumPart {
     // CONSTANTS
 
     static final int OP_NOP = 0;
@@ -30,7 +30,7 @@ public interface ITdlSumPart {
      * @return the parent for this sum part, can be <code>null</code> if there's
      *         no parent.
      */
-    ITdlSumPart getParent();
+    SumPart getParent();
 
     /**
      * Initializes this sum part.

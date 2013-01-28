@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.tree.*;
 
 /**
  * Provides a parser/lexer-facade capable of handling both TDL dialects, useful
- * for front-end editors.
+ * for front-ends, like editors.
  */
 public class TdlHelper {
     // INNER TYPES
@@ -180,25 +180,25 @@ public class TdlHelper {
 
     // VARIABLES
 
-    private final TdlDialect m_dialect;
+    private final TdlConfig m_config;
     private final TdlProblemReporter m_problemReporter;
     private final Lexer m_lexer;
     private final Parser m_parser;
-    private final TdlSemanticAnalyzer<?> m_analyzer;
+    private final SemanticAnalyzer<?> m_analyzer;
 
     // CONSTRUCTORS
 
     /**
      * Creates a new {@link TdlHelper} instance.
      * 
-     * @param dialect
-     *            the TDL dialect to use, cannot be <code>null</code>.
+     * @param config
+     *            the configuration to use, cannot be <code>null</code>.
      */
-    public TdlHelper(TdlDialect dialect) {
-        if (dialect == null) {
-            throw new IllegalArgumentException("Dialect cannot be null!");
+    public TdlHelper(TdlConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Config cannot be null!");
         }
-        m_dialect = dialect;
+        m_config = config;
 
         m_problemReporter = new TdlProblemReporter();
 
@@ -225,15 +225,6 @@ public class TdlHelper {
      */
     public void addTermDeclarationListener(TermDefinitionListener listener) {
         m_analyzer.addTermDefinitionListener(listener);
-    }
-
-    /**
-     * Returns the dialect used by this lexer.
-     * 
-     * @return the dialect, never <code>null</code>.
-     */
-    public TdlDialect getDialect() {
-        return m_dialect;
     }
 
     /**
@@ -278,13 +269,14 @@ public class TdlHelper {
      * @return a new {@link Lexer} instance, never <code>null</code>.
      */
     protected Lexer createLexer() {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return new BasicTdlLexer(null);
             case ADVANCED:
                 return new AdvTdlLexer(null);
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -295,13 +287,14 @@ public class TdlHelper {
      * @return a new {@link Parser} instance, never <code>null</code>.
      */
     protected Parser createParser() {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return new BasicTdlParser(null);
             case ADVANCED:
                 return new AdvTdlParser(null);
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -311,14 +304,15 @@ public class TdlHelper {
      * 
      * @return a new validator instance, never <code>null</code>.
      */
-    protected TdlSemanticAnalyzer<?> createAnalyzer() {
-        switch (m_dialect) {
+    protected SemanticAnalyzer<?> createAnalyzer() {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
-                return new BasicTdlSemanticAnalyzer(m_problemReporter);
+                return new BasicTdlSemanticAnalyzer(m_config, m_problemReporter);
             case ADVANCED:
-                return new AdvTdlSemanticAnalyzer(m_problemReporter);
+                return new AdvTdlSemanticAnalyzer(m_config, m_problemReporter);
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -328,13 +322,14 @@ public class TdlHelper {
      * @return a parse tree, never <code>null</code>.
      */
     protected ParseTree getParseTree() {
-        switch (m_dialect) {
+        TdlDialect dialect = m_config.getDialect();
+        switch (dialect) {
             case BASIC:
                 return ((BasicTdlParser) m_parser).prog();
             case ADVANCED:
                 return ((AdvTdlParser) m_parser).prog();
             default:
-                throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+                throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 
@@ -523,12 +518,13 @@ public class TdlHelper {
      * @return the corresponding {@link TdlTokenType}, never <code>null</code>.
      */
     private TdlTokenType convertTokenType(int tokenType) {
-        if (m_dialect == TdlDialect.ADVANCED) {
+        TdlDialect dialect = m_config.getDialect();
+        if (dialect == TdlDialect.ADVANCED) {
             return convertAdvTokenType(tokenType);
-        } else if (m_dialect == TdlDialect.BASIC) {
+        } else if (dialect == TdlDialect.BASIC) {
             return convertBasicTokenType(tokenType);
         } else {
-            throw new RuntimeException("Invalid/unknown dialect: " + m_dialect);
+            throw new RuntimeException("Invalid/unknown dialect: " + dialect);
         }
     }
 

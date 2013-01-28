@@ -5,14 +5,14 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.util.*;
 
 /**
  * Denotes a mid-pair for a trigger sum.
  */
-public class TdlMidPair extends AbstractSumPair {
+class MidPair extends AbstractSumPair {
     // CONSTANTS
 
     // @formatter:off                              NOP     ANY     AND    NAND      OR     NOR     XOR    NXOR       A       B
@@ -23,20 +23,20 @@ public class TdlMidPair extends AbstractSumPair {
 
     // VARIABLES
 
-    private volatile TdlFinalPair m_final;
+    private volatile FinalPair m_final;
 
     private final int m_index;
-    private final TdlInputPair[] m_inputs;
+    private final InputPair[] m_inputs;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlMidPair} instance.
+     * Creates a new {@link MidPair} instance.
      */
-    public TdlMidPair(int index, TdlInputPair... inputs) {
+    public MidPair(int index, InputPair... inputs) {
         m_index = index;
         m_inputs = Arrays.copyOf(inputs, INPUT_COUNT);
-        for (TdlInputPair input : m_inputs) {
+        for (InputPair input : m_inputs) {
             input.setMidPair(this);
         }
     }
@@ -88,7 +88,7 @@ public class TdlMidPair extends AbstractSumPair {
      * {@inheritDoc}
      */
     @Override
-    public ITdlSumPart getParent() {
+    public SumPart getParent() {
         return m_final;
     }
 
@@ -104,7 +104,7 @@ public class TdlMidPair extends AbstractSumPair {
      * @param finalPair
      *            the final pair to set
      */
-    void setFinal(TdlFinalPair finalPair) {
+    void setFinal(FinalPair finalPair) {
         m_final = finalPair;
     }
 }

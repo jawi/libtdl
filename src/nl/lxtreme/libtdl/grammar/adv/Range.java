@@ -5,16 +5,16 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides a range definition.
  */
-public class TdlRangeDefinition extends AbstractTdlDefinition {
+class Range extends AbstractDefinition {
     // CONSTANTS
 
     private static final int MAX_RANGES = 2;
@@ -32,16 +32,16 @@ public class TdlRangeDefinition extends AbstractTdlDefinition {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlRangeDefinition} instance.
+     * Creates a new {@link Range} instance.
      */
-    public TdlRangeDefinition(String name, long lower, long upper) {
+    public Range(String name, long lower, long upper) {
         this(toIndex(name), lower, upper);
     }
 
     /**
-     * Creates a new {@link TdlRangeDefinition} instance.
+     * Creates a new {@link Range} instance.
      */
-    public TdlRangeDefinition(int index, long lower, long upper) {
+    public Range(int index, long lower, long upper) {
         super(Type.RANGE);
 
         m_index = index % MAX_RANGES;
@@ -161,7 +161,7 @@ public class TdlRangeDefinition extends AbstractTdlDefinition {
 
             mask <<= 1;
 
-            outputStream.writeChain(lutvalue);
+            outputStream.writeData(lutvalue);
         }
     }
 }

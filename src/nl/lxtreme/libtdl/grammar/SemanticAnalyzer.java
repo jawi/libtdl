@@ -14,7 +14,7 @@ import org.antlr.v4.runtime.tree.*;
 /**
  * Provides a common interface for all semantic analyzers.
  */
-public interface TdlSemanticAnalyzer<T> extends ParseTreeVisitor<T> {
+public interface SemanticAnalyzer<T> extends ParseTreeVisitor<T> {
     // METHODS
 
     /**
@@ -37,13 +37,4 @@ public interface TdlSemanticAnalyzer<T> extends ParseTreeVisitor<T> {
      * Resets this analyzer to its initial state.
      */
     void reset();
-
-    /**
-     * Sets the number of stages that this analyzer should check for.
-     * 
-     * @param stages
-     *            a stage count, > 0.
-     */
-    void setStageCount(int stages);
-
 }

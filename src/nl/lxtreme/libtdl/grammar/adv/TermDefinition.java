@@ -5,14 +5,24 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
-import nl.lxtreme.libtdl.grammar.AbstractTdlDefinition.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
- * 
+ * Denotes a definition of term, range, edge or timer.
  */
-public interface TdlDefinition {
+interface TermDefinition extends TdlWritable {
+    // INNER TYPES
+
+    /**
+     * Denotes a type of definition.
+     */
+    public static enum Type {
+        TERM, TIMER, RANGE, EDGE;
+    }
+
+    // METHODS
 
     /**
      * @return the name of this term definition, never <code>null</code>.

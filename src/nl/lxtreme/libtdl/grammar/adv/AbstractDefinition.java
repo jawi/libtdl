@@ -5,25 +5,13 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
-
-import nl.lxtreme.libtdl.*;
+package nl.lxtreme.libtdl.grammar.adv;
 
 /**
- * Provides a common base class for all {@link AbstractTdlDefinition}s, like
- * terms,
- * ranges and so on.
+ * Provides a common base class for all {@link AbstractDefinition}s, like
+ * terms, ranges and so on.
  */
-abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
-    // INNER TYPES
-
-    /**
-     * Denotes a type of definition.
-     */
-    public static enum Type {
-        TERM, TIMER, RANGE, EDGE;
-    }
-
+abstract class AbstractDefinition implements TermDefinition {
     // CONSTANTS
 
     protected static final long MASK_32BIT = (1L << 32) - 1L;
@@ -35,22 +23,23 @@ abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link AbstractTdlDefinition} instance.
+     * Creates a new {@link AbstractDefinition} instance.
      */
-    protected AbstractTdlDefinition(Type type) {
+    protected AbstractDefinition(Type type) {
         m_type = type;
     }
 
     // METHODS
 
     /**
-     * {@inheritDoc}
+     * @return the name of this term definition, never <code>null</code>.
      */
     @Override
     public abstract String getName();
 
     /**
-     * {@inheritDoc}
+     * @return the type of this definition.
+     * @see Type
      */
     @Override
     public final Type getType() {
@@ -58,7 +47,8 @@ abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
     }
 
     /**
-     * {@inheritDoc}
+     * @return <code>true</code> if this is an edge definition,
+     *         <code>false</code> otherwise.
      */
     @Override
     public final boolean isEdge() {
@@ -66,7 +56,8 @@ abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
     }
 
     /**
-     * {@inheritDoc}
+     * @return <code>true</code> if this is a range definition,
+     *         <code>false</code> otherwise.
      */
     @Override
     public final boolean isRange() {
@@ -74,7 +65,8 @@ abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
     }
 
     /**
-     * {@inheritDoc}
+     * @return <code>true</code> if this is a term definition,
+     *         <code>false</code> otherwise.
      */
     @Override
     public final boolean isTerm() {
@@ -82,7 +74,8 @@ abstract class AbstractTdlDefinition implements TdlWritable, TdlDefinition {
     }
 
     /**
-     * {@inheritDoc}
+     * @return <code>true</code> if this is a timer definition,
+     *         <code>false</code> otherwise.
      */
     @Override
     public final boolean isTimer() {

@@ -5,7 +5,7 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl;
+package nl.lxtreme.libtdl.grammar;
 
 import java.io.*;
 
@@ -13,27 +13,27 @@ import java.io.*;
  * Denotes an output stream for writing trigger definitions, expressions and
  * stages to.
  */
-public interface TdlOutputStream {
+public interface TdlOutputStream extends Closeable {
     // METHODS
 
     /**
-     * Selects which particular chain the succeeding data writes will go to.
+     * Writes the opcode for which succeeding written data is meant.
      * 
-     * @param chainId
-     *            the 8-bit chain ID, >= 0 && < 255.
+     * @param opcode
+     *            the 8-bit opcode, >= 0 && < 255.
      * @throws IOException
-     *             in case of I/O problems writing the chain ID.
+     *             in case of I/O problems writing the opcode.
      */
-    void writeSelect(int chainId) throws IOException;
+    void writeSelect(int opcode) throws IOException;
 
     /**
-     * Writes data to an earlier selected chain.
+     * Writes data for an earlier selected opcode.
      * 
      * @param data
      *            the 32-bit data to write.
      * @throws IOException
-     *             in case of I/O problems writing to the chain.
+     *             in case of I/O problems writing the data.
      * @see {@link #writeSelect(int)}
      */
-    void writeChain(int data) throws IOException;
+    void writeData(int data) throws IOException;
 }

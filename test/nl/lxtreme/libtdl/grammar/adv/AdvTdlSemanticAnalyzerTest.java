@@ -15,7 +15,33 @@ import org.antlr.v4.runtime.*;
 /**
  * Test cases for {@link AdvTdlSemanticAnalyzer}.
  */
-public class AdvTdlValidatorTest extends BaseTdlTestCase {
+public class AdvTdlSemanticAnalyzerTest extends BaseTdlTestCase {
+    // INNER TYPES
+
+    static class StubConfig implements TdlConfig {
+        // METHODS
+
+        @Override
+        public TdlDialect getDialect() {
+            return TdlDialect.ADVANCED;
+        }
+
+        @Override
+        public int getMaxStages() {
+            return 10;
+        }
+
+        @Override
+        public int getMaxChannels() {
+            return 16;
+        }
+
+        @Override
+        public boolean isDdrMode() {
+            return false;
+        }
+    }
+
     // CONSTANTS
 
     // @formatter:off
@@ -81,7 +107,7 @@ public class AdvTdlValidatorTest extends BaseTdlTestCase {
     }
 
     private AdvTdlSemanticAnalyzer createValidator() {
-        return new AdvTdlSemanticAnalyzer(getProblemReporter());
+        return new AdvTdlSemanticAnalyzer(new StubConfig(), getProblemReporter());
     }
 
     private AdvTdlParser createParser(final String input) {

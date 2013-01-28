@@ -15,7 +15,33 @@ import org.antlr.v4.runtime.*;
 /**
  * Test cases for {@link BasicTdlSemanticAnalyzer}.
  */
-public class BasicTdlValidatorTest extends BaseTdlTestCase {
+public class BasicTdlSemanticAnalyzerTest extends BaseTdlTestCase {
+    // INNER TYPES
+
+    static class StubConfig implements TdlConfig {
+        // METHODS
+
+        @Override
+        public TdlDialect getDialect() {
+            return TdlDialect.BASIC;
+        }
+
+        @Override
+        public int getMaxStages() {
+            return 4;
+        }
+
+        @Override
+        public int getMaxChannels() {
+            return 16;
+        }
+
+        @Override
+        public boolean isDdrMode() {
+            return false;
+        }
+    }
+
     // CONSTANTS
 
     // @formatter:off
@@ -25,6 +51,7 @@ public class BasicTdlValidatorTest extends BaseTdlTestCase {
         "a := mask = 1, value = 2 termB := mask = 3, value = 4",
         "a := 2^1 stage 1: activate immediately, when a goto next", 
         "a := 2^2 b := 2^0 stage 1: activate on level 1, when b start capture delay 5#", 
+        "a := 2^3 stage 1: activate on level 1, when a @ 15 start capture",
     };
     private static String[] INVALID_INPUTS = {
         "stage 1: activate immediately, when b goto next",
@@ -33,6 +60,7 @@ public class BasicTdlValidatorTest extends BaseTdlTestCase {
         "a := 2^3 stage 1: activate on level 1, when a start capture delay 65536#",
         "a := 2^4 termA := 2^3",
         "a := 2^5 stage 1: activate on level 1, when a start capture stage 1: activate immediately, when a start capture",
+        "a := 2^6 stage 1: activate on level 1, when a @ 16 start capture",
     };
     private static String[][] INVALID_RESULTS = {
         { "termB is not declared" },
@@ -41,6 +69,7 @@ public class BasicTdlValidatorTest extends BaseTdlTestCase {
         { "invalid delay value" },
         { "term termA already declared" },
         { "stage 1 already defined" },
+        { "invalid channel: 16" },
     };
     // @formatter:on
 
@@ -80,7 +109,7 @@ public class BasicTdlValidatorTest extends BaseTdlTestCase {
     }
 
     private BasicTdlSemanticAnalyzer createValidator() {
-        return new BasicTdlSemanticAnalyzer(getProblemReporter());
+        return new BasicTdlSemanticAnalyzer(new StubConfig(), getProblemReporter());
     }
 
     private BasicTdlParser createParser(final String input) {

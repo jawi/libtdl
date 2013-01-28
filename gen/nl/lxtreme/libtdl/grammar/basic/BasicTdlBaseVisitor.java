@@ -8,16 +8,14 @@
  */
 package nl.lxtreme.libtdl.grammar.basic;
 
-import nl.lxtreme.libtdl.grammar.*;
-
 import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 public class BasicTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements BasicTdlVisitor<T> {
 	@Override public T visitTermDecl(BasicTdlParser.TermDeclContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitProg(BasicTdlParser.ProgContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitTermExpr(BasicTdlParser.TermExprContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitStageDef(BasicTdlParser.StageDefContext ctx) { return visitChildren(ctx); }
 

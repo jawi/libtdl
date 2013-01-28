@@ -8,15 +8,14 @@
  */
 package nl.lxtreme.libtdl.grammar.basic;
 
-import nl.lxtreme.libtdl.grammar.*;
-
 import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
 
 public interface BasicTdlVisitor<T> extends ParseTreeVisitor<T> {
 	T visitTermDecl(BasicTdlParser.TermDeclContext ctx);
 
 	T visitProg(BasicTdlParser.ProgContext ctx);
+
+	T visitTermExpr(BasicTdlParser.TermExprContext ctx);
 
 	T visitStageDef(BasicTdlParser.StageDefContext ctx);
 

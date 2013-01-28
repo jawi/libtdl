@@ -7,7 +7,7 @@
  */
 package nl.lxtreme.libtdl.grammar.adv;
 
-import static nl.lxtreme.libtdl.grammar.ValidationUtil.*;
+import static nl.lxtreme.libtdl.grammar.Util.*;
 
 import java.util.*;
 
@@ -35,10 +35,8 @@ import org.antlr.v4.runtime.*;
  * semantically valid.
  */
 public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnalyzer> implements
-        TdlSemanticAnalyzer<AdvTdlSemanticAnalyzer> {
+        SemanticAnalyzer<AdvTdlSemanticAnalyzer> {
     // CONSTANTS
-
-    private static final int DEFAULT_STAGE_COUNT = 10;
 
     private static final long MAX_INT_VALUE = (1L << 32) - 1L;
     private static final long MAX_TIMER_VALUE = 0xFFFFFFFFL;
@@ -46,23 +44,29 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
 
     // VARIABLES
 
+    private final TdlConfig m_config;
     private final List<TermDefinitionListener> m_listeners;
-    private final Map<String, TdlDefinition> m_declarations;
+    private final Map<String, TermDefinition> m_declarations;
     private final Map<Integer, Object> m_stages;
     private final ProblemReporter m_problemReporter;
-
-    private int m_stageCount;
 
     // CONSTRUCTORS
 
     /**
      * Creates a new {@link AdvTdlSemanticAnalyzer} instance.
      * 
+     * @param config
+     *            the configuration to use, cannot be <code>null</code>;
      * @param problemReporter
      *            the problem reporter to report any validation problems to,
      *            cannot be <code>null</code>.
      */
-    public AdvTdlSemanticAnalyzer(ProblemReporter problemReporter) {
+    public AdvTdlSemanticAnalyzer(TdlConfig config, ProblemReporter problemReporter) {
+        if (config == null) {
+            throw new IllegalArgumentException("Config cannot be null!");
+        }
+        m_config = config;
+
         if (problemReporter == null) {
             throw new IllegalArgumentException("Problem reporter cannot be null!");
         }
@@ -70,10 +74,8 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
 
         m_listeners = new ArrayList<TermDefinitionListener>();
 
-        m_declarations = new HashMap<String, TdlDefinition>();
+        m_declarations = new HashMap<String, TermDefinition>();
         m_stages = new HashMap<Integer, Object>();
-
-        m_stageCount = DEFAULT_STAGE_COUNT;
     }
 
     // METHODS
@@ -97,11 +99,6 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
     }
 
     @Override
-    public void setStageCount(int stages) {
-        m_stageCount = stages;
-    }
-
-    @Override
     public AdvTdlSemanticAnalyzer visitEdgeDecl(EdgeDeclContext ctx) {
         Map<String, Long> values = new HashMap<String, Long>();
         for (EdgeTermDeclContext term : ctx.terms) {
@@ -114,7 +111,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
         }
 
         if (!values.isEmpty()) {
-            declare(ctx, new TdlEdgeDefinition(ctx.name.getText(), values));
+            declare(ctx, new Edge(ctx.name.getText(), values));
         }
 
         return super.visitEdgeDecl(ctx);
@@ -122,7 +119,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
 
     @Override
     public AdvTdlSemanticAnalyzer visitElseAction(ElseActionContext ctx) {
-        Long levelID = validateValue(ctx.n, 1, m_stageCount, "invalid level ID");
+        Long levelID = validateValue(ctx.n, 1, m_config.getMaxStages(), "invalid level ID");
         if (levelID != null) {
             Integer level = Integer.valueOf(levelID.intValue());
             if (!m_stages.containsKey(level)) {
@@ -169,7 +166,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
                 "lower bound should be less than upper bound");
 
         if (validRange) {
-            declare(ctx, new TdlRangeDefinition(ctx.name.getText(), lower, upper));
+            declare(ctx, new Range(ctx.name.getText(), lower, upper));
         }
 
         return super.visitRangeDecl(ctx);
@@ -177,7 +174,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
 
     @Override
     public AdvTdlSemanticAnalyzer visitStageDef(StageDefContext ctx) {
-        Long stageId = validateValue(ctx.n, 1, m_stageCount, "invalid stage ID");
+        Long stageId = validateValue(ctx.n, 1, m_config.getMaxStages(), "invalid stage ID");
         if (stageId != null) {
             define(ctx, stageId.intValue(), ctx);
         }
@@ -195,7 +192,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
         Long value = validateValue(ctx.value, 0, MAX_INT_VALUE, "invalid value");
 
         if ((mask != null) && (value != null)) {
-            declare(ctx, new TdlTermDefinition(ctx.name.getText(), value.longValue(), mask.longValue()));
+            declare(ctx, new Term(ctx.name.getText(), value.longValue(), mask.longValue()));
         }
 
         return super.visitTermDecl(ctx);
@@ -206,7 +203,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
         Long value = validateValue(ctx.value, 1, MAX_TIMER_VALUE, "invalid timer value");
 
         if (value != null) {
-            declare(ctx, new TdlTimerDefinition(ctx.name.getText(), value.longValue(), ctx.unit.getText()));
+            declare(ctx, new Timer(ctx.name.getText(), value.longValue(), ctx.unit.getText()));
         }
 
         return super.visitTimerDecl(ctx);
@@ -221,7 +218,7 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
         return super.visitWhenAction(ctx);
     }
 
-    private void declare(ParserRuleContext context, TdlDefinition def) {
+    private void declare(ParserRuleContext context, TermDefinition def) {
         if (m_declarations.put(def.getName(), def) != null) {
             String msg = "term " + def.getName() + " already declared";
 
@@ -285,6 +282,6 @@ public class AdvTdlSemanticAnalyzer extends AdvTdlBaseVisitor<AdvTdlSemanticAnal
     }
 
     private Long validateValue(ParserRuleContext ctx, long lower, long upper, String msg) {
-        return ValidationUtil.validateValue(ctx, lower, upper, msg, m_problemReporter);
+        return Util.validateValue(ctx, lower, upper, msg, m_problemReporter);
     }
 }

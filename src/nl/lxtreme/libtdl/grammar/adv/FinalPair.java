@@ -5,12 +5,12 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 /**
  * Denotes a final pair for a trigger sum.
  */
-public class TdlFinalPair extends AbstractSumPair {
+class FinalPair extends AbstractSumPair {
     // CONSTANTS
 
     // @formatter:off                                NOP     ANY     AND    NAND      OR     NOR     XOR    NXOR       A       B
@@ -19,15 +19,15 @@ public class TdlFinalPair extends AbstractSumPair {
 
     // VARIABLES
 
-    private final TdlMidPair m_input1;
-    private final TdlMidPair m_input2;
+    private final MidPair m_input1;
+    private final MidPair m_input2;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlFinalPair} instance.
+     * Creates a new {@link FinalPair} instance.
      */
-    public TdlFinalPair(TdlMidPair... midPairs) {
+    public FinalPair(MidPair... midPairs) {
         m_input1 = midPairs[0];
         m_input2 = midPairs[1];
 
@@ -67,7 +67,7 @@ public class TdlFinalPair extends AbstractSumPair {
      * {@inheritDoc}
      */
     @Override
-    public ITdlSumPart getParent() {
+    public SumPart getParent() {
         return null;
     }
 

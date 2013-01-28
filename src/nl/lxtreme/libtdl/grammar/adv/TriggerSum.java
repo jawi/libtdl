@@ -5,20 +5,20 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
-import static nl.lxtreme.libtdl.grammar.ITdlSumPart.*;
+import static nl.lxtreme.libtdl.grammar.adv.SumPart.*;
 
 import java.io.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 import org.antlr.v4.runtime.*;
 
 /**
  * Denotes a trigger sum.
  */
-public class TdlTriggerSum implements TdlWritable {
+class TriggerSum implements TdlWritable {
     // CONSTANTS
 
     private static final String[] INPUT_NAMES = { "a", "b", "c", "range1", "d", "edge1", "e", "timer1", "f", "g", "h",
@@ -26,40 +26,40 @@ public class TdlTriggerSum implements TdlWritable {
 
     // VARIABLES
 
-    private final TdlInput[] m_inputs;
-    private final TdlInputPair[] m_inputPairs;
-    private final TdlMidPair[] m_midPairs;
-    private final TdlFinalPair m_finalPair;
+    private final Input[] m_inputs;
+    private final InputPair[] m_inputPairs;
+    private final MidPair[] m_midPairs;
+    private final FinalPair m_finalPair;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlTriggerSum} instance.
+     * Creates a new {@link TriggerSum} instance.
      */
-    public TdlTriggerSum() {
+    public TriggerSum() {
         int length = INPUT_NAMES.length;
 
-        m_inputs = new TdlInput[length];
+        m_inputs = new Input[length];
         for (int i = 0; i < length; i++) {
-            m_inputs[i] = new TdlInput(INPUT_NAMES[i]);
+            m_inputs[i] = new Input(INPUT_NAMES[i]);
         }
 
         length >>= 1;
 
-        m_inputPairs = new TdlInputPair[length];
+        m_inputPairs = new InputPair[length];
         for (int i = 0, j = 0; i < length; i++, j += 2) {
-            m_inputPairs[i] = new TdlInputPair(m_inputs[j], m_inputs[j + 1]);
+            m_inputPairs[i] = new InputPair(m_inputs[j], m_inputs[j + 1]);
         }
 
         length >>= 2;
 
-        m_midPairs = new TdlMidPair[length];
+        m_midPairs = new MidPair[length];
         for (int i = 0, j = 0; i < length; i++, j += 4) {
-            m_midPairs[i] = new TdlMidPair(i, m_inputPairs[j], m_inputPairs[j + 1], m_inputPairs[j + 2],
+            m_midPairs[i] = new MidPair(i, m_inputPairs[j], m_inputPairs[j + 1], m_inputPairs[j + 2],
                     m_inputPairs[j + 3]);
         }
 
-        m_finalPair = new TdlFinalPair(m_midPairs[0], m_midPairs[1]);
+        m_finalPair = new FinalPair(m_midPairs[0], m_midPairs[1]);
     }
 
     // METHODS
@@ -71,13 +71,13 @@ public class TdlTriggerSum implements TdlWritable {
      *            the input, e.g., a, b, timer1, and so on.
      * @return the index of the given input, >= 0 && < 16.
      */
-    public ITdlSumPart defineInput(Token inputTree) {
+    public SumPart defineInput(Token inputTree) {
         int idx = findInputIndex(inputTree.getText());
         if (idx < 0) {
             throw new RuntimeException("Invalid input: " + inputTree.getText());
         }
 
-        TdlInput input = m_inputs[idx];
+        Input input = m_inputs[idx];
         // Initialize this operator for use in this sum...
         input.init();
 
@@ -87,7 +87,7 @@ public class TdlTriggerSum implements TdlWritable {
     /**
      * @return
      */
-    public ITdlSumPart nop() {
+    public SumPart nop() {
         m_finalPair.setOperator(OP_NOP);
         return m_finalPair;
     }
@@ -95,7 +95,7 @@ public class TdlTriggerSum implements TdlWritable {
     /**
      * @return
      */
-    public ITdlSumPart any() {
+    public SumPart any() {
         m_finalPair.setOperator(OP_ANY);
         return m_finalPair;
     }
@@ -111,7 +111,7 @@ public class TdlTriggerSum implements TdlWritable {
      *            the RHS-sum pair.
      * @return the new index, >= 0.
      */
-    public ITdlSumPart defineOperator(Token operator, ITdlSumPart lhs, ITdlSumPart rhs) {
+    public SumPart defineOperator(Token operator, SumPart lhs, SumPart rhs) {
         AbstractSumPair part = getPart(lhs, rhs);
 
         part.setOperator(mapOperator(operator.getText()));
@@ -126,7 +126,7 @@ public class TdlTriggerSum implements TdlWritable {
      *            the index of the sum pair to invert.
      * @return the given index.
      */
-    public ITdlSumPart invert(ITdlSumPart part) {
+    public SumPart invert(SumPart part) {
         part.invert();
         return part;
     }
@@ -145,7 +145,7 @@ public class TdlTriggerSum implements TdlWritable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (TdlInputPair m_inputPair : m_inputPairs) {
+        for (InputPair m_inputPair : m_inputPairs) {
             int op = m_inputPair.getOperator();
             if (op == OP_NOP) {
                 continue;
@@ -153,7 +153,7 @@ public class TdlTriggerSum implements TdlWritable {
 
             sb.append(m_inputPair).append(" ");
         }
-        for (TdlMidPair m_midPair : m_midPairs) {
+        for (MidPair m_midPair : m_midPairs) {
             int op = m_midPair.getOperator();
             if (op == OP_NOP) {
                 continue;
@@ -171,12 +171,12 @@ public class TdlTriggerSum implements TdlWritable {
      */
     @Override
     public void write(TdlOutputStream outputStream) throws IOException {
-        outputStream.writeChain(m_finalPair.encodeValue());
-        outputStream.writeChain((m_midPairs[1].encodeValue() << 16) | (m_midPairs[0].encodeValue()));
-        outputStream.writeChain((m_inputPairs[7].encodeValue() << 16) | (m_inputPairs[6].encodeValue()));
-        outputStream.writeChain((m_inputPairs[5].encodeValue() << 16) | (m_inputPairs[4].encodeValue()));
-        outputStream.writeChain((m_inputPairs[3].encodeValue() << 16) | (m_inputPairs[2].encodeValue()));
-        outputStream.writeChain((m_inputPairs[1].encodeValue() << 16) | (m_inputPairs[0].encodeValue()));
+        outputStream.writeData(m_finalPair.encodeValue());
+        outputStream.writeData((m_midPairs[1].encodeValue() << 16) | (m_midPairs[0].encodeValue()));
+        outputStream.writeData((m_inputPairs[7].encodeValue() << 16) | (m_inputPairs[6].encodeValue()));
+        outputStream.writeData((m_inputPairs[5].encodeValue() << 16) | (m_inputPairs[4].encodeValue()));
+        outputStream.writeData((m_inputPairs[3].encodeValue() << 16) | (m_inputPairs[2].encodeValue()));
+        outputStream.writeData((m_inputPairs[1].encodeValue() << 16) | (m_inputPairs[0].encodeValue()));
     }
 
     /**
@@ -200,11 +200,11 @@ public class TdlTriggerSum implements TdlWritable {
      * @param rhs
      * @return
      */
-    private AbstractSumPair getPart(ITdlSumPart lhs, ITdlSumPart rhs) {
-        ITdlSumPart ptr1 = rhs;
+    private AbstractSumPair getPart(SumPart lhs, SumPart rhs) {
+        SumPart ptr1 = rhs;
 
         do {
-            ITdlSumPart ptr2 = lhs;
+            SumPart ptr2 = lhs;
 
             do {
                 if (ptr2 == ptr1) {

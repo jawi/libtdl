@@ -5,13 +5,13 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 /**
  * Denotes an input pair, where two inputs are "paired" by means of an
  * operation, such as AND, OR.
  */
-public class TdlInputPair extends AbstractSumPair {
+class InputPair extends AbstractSumPair {
     // CONSTANTS
 
     // @formatter:off                              NOP     ANY     AND    NAND      OR     NOR     XOR    NXOR       A       B
@@ -20,17 +20,17 @@ public class TdlInputPair extends AbstractSumPair {
 
     // VARIABLES
 
-    private volatile TdlMidPair m_midPair;
+    private volatile MidPair m_midPair;
 
-    private final TdlInput m_inputA;
-    private final TdlInput m_inputB;
+    private final Input m_inputA;
+    private final Input m_inputB;
 
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlInputPair} instance.
+     * Creates a new {@link InputPair} instance.
      */
-    public TdlInputPair(TdlInput inputA, TdlInput inputB) {
+    public InputPair(Input inputA, Input inputB) {
         m_inputA = inputA;
         m_inputB = inputB;
 
@@ -69,7 +69,7 @@ public class TdlInputPair extends AbstractSumPair {
      * {@inheritDoc}
      */
     @Override
-    public ITdlSumPart getParent() {
+    public SumPart getParent() {
         return m_midPair;
     }
 
@@ -92,7 +92,7 @@ public class TdlInputPair extends AbstractSumPair {
      * @param midPair
      *            the mid pair to which this input pair belongs.
      */
-    void setMidPair(TdlMidPair midPair) {
+    void setMidPair(MidPair midPair) {
         m_midPair = midPair;
     }
 

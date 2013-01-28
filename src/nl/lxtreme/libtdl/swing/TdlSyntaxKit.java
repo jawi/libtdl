@@ -15,8 +15,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import nl.lxtreme.libtdl.*;
-
 /**
  * Provides a custom syntax kit for highlighting TDL constructs.
  */
@@ -113,8 +111,8 @@ public class TdlSyntaxKit extends DefaultEditorKit implements ViewFactory {
      * {@inheritDoc}
      */
     @Override
-    public Document createDefaultDocument() {
-        return new TdlDocument(TdlDialect.ADVANCED);
+    public TdlDocument createDefaultDocument() {
+        return new TdlDocument();
     }
 
     /**

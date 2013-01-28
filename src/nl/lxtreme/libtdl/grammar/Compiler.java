@@ -5,24 +5,25 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl;
+package nl.lxtreme.libtdl.grammar;
 
 import java.io.*;
 
+import org.antlr.v4.runtime.tree.*;
+
 /**
- * Denotes an interface for entities that can write themselves to an output
- * stream.
+ * Provides a compiler for a particular dialect.
  */
-public interface TdlWritable {
+public interface Compiler<T> extends ParseTreeVisitor<T> {
     // METHODS
 
     /**
-     * Writes the contents of this implementation to the given output stream.
+     * Writes the compiled bitstream to the given output stream.
      * 
      * @param outputStream
      *            the output stream to write to, cannot be <code>null</code>.
      * @throws IOException
      *             in case of I/O problems writing to the given I/O stream.
      */
-    void write(TdlOutputStream outputStream) throws IOException;
+    void write(OutputStream outputStream) throws IOException;
 }

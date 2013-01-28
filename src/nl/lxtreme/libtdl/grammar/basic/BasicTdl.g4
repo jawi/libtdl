@@ -50,8 +50,8 @@ stageDef
       | ACTIVATE { notifyErrorListeners("missing activate clause"); }
       | { notifyErrorListeners("missing activate clause"); }
       )
-      ( WHEN expr whenAction
-      | WHEN expr { notifyErrorListeners("missing when action"); }
+      ( WHEN termExpr whenAction
+      | WHEN termExpr { notifyErrorListeners("missing when action"); }
       | WHEN { notifyErrorListeners("missing when expression"); }
       | { notifyErrorListeners("missing when clause"); }
       )
@@ -74,6 +74,10 @@ whenAction
     | ( GOTO NEXT
       | GOTO { notifyErrorListeners("missing next"); }
       )
+    ;
+
+termExpr
+    : expr ( AT n=decNumber )?
     ;
 
 expr
@@ -128,6 +132,7 @@ XOR         : '^' ;
 SAMPLES     : '#' ;
 COMMA       : ',' ;
 COLON       : ':' ;
+AT          : '@' ;
 
 fragment
 BIN_DIGIT

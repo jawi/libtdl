@@ -5,15 +5,15 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 /**
  * Denotes a single input, e.g., a term, range detector, timer or edge detector.
  */
-public class TdlInput implements ITdlSumPart {
+class Input implements SumPart {
     // VARIABLES
 
-    private volatile TdlInputPair m_inputPair;
+    private volatile InputPair m_inputPair;
 
     private final String m_name;
 
@@ -23,9 +23,9 @@ public class TdlInput implements ITdlSumPart {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlInput} instance.
+     * Creates a new {@link Input} instance.
      */
-    public TdlInput(String name) {
+    public Input(String name) {
         m_name = name;
     }
 
@@ -35,7 +35,7 @@ public class TdlInput implements ITdlSumPart {
      * {@inheritDoc}
      */
     @Override
-    public ITdlSumPart getParent() {
+    public SumPart getParent() {
         return m_inputPair;
     }
 
@@ -85,7 +85,7 @@ public class TdlInput implements ITdlSumPart {
      * @param inputPair
      *            the inputPair to set
      */
-    void setInputPair(TdlInputPair inputPair) {
+    void setInputPair(InputPair inputPair) {
         m_inputPair = inputPair;
     }
 }

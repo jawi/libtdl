@@ -5,17 +5,17 @@
  *
  * Licensed under Apache Software License version 2.0, see <http://www.apache.org/licenses/LICENSE-2.0.html>.
  */
-package nl.lxtreme.libtdl.grammar;
+package nl.lxtreme.libtdl.grammar.adv;
 
 import java.io.*;
 import java.util.*;
 
-import nl.lxtreme.libtdl.*;
+import nl.lxtreme.libtdl.grammar.*;
 
 /**
  * Provides a range definition.
  */
-public class TdlEdgeDefinition extends AbstractTdlDefinition {
+class Edge extends AbstractDefinition {
     // CONSTANTS
 
     private static final int MAX_EDGES = 2;
@@ -45,18 +45,18 @@ public class TdlEdgeDefinition extends AbstractTdlDefinition {
     // CONSTRUCTORS
 
     /**
-     * Creates a new {@link TdlEdgeDefinition} instance.
+     * Creates a new {@link Edge} instance.
      * 
      * @param values
      */
-    public TdlEdgeDefinition(String name, Map<String, Long> values) {
+    public Edge(String name, Map<String, Long> values) {
         this(toIndex(name), values);
     }
 
     /**
-     * Creates a new {@link TdlEdgeDefinition} instance.
+     * Creates a new {@link Edge} instance.
      */
-    public TdlEdgeDefinition(int index, Map<String, Long> values) {
+    public Edge(int index, Map<String, Long> values) {
         super(Type.EDGE);
 
         m_index = index % MAX_EDGES;
@@ -189,7 +189,7 @@ public class TdlEdgeDefinition extends AbstractTdlDefinition {
             if ((i & 1) == 0) {
                 data <<= 16;
             } else {
-                outputStream.writeChain(data); // 256 bits
+                outputStream.writeData(data); // 256 bits
                 data = 0;
             }
         }
