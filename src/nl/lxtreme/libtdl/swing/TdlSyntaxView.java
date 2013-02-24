@@ -7,6 +7,7 @@
  */
 package nl.lxtreme.libtdl.swing;
 
+import static java.awt.RenderingHints.*;
 import static nl.lxtreme.libtdl.swing.TdlStyleManager.*;
 
 import java.awt.*;
@@ -27,8 +28,8 @@ import nl.lxtreme.libtdl.swing.TdlStyleManager.TokenStyle;
 public class TdlSyntaxView extends PlainView {
     // CONSTANTS
 
-    private static final BasicStroke DASHED_STROKE = new BasicStroke(1.5f /* width */, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 1.0f /* miterLimit */, new float[] { 3f, 1f }, 0.0f);
+    private static final BasicStroke ERROR_STROKE = new BasicStroke(1.0f /* width */, BasicStroke.CAP_ROUND,
+            BasicStroke.JOIN_ROUND);
 
     // VARIABLES
 
@@ -156,6 +157,18 @@ public class TdlSyntaxView extends PlainView {
     }
 
     /**
+     * Creates the rendering hints for this view.
+     */
+    private RenderingHints createRenderingHints() {
+        RenderingHints hints = new RenderingHints(KEY_INTERPOLATION, VALUE_INTERPOLATION_BICUBIC);
+        hints.put(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+        hints.put(KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY);
+        hints.put(KEY_COLOR_RENDERING, VALUE_COLOR_RENDER_QUALITY);
+        hints.put(KEY_RENDERING, VALUE_RENDER_QUALITY);
+        return hints;
+    }
+
+    /**
      * @param canvas
      *            the canvas to paint on;
      * @param x
@@ -234,11 +247,19 @@ public class TdlSyntaxView extends PlainView {
 
         int result = Utilities.drawTabbedText(segment, x, y, graphics, this, startOffset);
         if ((fontStyle & ERROR_STYLE) != 0) {
-            int h = (y + fm.getDescent()) - 2;
-
             graphics.setColor(Color.RED);
-            graphics.setStroke(DASHED_STROKE);
-            graphics.drawLine(x, h, x + w, h);
+            graphics.setStroke(ERROR_STROKE);
+            graphics.setRenderingHints(createRenderingHints());
+
+            int waveY = y + 1;
+            for (int waveX = x; waveX < (x + w); waveX += 4) {
+                if ((waveX + 2) <= ((x + w) - 1)) {
+                    graphics.drawLine(waveX, waveY + 2, waveX + 2, waveY);
+                }
+                if ((waveX + 4) <= ((x + w) - 1)) {
+                    graphics.drawLine(waveX + 3, waveY + 1, waveX + 4, waveY + 2);
+                }
+            }
         }
 
         return result;
