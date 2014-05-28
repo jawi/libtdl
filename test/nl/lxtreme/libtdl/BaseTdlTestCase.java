@@ -60,7 +60,7 @@ public abstract class BaseTdlTestCase extends TestCase implements ProblemListene
 
     protected final void assertMarkers(String message, String... messages) {
         int expectedCount = messages.length;
-        assertMarkerCount(message, expectedCount);
+        assertMarkerCount(message + " => " + Arrays.toString(messages) + "; " + m_markers, expectedCount);
 
         for (int idx = 0; idx < expectedCount; idx++) {
             String marker = m_markers.get(idx).toString();

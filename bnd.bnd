@@ -3,6 +3,9 @@ Bundle-License: \
     description="Apache Software License 2.0"; \
     link=http://www.apache.org/licenses/LICENSE-2.0.html
 Bundle-Copyright: (C) 2013 - J.W. Janssen
+-sourcepath: \
+	${project}/src,\
+	${project}/gen
 -buildpath: \
 	lib/antlr-4.2.2-complete.jar;version=file,\
     osgi.core;version=4.2.0,\

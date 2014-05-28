@@ -1,5 +1,4 @@
 # Core functionality for LibTDL
--sourcepath: ${project}/src, ${project}/gen
 Conditional-Package: \
     org.abego.treelayout.*,\
     org.antlr.*,\

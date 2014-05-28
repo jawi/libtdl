@@ -19,14 +19,14 @@ public class BasicTdlParserTest extends BaseTdlTestCase {
     // CONSTANTS
 
     // @formatter:off
-    private static String[] VALID_INPUTS = {
-        "termA := mask = 0b11, value = 0b10", 
+    private static final String[] VALID_INPUTS = {
+        "termA := mask = 0b11, value = 0b10",
         "termA := 0b11 ^ 0b10",
         "termA := mask = 1, value = 2  termB := mask = 3, value = 4",
-        "stage 1: activate immediately, when a goto next", 
-        "stage 1: activate on level 1, when b start capture delay 5#", 
+        "stage 1: activate immediately, when a goto next",
+        "stage 1: activate on level 1, when b start capture delay 5#",
     };
-    private static String[] VALID_RESULTS = {
+    private static final String[] VALID_RESULTS = {
         "(prog (decl (termDecl termA := mask = (number 0b11) , value = (number 0b10))) <EOF>)",
         "(prog (decl (termDecl termA := (number 0b11) ^ (number 0b10))) <EOF>)",
         "(prog (decl (termDecl termA := mask = (number 1) , value = (number 2))) (decl (termDecl termB := mask = (number 3) , value = (number 4))) <EOF>)",
@@ -51,9 +51,9 @@ public class BasicTdlParserTest extends BaseTdlTestCase {
         "a := 2^10 stage",
     };
     private static final String[][] INVALID_RESULTS = {
-        { "missing ':=' at '<EOF>'", "missing mask and value" }, 
-        { "missing mask and value" }, 
-        { "missing term value" }, 
+        { "missing ':=' at '<EOF>'", "missing mask and value" },
+        { "missing mask and value" },
+        { "missing term value" },
         { "missing term value" },
         { "missing delay unit" },
         { "missing when action", "extraneous input 'delay'" },
@@ -63,7 +63,7 @@ public class BasicTdlParserTest extends BaseTdlTestCase {
         { "missing comma", "missing when clause" },
         { "missing level ID", "missing comma", "missing when clause" },
         { "missing level", "missing comma", "missing when clause" },
-        { "missing on level", "missing comma", "missing when clause" },
+        { "Ambiguity found", "missing on level", "missing comma", "missing when clause" },
         { "missing colon", "missing activate clause", "missing when clause" },
         { "missing stage ID", "missing activate clause", "missing when clause" },
     };
@@ -108,7 +108,7 @@ public class BasicTdlParserTest extends BaseTdlTestCase {
         ProgContext result = parser.prog();
         assertNotNull(result);
 
-        assertMarkers("Input: " + input, expected);
+        assertMarkers("Input: '" + input + "'", expected);
     }
 
     /**
