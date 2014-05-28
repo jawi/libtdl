@@ -10,13 +10,12 @@ grammar AdvTdl;
  */
 package nl.lxtreme.libtdl.grammar.adv;
 
-import nl.lxtreme.libtdl.grammar.*;
 }
 
 /* PARSER RULES */
 
 prog
-    : ( decl | stageDef )* EOF!
+    : ( decl | stageDef )* EOF
     ;
 
 /* DECLARATION RULES */
@@ -229,4 +228,4 @@ EDGE_NAME
     : 'edge' ('1' | '2')
     ;
 
-// EOF
+/* EOF */

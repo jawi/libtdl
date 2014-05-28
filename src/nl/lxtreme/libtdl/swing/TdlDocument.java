@@ -365,7 +365,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Returns all available problem markers.
-     * 
+     *
      * @return a list with all problem markers.
      */
     public List<Marker> getAllProblemMarkers() {
@@ -380,7 +380,7 @@ public class TdlDocument extends PlainDocument {
     /**
      * Returns the number of spaces at the beginning of the line denoted by the
      * given caret position.
-     * 
+     *
      * @param position
      *            the caret position to determine the indentation level of.
      * @return the number of spaces at the beginning of the line, >= 0.
@@ -423,7 +423,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Returns the line number for the given position in the document.
-     * 
+     *
      * @param position
      *            a document position, >= 0.
      * @return a line number, >= 0.
@@ -434,7 +434,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Returns the problem markers at the given line.
-     * 
+     *
      * @param lineNo
      *            the line number to get the problem markers for.
      * @return the list with problem markers, never <code>null</code>.
@@ -450,7 +450,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Returns the definition for the term with the given name,
-     * 
+     *
      * @param name
      *            the name of the term to get the definition for, cannot be
      *            <code>null</code>.
@@ -463,7 +463,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Returns a subset of (parsed) tokens.
-     * 
+     *
      * @param startPos
      *            the start position of the first token to return;
      * @param endPos
@@ -516,7 +516,7 @@ public class TdlDocument extends PlainDocument {
     /**
      * Returns whether or not the given line number contains any problem
      * markers.
-     * 
+     *
      * @param lineNo
      *            the (1-based) line number to test.
      * @return <code>true</code> if there are problem markers on the given line,
@@ -540,7 +540,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Sets whether or not DDR mode is to be used.
-     * 
+     *
      * @param ddrMode
      *            <code>true</code> if DDR mode should be enabled,
      *            <code>false</code> otherwise.
@@ -552,7 +552,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Sets the dialect for this document.
-     * 
+     *
      * @param dialect
      *            the dialect to set, cannot be <code>null</code>.
      */
@@ -563,7 +563,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Sets the maximum number of channels.
-     * 
+     *
      * @param maxChannels
      *            the maximum number of channels, > 0 && < 32.
      */
@@ -574,7 +574,7 @@ public class TdlDocument extends PlainDocument {
 
     /**
      * Sets the maximum number of stages.
-     * 
+     *
      * @param maxStages
      *            the maximum number of trigger stages supported, > 0 && < 32.
      */

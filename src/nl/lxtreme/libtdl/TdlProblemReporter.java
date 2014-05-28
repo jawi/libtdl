@@ -50,7 +50,7 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
     /**
      * Installs this adapter on the given recognizer, replacing all of its error
      * listeners with this adapter.
-     * 
+     *
      * @param recognizers
      *            the array with recognizers (= parsers and/or lexers) to
      *            install this adapter for, cannot be <code>null</code> or an
@@ -83,9 +83,12 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet ambigAlts,
-            ATNConfigSet configs) {
+    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean unknown,
+            BitSet ambigAlts, ATNConfigSet configs) {
         MarkerBuilder builder = new MarkerBuilder();
         Marker marker = builder.setCategory(Category.AMBIGUITY).setType(Type.WARNING)
                 .setLocation(startIndex, stopIndex - startIndex, -1, -1)
@@ -97,15 +100,22 @@ public class TdlProblemReporter implements ANTLRErrorListener, ProblemReporter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
+    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet alts,
             ATNConfigSet configs) {
         // Nop; our grammar shouldn't be that difficult that StrongLA cannot
         // cope with it...
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, ATNConfigSet configs) {
+    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int unknown,
+            ATNConfigSet configs) {
         // Nop; our grammar shouldn't be that difficult that StrongLA cannot
         // cope with it...
     }

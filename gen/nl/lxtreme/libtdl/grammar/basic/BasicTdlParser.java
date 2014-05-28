@@ -1,4 +1,4 @@
-// $ANTLR ANTLRVersion> BasicTdlParser.java generatedTimestamp>
+// Generated from BasicTdl.g4 by ANTLR 4.2.2
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -9,12 +9,15 @@
  */
 package nl.lxtreme.libtdl.grammar.basic;
 
-import java.util.*;
 
-import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.*;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BasicTdlParser extends Parser {
@@ -53,27 +56,28 @@ public class BasicTdlParser extends Parser {
 	public String[] getRuleNames() { return ruleNames; }
 
 	@Override
+	public String getSerializedATN() { return _serializedATN; }
+
+	@Override
 	public ATN getATN() { return _ATN; }
-
-
 
 	public BasicTdlParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgContext extends ParserRuleContext {
-		public List<StageDefContext> stageDef() {
-			return getRuleContexts(StageDefContext.class);
-		}
-		public DeclContext decl(int i) {
-			return getRuleContext(DeclContext.class,i);
-		}
 		public StageDefContext stageDef(int i) {
 			return getRuleContext(StageDefContext.class,i);
 		}
 		public TerminalNode EOF() { return getToken(BasicTdlParser.EOF, 0); }
+		public List<StageDefContext> stageDef() {
+			return getRuleContexts(StageDefContext.class);
+		}
 		public List<DeclContext> decl() {
 			return getRuleContexts(DeclContext.class);
+		}
+		public DeclContext decl(int i) {
+			return getRuleContext(DeclContext.class,i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -82,7 +86,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitProg(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -133,10 +137,10 @@ public class BasicTdlParser extends Parser {
 	}
 
 	public static class DeclContext extends ParserRuleContext {
+		public List<TerminalNode> WS() { return getTokens(BasicTdlParser.WS); }
 		public TermDeclContext termDecl() {
 			return getRuleContext(TermDeclContext.class,0);
 		}
-		public List<TerminalNode> WS() { return getTokens(BasicTdlParser.WS); }
 		public TerminalNode WS(int i) {
 			return getToken(BasicTdlParser.WS, i);
 		}
@@ -147,7 +151,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -189,16 +193,22 @@ public class BasicTdlParser extends Parser {
 		public Token name;
 		public NumberContext mask;
 		public NumberContext value;
-		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
-		public TerminalNode XOR() { return getToken(BasicTdlParser.XOR, 0); }
-		public TerminalNode MASK() { return getToken(BasicTdlParser.MASK, 0); }
-		public TerminalNode VALUE() { return getToken(BasicTdlParser.VALUE, 0); }
-		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
-		public NumberContext number() {
-			return getRuleContext(NumberContext.class,0);
+		public List<NumberContext> number() {
+			return getRuleContexts(NumberContext.class);
 		}
-		public TerminalNode EQUALS_TO() { return getToken(BasicTdlParser.EQUALS_TO, 0); }
+		public List<TerminalNode> EQUALS_TO() { return getTokens(BasicTdlParser.EQUALS_TO); }
+		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
+		public TerminalNode VALUE() { return getToken(BasicTdlParser.VALUE, 0); }
+		public TerminalNode XOR() { return getToken(BasicTdlParser.XOR, 0); }
 		public TerminalNode ASSIGN() { return getToken(BasicTdlParser.ASSIGN, 0); }
+		public NumberContext number(int i) {
+			return getRuleContext(NumberContext.class,i);
+		}
+		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
+		public TerminalNode MASK() { return getToken(BasicTdlParser.MASK, 0); }
+		public TerminalNode EQUALS_TO(int i) {
+			return getToken(BasicTdlParser.EQUALS_TO, i);
+		}
 		public TermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -206,7 +216,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitTermDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -287,23 +297,23 @@ public class BasicTdlParser extends Parser {
 
 	public static class StageDefContext extends ParserRuleContext {
 		public DecNumberContext n;
-		public TerminalNode COLON() { return getToken(BasicTdlParser.COLON, 0); }
-		public TermExprContext termExpr() {
-			return getRuleContext(TermExprContext.class,0);
-		}
-		public DecNumberContext decNumber() {
-			return getRuleContext(DecNumberContext.class,0);
-		}
-		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
-		public TerminalNode WHEN() { return getToken(BasicTdlParser.WHEN, 0); }
-		public ActiveClauseContext activeClause() {
-			return getRuleContext(ActiveClauseContext.class,0);
-		}
-		public TerminalNode STAGE() { return getToken(BasicTdlParser.STAGE, 0); }
-		public TerminalNode ACTIVATE() { return getToken(BasicTdlParser.ACTIVATE, 0); }
 		public WhenActionContext whenAction() {
 			return getRuleContext(WhenActionContext.class,0);
 		}
+		public TerminalNode STAGE() { return getToken(BasicTdlParser.STAGE, 0); }
+		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
+		public DecNumberContext decNumber() {
+			return getRuleContext(DecNumberContext.class,0);
+		}
+		public TermExprContext termExpr() {
+			return getRuleContext(TermExprContext.class,0);
+		}
+		public ActiveClauseContext activeClause() {
+			return getRuleContext(ActiveClauseContext.class,0);
+		}
+		public TerminalNode COLON() { return getToken(BasicTdlParser.COLON, 0); }
+		public TerminalNode WHEN() { return getToken(BasicTdlParser.WHEN, 0); }
+		public TerminalNode ACTIVATE() { return getToken(BasicTdlParser.ACTIVATE, 0); }
 		public StageDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -311,7 +321,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitStageDef(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -424,10 +434,10 @@ public class BasicTdlParser extends Parser {
 	public static class ActiveClauseContext extends ParserRuleContext {
 		public DecNumberContext n;
 		public TerminalNode ON() { return getToken(BasicTdlParser.ON, 0); }
+		public TerminalNode LEVEL() { return getToken(BasicTdlParser.LEVEL, 0); }
 		public DecNumberContext decNumber() {
 			return getRuleContext(DecNumberContext.class,0);
 		}
-		public TerminalNode LEVEL() { return getToken(BasicTdlParser.LEVEL, 0); }
 		public TerminalNode IMMEDIATELY() { return getToken(BasicTdlParser.IMMEDIATELY, 0); }
 		public ActiveClauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -436,7 +446,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitActiveClause(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -510,15 +520,15 @@ public class BasicTdlParser extends Parser {
 
 	public static class WhenActionContext extends ParserRuleContext {
 		public DecNumberContext n;
-		public TerminalNode DELAY() { return getToken(BasicTdlParser.DELAY, 0); }
-		public TerminalNode CAPTURE() { return getToken(BasicTdlParser.CAPTURE, 0); }
-		public TerminalNode START() { return getToken(BasicTdlParser.START, 0); }
-		public TerminalNode NEXT() { return getToken(BasicTdlParser.NEXT, 0); }
-		public TerminalNode SAMPLES() { return getToken(BasicTdlParser.SAMPLES, 0); }
 		public TerminalNode GOTO() { return getToken(BasicTdlParser.GOTO, 0); }
+		public TerminalNode NEXT() { return getToken(BasicTdlParser.NEXT, 0); }
+		public TerminalNode DELAY() { return getToken(BasicTdlParser.DELAY, 0); }
+		public TerminalNode START() { return getToken(BasicTdlParser.START, 0); }
+		public TerminalNode SAMPLES() { return getToken(BasicTdlParser.SAMPLES, 0); }
 		public DecNumberContext decNumber() {
 			return getRuleContext(DecNumberContext.class,0);
 		}
+		public TerminalNode CAPTURE() { return getToken(BasicTdlParser.CAPTURE, 0); }
 		public WhenActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -526,7 +536,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitWhenAction(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -599,13 +609,13 @@ public class BasicTdlParser extends Parser {
 
 	public static class TermExprContext extends ParserRuleContext {
 		public DecNumberContext n;
-		public TerminalNode AT() { return getToken(BasicTdlParser.AT, 0); }
-		public DecNumberContext decNumber() {
-			return getRuleContext(DecNumberContext.class,0);
-		}
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		public DecNumberContext decNumber() {
+			return getRuleContext(DecNumberContext.class,0);
+		}
+		public TerminalNode AT() { return getToken(BasicTdlParser.AT, 0); }
 		public TermExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -613,7 +623,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitTermExpr(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -650,13 +660,13 @@ public class BasicTdlParser extends Parser {
 	public static class ExprContext extends ParserRuleContext {
 		public Token term;
 		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
-		public List<TerminalNode> NOT() { return getTokens(BasicTdlParser.NOT); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode NOT(int i) {
 			return getToken(BasicTdlParser.NOT, i);
 		}
+		public List<TerminalNode> NOT() { return getTokens(BasicTdlParser.NOT); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -664,7 +674,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitExpr(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -719,10 +729,10 @@ public class BasicTdlParser extends Parser {
 	}
 
 	public static class NumberContext extends ParserRuleContext {
-		public TerminalNode BIN_LITERAL() { return getToken(BasicTdlParser.BIN_LITERAL, 0); }
-		public TerminalNode HEX_LITERAL() { return getToken(BasicTdlParser.HEX_LITERAL, 0); }
 		public TerminalNode OCT_LITERAL() { return getToken(BasicTdlParser.OCT_LITERAL, 0); }
+		public TerminalNode BIN_LITERAL() { return getToken(BasicTdlParser.BIN_LITERAL, 0); }
 		public TerminalNode DEC_LITERAL() { return getToken(BasicTdlParser.DEC_LITERAL, 0); }
+		public TerminalNode HEX_LITERAL() { return getToken(BasicTdlParser.HEX_LITERAL, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -730,7 +740,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitNumber(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -769,7 +779,7 @@ public class BasicTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BasicTdlVisitor ) return ((BasicTdlVisitor<? extends T>)visitor).visitDecNumber(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -794,53 +804,57 @@ public class BasicTdlParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\1\3\37\u009d\2\0\7\0\2\1\7\1\2\2\7\2\2\3\7\3\2\4\7\4\2\5\7\5\2\6\7\6"+
-		"\2\7\7\7\2\b\7\b\2\t\7\t\1\0\1\0\5\0\27\b\0\n\0\f\0\32\t\0\1\0\1\0\1\1"+
-		"\1\1\5\1 \b\1\n\1\f\1#\t\1\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2"+
-		"\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\3\2>\b\2\1\3"+
-		"\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\3\3J\b\3\1\3\1\3\1\3\1\3\1\3\1\3"+
-		"\1\3\1\3\1\3\1\3\1\3\3\3W\b\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3"+
-		"\1\3\3\3d\b\3\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4\3\4o\b\4\1\4\3\4r\b"+
-		"\4\1\5\1\5\1\5\1\5\1\5\1\5\1\5\1\5\1\5\1\5\3\5~\b\5\1\5\1\5\1\5\1\5\3"+
-		"\5\u0084\b\5\3\5\u0086\b\5\1\6\1\6\1\6\3\6\u008b\b\6\1\7\1\7\1\7\1\7\1"+
-		"\7\1\7\1\7\3\7\u0094\b\7\1\7\3\7\u0097\b\7\1\b\1\b\1\t\1\t\1\t\0\n\0\2"+
-		"\4\6\b\n\f\16\20\22\0\1\1\32\35\u00ac\0\30\1\0\0\0\2\35\1\0\0\0\4$\1\0"+
-		"\0\0\6I\1\0\0\0\bq\1\0\0\0\n\u0085\1\0\0\0\f\u0087\1\0\0\0\16\u0096\1"+
-		"\0\0\0\20\u0098\1\0\0\0\22\u009a\1\0\0\0\24\27\3\2\1\0\25\27\3\6\3\0\26"+
-		"\24\1\0\0\0\26\25\1\0\0\0\27\32\1\0\0\0\30\26\1\0\0\0\30\31\1\0\0\0\31"+
-		"\33\1\0\0\0\32\30\1\0\0\0\33\34\5\uffff\0\0\34\1\1\0\0\0\35!\3\4\2\0\36"+
-		" \5\3\0\0\37\36\1\0\0\0 #\1\0\0\0!\37\1\0\0\0!\"\1\0\0\0\"\3\1\0\0\0#"+
-		"!\1\0\0\0$%\5\37\0\0%=\5\4\0\0&\'\5\6\0\0\'(\5\5\0\0()\3\20\b\0)*\1\0"+
-		"\0\0*+\5\27\0\0+,\5\7\0\0,-\5\5\0\0-.\3\20\b\0.>\1\0\0\0/\60\5\6\0\0\60"+
-		"\61\5\5\0\0\61\62\3\20\b\0\62\63\1\0\0\0\63\64\6\2\uffff\0\64>\1\0\0\0"+
-		"\65\66\3\20\b\0\66\67\5\25\0\0\678\3\20\b\08>\1\0\0\09:\3\20\b\0:;\6\2"+
-		"\uffff\0;>\1\0\0\0<>\6\2\uffff\0=&\1\0\0\0=/\1\0\0\0=\65\1\0\0\0=9\1\0"+
-		"\0\0=<\1\0\0\0>\5\1\0\0\0?@\5\b\0\0@A\3\22\t\0AB\5\30\0\0BJ\1\0\0\0CD"+
-		"\5\b\0\0DE\3\22\t\0EF\6\3\uffff\0FJ\1\0\0\0GH\5\b\0\0HJ\6\3\uffff\0I?"+
-		"\1\0\0\0IC\1\0\0\0IG\1\0\0\0JV\1\0\0\0KL\5\17\0\0LM\3\b\4\0MN\5\27\0\0"+
-		"NW\1\0\0\0OP\5\17\0\0PQ\3\b\4\0QR\6\3\uffff\0RW\1\0\0\0ST\5\17\0\0TW\6"+
-		"\3\uffff\0UW\6\3\uffff\0VK\1\0\0\0VO\1\0\0\0VS\1\0\0\0VU\1\0\0\0Wc\1\0"+
-		"\0\0XY\5\n\0\0YZ\3\f\6\0Z[\3\n\5\0[d\1\0\0\0\\]\5\n\0\0]^\3\f\6\0^_\6"+
-		"\3\uffff\0_d\1\0\0\0`a\5\n\0\0ad\6\3\uffff\0bd\6\3\uffff\0cX\1\0\0\0c"+
-		"\\\1\0\0\0c`\1\0\0\0cb\1\0\0\0d\7\1\0\0\0ef\5\20\0\0fg\5\21\0\0go\3\22"+
-		"\t\0hi\5\20\0\0ij\5\21\0\0jo\6\4\uffff\0kl\5\20\0\0lo\6\4\uffff\0mo\6"+
-		"\4\uffff\0ne\1\0\0\0nh\1\0\0\0nk\1\0\0\0nm\1\0\0\0or\1\0\0\0pr\5\22\0"+
-		"\0qn\1\0\0\0qp\1\0\0\0r\t\1\0\0\0st\5\13\0\0t}\5\t\0\0uv\5\23\0\0vw\3"+
-		"\22\t\0wx\5\26\0\0x~\1\0\0\0yz\5\23\0\0z{\3\22\t\0{|\6\5\uffff\0|~\1\0"+
-		"\0\0}u\1\0\0\0}y\1\0\0\0}~\1\0\0\0~\u0086\1\0\0\0\177\u0080\5\r\0\0\u0080"+
-		"\u0084\5\16\0\0\u0081\u0082\5\r\0\0\u0082\u0084\6\5\uffff\0\u0083\177"+
-		"\1\0\0\0\u0083\u0081\1\0\0\0\u0084\u0086\1\0\0\0\u0085s\1\0\0\0\u0085"+
-		"\u0083\1\0\0\0\u0086\13\1\0\0\0\u0087\u008a\3\16\7\0\u0088\u0089\5\31"+
-		"\0\0\u0089\u008b\3\22\t\0\u008a\u0088\1\0\0\0\u008a\u008b\1\0\0\0\u008b"+
-		"\r\1\0\0\0\u008c\u008d\5\24\0\0\u008d\u0094\3\16\7\0\u008e\u008f\5\24"+
-		"\0\0\u008f\u0090\5\24\0\0\u0090\u0091\3\16\7\0\u0091\u0092\6\7\uffff\0"+
-		"\u0092\u0094\1\0\0\0\u0093\u008c\1\0\0\0\u0093\u008e\1\0\0\0\u0094\u0097"+
-		"\1\0\0\0\u0095\u0097\5\37\0\0\u0096\u0093\1\0\0\0\u0096\u0095\1\0\0\0"+
-		"\u0097\17\1\0\0\0\u0098\u0099\7\0\0\0\u0099\21\1\0\0\0\u009a\u009b\5\35"+
-		"\0\0\u009b\23\1\0\0\0\17\26\30!=IVcnq}\u0083\u0085\u008a\u0093\u0096";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u009f\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\3\2\3\2\7\2\31\n\2\f\2\16\2\34\13\2\3\2\3\2\3\3\3\3\7\3\"\n\3\f\3"+
+		"\16\3%\13\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
+		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4@\n\4\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\5\3\5\3\5\3\5\5\5L\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\5\5Y\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5f\n\5\3"+
+		"\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6q\n\6\3\6\5\6t\n\6\3\7\3\7\3\7\3"+
+		"\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u0080\n\7\3\7\3\7\3\7\3\7\5\7\u0086\n\7"+
+		"\5\7\u0088\n\7\3\b\3\b\3\b\5\b\u008d\n\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5"+
+		"\t\u0096\n\t\3\t\5\t\u0099\n\t\3\n\3\n\3\13\3\13\3\13\2\2\f\2\4\6\b\n"+
+		"\f\16\20\22\24\2\3\3\2\34\37\u00ae\2\32\3\2\2\2\4\37\3\2\2\2\6&\3\2\2"+
+		"\2\bK\3\2\2\2\ns\3\2\2\2\f\u0087\3\2\2\2\16\u0089\3\2\2\2\20\u0098\3\2"+
+		"\2\2\22\u009a\3\2\2\2\24\u009c\3\2\2\2\26\31\5\4\3\2\27\31\5\b\5\2\30"+
+		"\26\3\2\2\2\30\27\3\2\2\2\31\34\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33"+
+		"\35\3\2\2\2\34\32\3\2\2\2\35\36\7\2\2\3\36\3\3\2\2\2\37#\5\6\4\2 \"\7"+
+		"\5\2\2! \3\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\5\3\2\2\2%#\3\2\2\2&"+
+		"\'\7!\2\2\'?\7\6\2\2()\7\b\2\2)*\7\7\2\2*+\5\22\n\2+,\3\2\2\2,-\7\31\2"+
+		"\2-.\7\t\2\2./\7\7\2\2/\60\5\22\n\2\60@\3\2\2\2\61\62\7\b\2\2\62\63\7"+
+		"\7\2\2\63\64\5\22\n\2\64\65\3\2\2\2\65\66\b\4\1\2\66@\3\2\2\2\678\5\22"+
+		"\n\289\7\27\2\29:\5\22\n\2:@\3\2\2\2;<\5\22\n\2<=\b\4\1\2=@\3\2\2\2>@"+
+		"\b\4\1\2?(\3\2\2\2?\61\3\2\2\2?\67\3\2\2\2?;\3\2\2\2?>\3\2\2\2@\7\3\2"+
+		"\2\2AB\7\n\2\2BC\5\24\13\2CD\7\32\2\2DL\3\2\2\2EF\7\n\2\2FG\5\24\13\2"+
+		"GH\b\5\1\2HL\3\2\2\2IJ\7\n\2\2JL\b\5\1\2KA\3\2\2\2KE\3\2\2\2KI\3\2\2\2"+
+		"LX\3\2\2\2MN\7\21\2\2NO\5\n\6\2OP\7\31\2\2PY\3\2\2\2QR\7\21\2\2RS\5\n"+
+		"\6\2ST\b\5\1\2TY\3\2\2\2UV\7\21\2\2VY\b\5\1\2WY\b\5\1\2XM\3\2\2\2XQ\3"+
+		"\2\2\2XU\3\2\2\2XW\3\2\2\2Ye\3\2\2\2Z[\7\f\2\2[\\\5\16\b\2\\]\5\f\7\2"+
+		"]f\3\2\2\2^_\7\f\2\2_`\5\16\b\2`a\b\5\1\2af\3\2\2\2bc\7\f\2\2cf\b\5\1"+
+		"\2df\b\5\1\2eZ\3\2\2\2e^\3\2\2\2eb\3\2\2\2ed\3\2\2\2f\t\3\2\2\2gh\7\22"+
+		"\2\2hi\7\23\2\2iq\5\24\13\2jk\7\22\2\2kl\7\23\2\2lq\b\6\1\2mn\7\22\2\2"+
+		"nq\b\6\1\2oq\b\6\1\2pg\3\2\2\2pj\3\2\2\2pm\3\2\2\2po\3\2\2\2qt\3\2\2\2"+
+		"rt\7\24\2\2sp\3\2\2\2sr\3\2\2\2t\13\3\2\2\2uv\7\r\2\2v\177\7\13\2\2wx"+
+		"\7\25\2\2xy\5\24\13\2yz\7\30\2\2z\u0080\3\2\2\2{|\7\25\2\2|}\5\24\13\2"+
+		"}~\b\7\1\2~\u0080\3\2\2\2\177w\3\2\2\2\177{\3\2\2\2\177\u0080\3\2\2\2"+
+		"\u0080\u0088\3\2\2\2\u0081\u0082\7\17\2\2\u0082\u0086\7\20\2\2\u0083\u0084"+
+		"\7\17\2\2\u0084\u0086\b\7\1\2\u0085\u0081\3\2\2\2\u0085\u0083\3\2\2\2"+
+		"\u0086\u0088\3\2\2\2\u0087u\3\2\2\2\u0087\u0085\3\2\2\2\u0088\r\3\2\2"+
+		"\2\u0089\u008c\5\20\t\2\u008a\u008b\7\33\2\2\u008b\u008d\5\24\13\2\u008c"+
+		"\u008a\3\2\2\2\u008c\u008d\3\2\2\2\u008d\17\3\2\2\2\u008e\u008f\7\26\2"+
+		"\2\u008f\u0096\5\20\t\2\u0090\u0091\7\26\2\2\u0091\u0092\7\26\2\2\u0092"+
+		"\u0093\5\20\t\2\u0093\u0094\b\t\1\2\u0094\u0096\3\2\2\2\u0095\u008e\3"+
+		"\2\2\2\u0095\u0090\3\2\2\2\u0096\u0099\3\2\2\2\u0097\u0099\7!\2\2\u0098"+
+		"\u0095\3\2\2\2\u0098\u0097\3\2\2\2\u0099\21\3\2\2\2\u009a\u009b\t\2\2"+
+		"\2\u009b\23\3\2\2\2\u009c\u009d\7\37\2\2\u009d\25\3\2\2\2\21\30\32#?K"+
+		"Xeps\177\u0085\u0087\u008c\u0095\u0098";
 	public static final ATN _ATN =
-		ATNSimulator.deserialize(_serializedATN.toCharArray());
+		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
-	    _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
+		}
 	}
 }

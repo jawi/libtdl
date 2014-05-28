@@ -1,4 +1,4 @@
-// $ANTLR ANTLRVersion> AdvTdlParser.java generatedTimestamp>
+// Generated from AdvTdl.g4 by ANTLR 4.2.2
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -9,12 +9,15 @@
  */
 package nl.lxtreme.libtdl.grammar.adv;
 
-import java.util.*;
 
-import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.*;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AdvTdlParser extends Parser {
@@ -57,6 +60,9 @@ public class AdvTdlParser extends Parser {
 	public String[] getRuleNames() { return ruleNames; }
 
 	@Override
+	public String getSerializedATN() { return _serializedATN; }
+
+	@Override
 	public ATN getATN() { return _ATN; }
 
 	public AdvTdlParser(TokenStream input) {
@@ -64,18 +70,18 @@ public class AdvTdlParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgContext extends ParserRuleContext {
-		public List<StageDefContext> stageDef() {
-			return getRuleContexts(StageDefContext.class);
-		}
-		public DeclContext decl(int i) {
-			return getRuleContext(DeclContext.class,i);
-		}
 		public StageDefContext stageDef(int i) {
 			return getRuleContext(StageDefContext.class,i);
 		}
 		public TerminalNode EOF() { return getToken(AdvTdlParser.EOF, 0); }
+		public List<StageDefContext> stageDef() {
+			return getRuleContexts(StageDefContext.class);
+		}
 		public List<DeclContext> decl() {
 			return getRuleContexts(DeclContext.class);
+		}
+		public DeclContext decl(int i) {
+			return getRuleContext(DeclContext.class,i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -84,7 +90,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitProg(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -138,21 +144,21 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class DeclContext extends ParserRuleContext {
-		public EdgeDeclContext edgeDecl() {
-			return getRuleContext(EdgeDeclContext.class,0);
+		public List<TerminalNode> WS() { return getTokens(AdvTdlParser.WS); }
+		public TermDeclContext termDecl() {
+			return getRuleContext(TermDeclContext.class,0);
 		}
 		public RangeDeclContext rangeDecl() {
 			return getRuleContext(RangeDeclContext.class,0);
 		}
-		public TermDeclContext termDecl() {
-			return getRuleContext(TermDeclContext.class,0);
-		}
-		public List<TerminalNode> WS() { return getTokens(AdvTdlParser.WS); }
-		public TimerDeclContext timerDecl() {
-			return getRuleContext(TimerDeclContext.class,0);
+		public EdgeDeclContext edgeDecl() {
+			return getRuleContext(EdgeDeclContext.class,0);
 		}
 		public TerminalNode WS(int i) {
 			return getToken(AdvTdlParser.WS, i);
+		}
+		public TimerDeclContext timerDecl() {
+			return getRuleContext(TimerDeclContext.class,0);
 		}
 		public DeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -161,7 +167,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -227,16 +233,22 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext mask;
 		public NumberContext value;
-		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
-		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
-		public TerminalNode MASK() { return getToken(AdvTdlParser.MASK, 0); }
-		public TerminalNode VALUE() { return getToken(AdvTdlParser.VALUE, 0); }
-		public TerminalNode COMMA() { return getToken(AdvTdlParser.COMMA, 0); }
-		public NumberContext number() {
-			return getRuleContext(NumberContext.class,0);
+		public List<NumberContext> number() {
+			return getRuleContexts(NumberContext.class);
 		}
-		public TerminalNode EQUALS_TO() { return getToken(AdvTdlParser.EQUALS_TO, 0); }
+		public List<TerminalNode> EQUALS_TO() { return getTokens(AdvTdlParser.EQUALS_TO); }
+		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
+		public TerminalNode VALUE() { return getToken(AdvTdlParser.VALUE, 0); }
+		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
 		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public NumberContext number(int i) {
+			return getRuleContext(NumberContext.class,i);
+		}
+		public TerminalNode COMMA() { return getToken(AdvTdlParser.COMMA, 0); }
+		public TerminalNode MASK() { return getToken(AdvTdlParser.MASK, 0); }
+		public TerminalNode EQUALS_TO(int i) {
+			return getToken(AdvTdlParser.EQUALS_TO, i);
+		}
 		public TermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -244,7 +256,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitTermDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -327,12 +339,12 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext value;
 		public Token unit;
-		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
-		public TerminalNode TIME_UNIT() { return getToken(AdvTdlParser.TIME_UNIT, 0); }
 		public NumberContext number() {
 			return getRuleContext(NumberContext.class,0);
 		}
 		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public TerminalNode TIME_UNIT() { return getToken(AdvTdlParser.TIME_UNIT, 0); }
+		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
 		public TimerDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -340,7 +352,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitTimerDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -391,11 +403,14 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext lowerBound;
 		public NumberContext upperBound;
-		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
-		public NumberContext number() {
-			return getRuleContext(NumberContext.class,0);
+		public List<NumberContext> number() {
+			return getRuleContexts(NumberContext.class);
 		}
 		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public NumberContext number(int i) {
+			return getRuleContext(NumberContext.class,i);
+		}
+		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
 		public RangeDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -403,7 +418,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitRangeDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -463,13 +478,13 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext mask;
 		public TerminalNode BOTH() { return getToken(AdvTdlParser.BOTH, 0); }
-		public TerminalNode NEITHER() { return getToken(AdvTdlParser.NEITHER, 0); }
-		public TerminalNode FALLING() { return getToken(AdvTdlParser.FALLING, 0); }
 		public NumberContext number() {
 			return getRuleContext(NumberContext.class,0);
 		}
+		public TerminalNode FALLING() { return getToken(AdvTdlParser.FALLING, 0); }
 		public TerminalNode EQUALS_TO() { return getToken(AdvTdlParser.EQUALS_TO, 0); }
 		public TerminalNode RISING() { return getToken(AdvTdlParser.RISING, 0); }
+		public TerminalNode NEITHER() { return getToken(AdvTdlParser.NEITHER, 0); }
 		public EdgeTermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -477,7 +492,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitEdgeTermDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -538,12 +553,18 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public EdgeTermDeclContext edgeTermDecl;
 		public List<EdgeTermDeclContext> terms = new ArrayList<EdgeTermDeclContext>();
-		public EdgeTermDeclContext edgeTermDecl() {
-			return getRuleContext(EdgeTermDeclContext.class,0);
+		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public List<TerminalNode> COMMA() { return getTokens(AdvTdlParser.COMMA); }
+		public EdgeTermDeclContext edgeTermDecl(int i) {
+			return getRuleContext(EdgeTermDeclContext.class,i);
 		}
 		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
-		public TerminalNode COMMA() { return getToken(AdvTdlParser.COMMA, 0); }
-		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public TerminalNode COMMA(int i) {
+			return getToken(AdvTdlParser.COMMA, i);
+		}
+		public List<EdgeTermDeclContext> edgeTermDecl() {
+			return getRuleContexts(EdgeTermDeclContext.class);
+		}
 		public EdgeDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -551,7 +572,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitEdgeDecl(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -625,31 +646,31 @@ public class AdvTdlParser extends Parser {
 		public TermExprContext ifExpr;
 		public DecNumberContext occurrence;
 		public TermExprContext elseExpr;
-		public TerminalNode COLON() { return getToken(AdvTdlParser.COLON, 0); }
+		public TerminalNode ON() { return getToken(AdvTdlParser.ON, 0); }
+		public WhenActionContext whenAction() {
+			return getRuleContext(WhenActionContext.class,0);
+		}
+		public TerminalNode STAGE() { return getToken(AdvTdlParser.STAGE, 0); }
+		public TerminalNode ELSE() { return getToken(AdvTdlParser.ELSE, 0); }
+		public TerminalNode OCCURS() { return getToken(AdvTdlParser.OCCURS, 0); }
+		public List<DecNumberContext> decNumber() {
+			return getRuleContexts(DecNumberContext.class);
+		}
 		public ElseActionContext elseAction() {
 			return getRuleContext(ElseActionContext.class,0);
+		}
+		public DecNumberContext decNumber(int i) {
+			return getRuleContext(DecNumberContext.class,i);
 		}
 		public List<TermExprContext> termExpr() {
 			return getRuleContexts(TermExprContext.class);
 		}
-		public List<DecNumberContext> decNumber() {
-			return getRuleContexts(DecNumberContext.class);
-		}
-		public TerminalNode STAGE() { return getToken(AdvTdlParser.STAGE, 0); }
-		public TerminalNode WHEN() { return getToken(AdvTdlParser.WHEN, 0); }
-		public DecNumberContext decNumber(int i) {
-			return getRuleContext(DecNumberContext.class,i);
-		}
-		public TerminalNode ELSE() { return getToken(AdvTdlParser.ELSE, 0); }
-		public TerminalNode OCCURS() { return getToken(AdvTdlParser.OCCURS, 0); }
-		public TerminalNode ON() { return getToken(AdvTdlParser.ON, 0); }
 		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
-		public WhenActionContext whenAction() {
-			return getRuleContext(WhenActionContext.class,0);
-		}
 		public TermExprContext termExpr(int i) {
 			return getRuleContext(TermExprContext.class,i);
 		}
+		public TerminalNode COLON() { return getToken(AdvTdlParser.COLON, 0); }
+		public TerminalNode WHEN() { return getToken(AdvTdlParser.WHEN, 0); }
 		public StageDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -657,7 +678,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitStageDef(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -830,13 +851,13 @@ public class AdvTdlParser extends Parser {
 	public static class WhenActionContext extends ParserRuleContext {
 		public Token action;
 		public Token name;
-		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
-		public TerminalNode START() { return getToken(AdvTdlParser.START, 0); }
+		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
 		public TerminalNode NEXT() { return getToken(AdvTdlParser.NEXT, 0); }
 		public TerminalNode STOP() { return getToken(AdvTdlParser.STOP, 0); }
-		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
-		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
+		public TerminalNode START() { return getToken(AdvTdlParser.START, 0); }
 		public TerminalNode CLEAR() { return getToken(AdvTdlParser.CLEAR, 0); }
+		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
+		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
 		public WhenActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -844,7 +865,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitWhenAction(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -919,10 +940,10 @@ public class AdvTdlParser extends Parser {
 
 	public static class ElseActionContext extends ParserRuleContext {
 		public DecNumberContext n;
+		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
 		public DecNumberContext decNumber() {
 			return getRuleContext(DecNumberContext.class,0);
 		}
-		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
 		public ElseActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -930,7 +951,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitElseAction(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -970,10 +991,10 @@ public class AdvTdlParser extends Parser {
 
 	public static class TermExprContext extends ParserRuleContext {
 		public Token e;
-		public TerminalNode ANY() { return getToken(AdvTdlParser.ANY, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		public TerminalNode ANY() { return getToken(AdvTdlParser.ANY, 0); }
 		public TerminalNode NOP() { return getToken(AdvTdlParser.NOP, 0); }
 		public TermExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -982,7 +1003,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitTermExpr(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1031,47 +1052,48 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class ExprContext extends ParserRuleContext {
-		public int _p;
 		public ExprContext lhs;
 		public Token op;
 		public ExprContext rhs;
 		public Token term;
-		public TerminalNode RPAREN() { return getToken(AdvTdlParser.RPAREN, 0); }
 		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
-		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
-		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
-		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
-		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
-		public TerminalNode NOT() { return getToken(AdvTdlParser.NOT, 0); }
-		public TerminalNode AND() { return getToken(AdvTdlParser.AND, 0); }
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
-		public TerminalNode LPAREN() { return getToken(AdvTdlParser.LPAREN, 0); }
+		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
+		public TerminalNode AND() { return getToken(AdvTdlParser.AND, 0); }
 		public TerminalNode OR() { return getToken(AdvTdlParser.OR, 0); }
-		public ExprContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExprContext(ParserRuleContext parent, int invokingState, int _p) {
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode RPAREN() { return getToken(AdvTdlParser.RPAREN, 0); }
+		public TerminalNode NOT() { return getToken(AdvTdlParser.NOT, 0); }
+		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
+		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
+		public TerminalNode LPAREN() { return getToken(AdvTdlParser.LPAREN, 0); }
+		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
+		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this._p = _p;
 		}
 		@Override public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitExpr(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ExprContext expr(int _p) throws RecognitionException {
+	public final ExprContext expr() throws RecognitionException {
+		return expr(0);
+	}
+
+	private ExprContext expr(int _p) throws RecognitionException {
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
-		ExprContext _localctx = new ExprContext(_ctx, _parentState, _p);
+		ExprContext _localctx = new ExprContext(_ctx, _parentState);
 		ExprContext _prevctx = _localctx;
 		int _startState = 22;
-		enterRecursionRule(_localctx, RULE_expr);
+		enterRecursionRule(_localctx, 22, RULE_expr, _p);
 		int _la;
 		try {
 			int _alt;
@@ -1113,7 +1135,7 @@ public class AdvTdlParser extends Parser {
 			setState(228);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -1122,11 +1144,11 @@ public class AdvTdlParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
 					case 1:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx = new ExprContext(_parentctx, _parentState);
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(217);
-						if (!(4 >= _localctx._p)) throw new FailedPredicateException(this, "4 >= $_p");
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(218); ((ExprContext)_localctx).op = match(AND);
 						setState(219); ((ExprContext)_localctx).rhs = expr(5);
 						}
@@ -1134,11 +1156,11 @@ public class AdvTdlParser extends Parser {
 
 					case 2:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx = new ExprContext(_parentctx, _parentState);
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(220);
-						if (!(3 >= _localctx._p)) throw new FailedPredicateException(this, "3 >= $_p");
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(221); ((ExprContext)_localctx).op = match(XOR);
 						setState(222); ((ExprContext)_localctx).rhs = expr(4);
 						}
@@ -1146,11 +1168,11 @@ public class AdvTdlParser extends Parser {
 
 					case 3:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState, _p);
+						_localctx = new ExprContext(_parentctx, _parentState);
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(223);
-						if (!(2 >= _localctx._p)) throw new FailedPredicateException(this, "2 >= $_p");
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(224); ((ExprContext)_localctx).op = match(OR);
 						setState(225); ((ExprContext)_localctx).rhs = expr(3);
 						}
@@ -1176,10 +1198,10 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class NumberContext extends ParserRuleContext {
-		public TerminalNode BIN_LITERAL() { return getToken(AdvTdlParser.BIN_LITERAL, 0); }
-		public TerminalNode HEX_LITERAL() { return getToken(AdvTdlParser.HEX_LITERAL, 0); }
 		public TerminalNode OCT_LITERAL() { return getToken(AdvTdlParser.OCT_LITERAL, 0); }
+		public TerminalNode BIN_LITERAL() { return getToken(AdvTdlParser.BIN_LITERAL, 0); }
 		public TerminalNode DEC_LITERAL() { return getToken(AdvTdlParser.DEC_LITERAL, 0); }
+		public TerminalNode HEX_LITERAL() { return getToken(AdvTdlParser.HEX_LITERAL, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1187,7 +1209,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitNumber(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1226,7 +1248,7 @@ public class AdvTdlParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof AdvTdlVisitor ) return ((AdvTdlVisitor<? extends T>)visitor).visitDecNumber(this);
-			else return null;
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1258,98 +1280,100 @@ public class AdvTdlParser extends Parser {
 	}
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return 4 >= _localctx._p;
+		case 0: return precpred(_ctx, 4);
 
-		case 1: return 3 >= _localctx._p;
+		case 1: return precpred(_ctx, 3);
 
-		case 2: return 2 >= _localctx._p;
+		case 2: return precpred(_ctx, 2);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\1\3*\u00ec\2\0\7\0\2\1\7\1\2\2\7\2\2\3\7\3\2\4\7\4\2\5\7\5\2\6\7\6\2"+
-		"\7\7\7\2\b\7\b\2\t\7\t\2\n\7\n\2\13\7\13\2\f\7\f\2\r\7\r\1\0\1\0\5\0\37"+
-		"\b\0\n\0\f\0\"\t\0\1\0\1\0\1\1\1\1\1\1\1\1\3\1*\b\1\1\1\5\1-\b\1\n\1\f"+
-		"\1\60\t\1\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2"+
-		"\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\1\2\3\2K\b\2\1\3\1\3\1\3\1\3\1\3"+
-		"\1\3\1\3\1\3\1\3\3\3V\b\3\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4\1\4"+
-		"\1\4\1\4\1\4\3\4f\b\4\1\5\1\5\1\5\1\5\3\5l\b\5\1\6\1\6\1\6\1\6\1\6\5\6"+
-		"s\b\6\n\6\f\6v\t\6\1\6\3\6y\b\6\1\7\1\7\1\7\1\7\1\7\1\7\1\7\1\7\1\7\1"+
-		"\7\3\7\u0085\b\7\1\7\1\7\1\7\1\7\1\7\3\7\u008c\b\7\1\7\1\7\1\7\1\7\3\7"+
-		"\u0092\b\7\1\7\1\7\1\7\1\7\1\7\1\7\3\7\u009a\b\7\1\7\1\7\1\7\1\7\1\7\3"+
-		"\7\u00a1\b\7\1\7\1\7\3\7\u00a5\b\7\1\7\1\7\1\7\1\7\1\7\1\7\1\7\1\7\1\7"+
-		"\1\7\1\7\1\7\1\7\1\7\1\7\1\7\3\7\u00b7\b\7\1\b\1\b\1\b\1\b\1\b\1\b\1\b"+
-		"\1\b\3\b\u00c1\b\b\3\b\u00c3\b\b\1\t\1\t\1\t\1\t\3\t\u00c9\b\t\1\n\1\n"+
-		"\1\n\3\n\u00ce\b\n\1\13\1\13\1\13\1\13\1\13\1\13\1\13\1\13\3\13\u00d8"+
-		"\b\13\1\13\1\13\1\13\1\13\1\13\1\13\1\13\1\13\1\13\5\13\u00e3\b\13\n\13"+
-		"\f\13\u00e6\t\13\1\f\1\f\1\r\1\r\1\r\0\16\0\2\4\6\b\n\f\16\20\22\24\26"+
-		"\30\32\0\5\1\t\f\1\23\25\1\23\24\1\'*\1\"%\u0108\0 \1\0\0\0\2)\1\0\0\0"+
-		"\4\61\1\0\0\0\6L\1\0\0\0\bW\1\0\0\0\ng\1\0\0\0\fm\1\0\0\0\16\u0084\1\0"+
-		"\0\0\20\u00c2\1\0\0\0\22\u00c8\1\0\0\0\24\u00cd\1\0\0\0\26\u00d7\1\0\0"+
-		"\0\30\u00e7\1\0\0\0\32\u00e9\1\0\0\0\34\37\3\2\1\0\35\37\3\16\7\0\36\34"+
-		"\1\0\0\0\36\35\1\0\0\0\37\"\1\0\0\0 \36\1\0\0\0 !\1\0\0\0!#\1\0\0\0\""+
-		" \1\0\0\0#$\5\uffff\0\0$\1\1\0\0\0%*\3\4\2\0&*\3\6\3\0\'*\3\b\4\0(*\3"+
-		"\f\6\0)%\1\0\0\0)&\1\0\0\0)\'\1\0\0\0)(\1\0\0\0*.\1\0\0\0+-\5\4\0\0,+"+
-		"\1\0\0\0-\60\1\0\0\0.,\1\0\0\0./\1\0\0\0/\3\1\0\0\0\60.\1\0\0\0\61\62"+
-		"\5\'\0\0\62J\5\5\0\0\63\64\5\7\0\0\64\65\5\6\0\0\65\66\3\30\f\0\66\67"+
-		"\1\0\0\0\678\5\32\0\089\5\b\0\09:\5\6\0\0:;\3\30\f\0;K\1\0\0\0<=\5\7\0"+
-		"\0=>\5\6\0\0>?\3\30\f\0?@\1\0\0\0@A\6\2\uffff\0AK\1\0\0\0BC\3\30\f\0C"+
-		"D\5\35\0\0DE\3\30\f\0EK\1\0\0\0FG\3\30\f\0GH\6\2\uffff\0HK\1\0\0\0IK\6"+
-		"\2\uffff\0J\63\1\0\0\0J<\1\0\0\0JB\1\0\0\0JF\1\0\0\0JI\1\0\0\0K\5\1\0"+
-		"\0\0LM\5(\0\0MU\5\5\0\0NO\3\30\f\0OP\5&\0\0PV\1\0\0\0QR\3\30\f\0RS\6\3"+
-		"\uffff\0SV\1\0\0\0TV\6\3\uffff\0UN\1\0\0\0UQ\1\0\0\0UT\1\0\0\0V\7\1\0"+
-		"\0\0WX\5)\0\0Xe\5\5\0\0YZ\3\30\f\0Z[\5\1\0\0[\\\3\30\f\0\\f\1\0\0\0]^"+
-		"\3\30\f\0^_\5\1\0\0_`\6\4\uffff\0`f\1\0\0\0ab\3\30\f\0bc\6\4\uffff\0c"+
-		"f\1\0\0\0df\6\4\uffff\0eY\1\0\0\0e]\1\0\0\0ea\1\0\0\0ed\1\0\0\0f\t\1\0"+
-		"\0\0gh\7\0\0\0hk\5\6\0\0il\3\30\f\0jl\6\5\uffff\0ki\1\0\0\0kj\1\0\0\0"+
-		"l\13\1\0\0\0mn\5*\0\0nx\5\5\0\0ot\3\n\5\0pq\5\32\0\0qs\3\n\5\0rp\1\0\0"+
-		"\0sv\1\0\0\0tr\1\0\0\0tu\1\0\0\0uy\1\0\0\0vt\1\0\0\0wy\6\6\uffff\0xo\1"+
-		"\0\0\0xw\1\0\0\0y\r\1\0\0\0z{\5\r\0\0{|\3\32\r\0|}\5\33\0\0}\u0085\1\0"+
-		"\0\0~\177\5\r\0\0\177\u0080\3\32\r\0\u0080\u0081\6\7\uffff\0\u0081\u0085"+
-		"\1\0\0\0\u0082\u0083\5\r\0\0\u0083\u0085\6\7\uffff\0\u0084z\1\0\0\0\u0084"+
-		"~\1\0\0\0\u0084\u0082\1\0\0\0\u0085\u008b\1\0\0\0\u0086\u0087\5\16\0\0"+
-		"\u0087\u008c\3\24\n\0\u0088\u0089\5\16\0\0\u0089\u008c\6\7\uffff\0\u008a"+
-		"\u008c\6\7\uffff\0\u008b\u0086\1\0\0\0\u008b\u0088\1\0\0\0\u008b\u008a"+
-		"\1\0\0\0\u008c\u00a4\1\0\0\0\u008d\u008e\5\21\0\0\u008e\u0091\3\24\n\0"+
-		"\u008f\u0090\5\22\0\0\u0090\u0092\3\32\r\0\u0091\u008f\1\0\0\0\u0091\u0092"+
-		"\1\0\0\0\u0092\u0093\1\0\0\0\u0093\u0094\3\20\b\0\u0094\u00a5\1\0\0\0"+
-		"\u0095\u0096\5\21\0\0\u0096\u0099\3\24\n\0\u0097\u0098\5\22\0\0\u0098"+
-		"\u009a\3\32\r\0\u0099\u0097\1\0\0\0\u0099\u009a\1\0\0\0\u009a\u009b\1"+
-		"\0\0\0\u009b\u009c\6\7\uffff\0\u009c\u00a5\1\0\0\0\u009d\u00a0\5\21\0"+
-		"\0\u009e\u009f\5\22\0\0\u009f\u00a1\3\32\r\0\u00a0\u009e\1\0\0\0\u00a0"+
-		"\u00a1\1\0\0\0\u00a1\u00a2\1\0\0\0\u00a2\u00a5\6\7\uffff\0\u00a3\u00a5"+
-		"\6\7\uffff\0\u00a4\u008d\1\0\0\0\u00a4\u0095\1\0\0\0\u00a4\u009d\1\0\0"+
-		"\0\u00a4\u00a3\1\0\0\0\u00a5\u00b6\1\0\0\0\u00a6\u00a7\5\30\0\0\u00a7"+
-		"\u00a8\5\31\0\0\u00a8\u00a9\3\24\n\0\u00a9\u00aa\3\22\t\0\u00aa\u00b7"+
-		"\1\0\0\0\u00ab\u00ac\5\30\0\0\u00ac\u00ad\5\31\0\0\u00ad\u00ae\3\24\n"+
-		"\0\u00ae\u00af\6\7\uffff\0\u00af\u00b7\1\0\0\0\u00b0\u00b1\5\30\0\0\u00b1"+
-		"\u00b2\5\31\0\0\u00b2\u00b7\6\7\uffff\0\u00b3\u00b4\5\30\0\0\u00b4\u00b7"+
-		"\6\7\uffff\0\u00b5\u00b7\6\7\uffff\0\u00b6\u00a6\1\0\0\0\u00b6\u00ab\1"+
-		"\0\0\0\u00b6\u00b0\1\0\0\0\u00b6\u00b3\1\0\0\0\u00b6\u00b5\1\0\0\0\u00b7"+
-		"\17\1\0\0\0\u00b8\u00b9\7\1\0\0\u00b9\u00c3\5(\0\0\u00ba\u00bb\7\2\0\0"+
-		"\u00bb\u00c3\5\16\0\0\u00bc\u00bd\5\26\0\0\u00bd\u00c1\5\27\0\0\u00be"+
-		"\u00bf\5\26\0\0\u00bf\u00c1\6\b\uffff\0\u00c0\u00bc\1\0\0\0\u00c0\u00be"+
-		"\1\0\0\0\u00c1\u00c3\1\0\0\0\u00c2\u00b8\1\0\0\0\u00c2\u00ba\1\0\0\0\u00c2"+
-		"\u00c0\1\0\0\0\u00c3\21\1\0\0\0\u00c4\u00c5\5\26\0\0\u00c5\u00c9\3\32"+
-		"\r\0\u00c6\u00c7\5\26\0\0\u00c7\u00c9\6\t\uffff\0\u00c8\u00c4\1\0\0\0"+
-		"\u00c8\u00c6\1\0\0\0\u00c9\23\1\0\0\0\u00ca\u00ce\5\17\0\0\u00cb\u00ce"+
-		"\5\20\0\0\u00cc\u00ce\3\26\13\0\u00cd\u00ca\1\0\0\0\u00cd\u00cb\1\0\0"+
-		"\0\u00cd\u00cc\1\0\0\0\u00ce\25\1\0\0\0\u00cf\u00d0\6\13\uffff\0\u00d0"+
-		"\u00d1\5\34\0\0\u00d1\u00d8\3\26\13\0\u00d2\u00d3\5 \0\0\u00d3\u00d4\3"+
-		"\26\13\0\u00d4\u00d5\5!\0\0\u00d5\u00d8\1\0\0\0\u00d6\u00d8\7\3\0\0\u00d7"+
-		"\u00cf\1\0\0\0\u00d7\u00d2\1\0\0\0\u00d7\u00d6\1\0\0\0\u00d8\u00e4\1\0"+
-		"\0\0\u00d9\u00da\4\13\0\1\u00da\u00db\5\36\0\0\u00db\u00e3\3\26\13\0\u00dc"+
-		"\u00dd\4\13\1\1\u00dd\u00de\5\35\0\0\u00de\u00e3\3\26\13\0\u00df\u00e0"+
-		"\4\13\2\1\u00e0\u00e1\5\37\0\0\u00e1\u00e3\3\26\13\0\u00e2\u00d9\1\0\0"+
-		"\0\u00e2\u00dc\1\0\0\0\u00e2\u00df\1\0\0\0\u00e3\u00e6\1\0\0\0\u00e4\u00e2"+
-		"\1\0\0\0\u00e4\u00e5\1\0\0\0\u00e5\27\1\0\0\0\u00e6\u00e4\1\0\0\0\u00e7"+
-		"\u00e8\7\4\0\0\u00e8\31\1\0\0\0\u00e9\u00ea\5%\0\0\u00ea\33\1\0\0\0\30"+
-		"\36 ).JUektx\u0084\u008b\u0091\u0099\u00a0\u00a4\u00b6\u00c0\u00c2\u00c8"+
-		"\u00cd\u00d7\u00e2\u00e4";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3,\u00ee\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\7\2!\n\2\f\2\16\2$\13"+
+		"\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3,\n\3\3\3\7\3/\n\3\f\3\16\3\62\13\3\3\4"+
+		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
+		"\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4M\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\5\5X\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5"+
+		"\6h\n\6\3\7\3\7\3\7\3\7\5\7n\n\7\3\b\3\b\3\b\3\b\3\b\7\bu\n\b\f\b\16\b"+
+		"x\13\b\3\b\5\b{\n\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\t\u0087"+
+		"\n\t\3\t\3\t\3\t\3\t\3\t\5\t\u008e\n\t\3\t\3\t\3\t\3\t\5\t\u0094\n\t\3"+
+		"\t\3\t\3\t\3\t\3\t\3\t\5\t\u009c\n\t\3\t\3\t\3\t\3\t\3\t\5\t\u00a3\n\t"+
+		"\3\t\3\t\5\t\u00a7\n\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t"+
+		"\3\t\3\t\3\t\3\t\5\t\u00b9\n\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\n\u00c3"+
+		"\n\n\5\n\u00c5\n\n\3\13\3\13\3\13\3\13\5\13\u00cb\n\13\3\f\3\f\3\f\5\f"+
+		"\u00d0\n\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00da\n\r\3\r\3\r\3\r\3"+
+		"\r\3\r\3\r\3\r\3\r\3\r\7\r\u00e5\n\r\f\r\16\r\u00e8\13\r\3\16\3\16\3\17"+
+		"\3\17\3\17\2\3\30\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34\2\7\3\2\13\16"+
+		"\3\2\25\27\3\2\25\26\3\2),\3\2$\'\u010a\2\"\3\2\2\2\4+\3\2\2\2\6\63\3"+
+		"\2\2\2\bN\3\2\2\2\nY\3\2\2\2\fi\3\2\2\2\16o\3\2\2\2\20\u0086\3\2\2\2\22"+
+		"\u00c4\3\2\2\2\24\u00ca\3\2\2\2\26\u00cf\3\2\2\2\30\u00d9\3\2\2\2\32\u00e9"+
+		"\3\2\2\2\34\u00eb\3\2\2\2\36!\5\4\3\2\37!\5\20\t\2 \36\3\2\2\2 \37\3\2"+
+		"\2\2!$\3\2\2\2\" \3\2\2\2\"#\3\2\2\2#%\3\2\2\2$\"\3\2\2\2%&\7\2\2\3&\3"+
+		"\3\2\2\2\',\5\6\4\2(,\5\b\5\2),\5\n\6\2*,\5\16\b\2+\'\3\2\2\2+(\3\2\2"+
+		"\2+)\3\2\2\2+*\3\2\2\2,\60\3\2\2\2-/\7\6\2\2.-\3\2\2\2/\62\3\2\2\2\60"+
+		".\3\2\2\2\60\61\3\2\2\2\61\5\3\2\2\2\62\60\3\2\2\2\63\64\7)\2\2\64L\7"+
+		"\7\2\2\65\66\7\t\2\2\66\67\7\b\2\2\678\5\32\16\289\3\2\2\29:\7\34\2\2"+
+		":;\7\n\2\2;<\7\b\2\2<=\5\32\16\2=M\3\2\2\2>?\7\t\2\2?@\7\b\2\2@A\5\32"+
+		"\16\2AB\3\2\2\2BC\b\4\1\2CM\3\2\2\2DE\5\32\16\2EF\7\37\2\2FG\5\32\16\2"+
+		"GM\3\2\2\2HI\5\32\16\2IJ\b\4\1\2JM\3\2\2\2KM\b\4\1\2L\65\3\2\2\2L>\3\2"+
+		"\2\2LD\3\2\2\2LH\3\2\2\2LK\3\2\2\2M\7\3\2\2\2NO\7*\2\2OW\7\7\2\2PQ\5\32"+
+		"\16\2QR\7(\2\2RX\3\2\2\2ST\5\32\16\2TU\b\5\1\2UX\3\2\2\2VX\b\5\1\2WP\3"+
+		"\2\2\2WS\3\2\2\2WV\3\2\2\2X\t\3\2\2\2YZ\7+\2\2Zg\7\7\2\2[\\\5\32\16\2"+
+		"\\]\7\3\2\2]^\5\32\16\2^h\3\2\2\2_`\5\32\16\2`a\7\3\2\2ab\b\6\1\2bh\3"+
+		"\2\2\2cd\5\32\16\2de\b\6\1\2eh\3\2\2\2fh\b\6\1\2g[\3\2\2\2g_\3\2\2\2g"+
+		"c\3\2\2\2gf\3\2\2\2h\13\3\2\2\2ij\t\2\2\2jm\7\b\2\2kn\5\32\16\2ln\b\7"+
+		"\1\2mk\3\2\2\2ml\3\2\2\2n\r\3\2\2\2op\7,\2\2pz\7\7\2\2qv\5\f\7\2rs\7\34"+
+		"\2\2su\5\f\7\2tr\3\2\2\2ux\3\2\2\2vt\3\2\2\2vw\3\2\2\2w{\3\2\2\2xv\3\2"+
+		"\2\2y{\b\b\1\2zq\3\2\2\2zy\3\2\2\2{\17\3\2\2\2|}\7\17\2\2}~\5\34\17\2"+
+		"~\177\7\35\2\2\177\u0087\3\2\2\2\u0080\u0081\7\17\2\2\u0081\u0082\5\34"+
+		"\17\2\u0082\u0083\b\t\1\2\u0083\u0087\3\2\2\2\u0084\u0085\7\17\2\2\u0085"+
+		"\u0087\b\t\1\2\u0086|\3\2\2\2\u0086\u0080\3\2\2\2\u0086\u0084\3\2\2\2"+
+		"\u0087\u008d\3\2\2\2\u0088\u0089\7\20\2\2\u0089\u008e\5\26\f\2\u008a\u008b"+
+		"\7\20\2\2\u008b\u008e\b\t\1\2\u008c\u008e\b\t\1\2\u008d\u0088\3\2\2\2"+
+		"\u008d\u008a\3\2\2\2\u008d\u008c\3\2\2\2\u008e\u00a6\3\2\2\2\u008f\u0090"+
+		"\7\23\2\2\u0090\u0093\5\26\f\2\u0091\u0092\7\24\2\2\u0092\u0094\5\34\17"+
+		"\2\u0093\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0096"+
+		"\5\22\n\2\u0096\u00a7\3\2\2\2\u0097\u0098\7\23\2\2\u0098\u009b\5\26\f"+
+		"\2\u0099\u009a\7\24\2\2\u009a\u009c\5\34\17\2\u009b\u0099\3\2\2\2\u009b"+
+		"\u009c\3\2\2\2\u009c\u009d\3\2\2\2\u009d\u009e\b\t\1\2\u009e\u00a7\3\2"+
+		"\2\2\u009f\u00a2\7\23\2\2\u00a0\u00a1\7\24\2\2\u00a1\u00a3\5\34\17\2\u00a2"+
+		"\u00a0\3\2\2\2\u00a2\u00a3\3\2\2\2\u00a3\u00a4\3\2\2\2\u00a4\u00a7\b\t"+
+		"\1\2\u00a5\u00a7\b\t\1\2\u00a6\u008f\3\2\2\2\u00a6\u0097\3\2\2\2\u00a6"+
+		"\u009f\3\2\2\2\u00a6\u00a5\3\2\2\2\u00a7\u00b8\3\2\2\2\u00a8\u00a9\7\32"+
+		"\2\2\u00a9\u00aa\7\33\2\2\u00aa\u00ab\5\26\f\2\u00ab\u00ac\5\24\13\2\u00ac"+
+		"\u00b9\3\2\2\2\u00ad\u00ae\7\32\2\2\u00ae\u00af\7\33\2\2\u00af\u00b0\5"+
+		"\26\f\2\u00b0\u00b1\b\t\1\2\u00b1\u00b9\3\2\2\2\u00b2\u00b3\7\32\2\2\u00b3"+
+		"\u00b4\7\33\2\2\u00b4\u00b9\b\t\1\2\u00b5\u00b6\7\32\2\2\u00b6\u00b9\b"+
+		"\t\1\2\u00b7\u00b9\b\t\1\2\u00b8\u00a8\3\2\2\2\u00b8\u00ad\3\2\2\2\u00b8"+
+		"\u00b2\3\2\2\2\u00b8\u00b5\3\2\2\2\u00b8\u00b7\3\2\2\2\u00b9\21\3\2\2"+
+		"\2\u00ba\u00bb\t\3\2\2\u00bb\u00c5\7*\2\2\u00bc\u00bd\t\4\2\2\u00bd\u00c5"+
+		"\7\20\2\2\u00be\u00bf\7\30\2\2\u00bf\u00c3\7\31\2\2\u00c0\u00c1\7\30\2"+
+		"\2\u00c1\u00c3\b\n\1\2\u00c2\u00be\3\2\2\2\u00c2\u00c0\3\2\2\2\u00c3\u00c5"+
+		"\3\2\2\2\u00c4\u00ba\3\2\2\2\u00c4\u00bc\3\2\2\2\u00c4\u00c2\3\2\2\2\u00c5"+
+		"\23\3\2\2\2\u00c6\u00c7\7\30\2\2\u00c7\u00cb\5\34\17\2\u00c8\u00c9\7\30"+
+		"\2\2\u00c9\u00cb\b\13\1\2\u00ca\u00c6\3\2\2\2\u00ca\u00c8\3\2\2\2\u00cb"+
+		"\25\3\2\2\2\u00cc\u00d0\7\21\2\2\u00cd\u00d0\7\22\2\2\u00ce\u00d0\5\30"+
+		"\r\2\u00cf\u00cc\3\2\2\2\u00cf\u00cd\3\2\2\2\u00cf\u00ce\3\2\2\2\u00d0"+
+		"\27\3\2\2\2\u00d1\u00d2\b\r\1\2\u00d2\u00d3\7\36\2\2\u00d3\u00da\5\30"+
+		"\r\7\u00d4\u00d5\7\"\2\2\u00d5\u00d6\5\30\r\2\u00d6\u00d7\7#\2\2\u00d7"+
+		"\u00da\3\2\2\2\u00d8\u00da\t\5\2\2\u00d9\u00d1\3\2\2\2\u00d9\u00d4\3\2"+
+		"\2\2\u00d9\u00d8\3\2\2\2\u00da\u00e6\3\2\2\2\u00db\u00dc\f\6\2\2\u00dc"+
+		"\u00dd\7 \2\2\u00dd\u00e5\5\30\r\7\u00de\u00df\f\5\2\2\u00df\u00e0\7\37"+
+		"\2\2\u00e0\u00e5\5\30\r\6\u00e1\u00e2\f\4\2\2\u00e2\u00e3\7!\2\2\u00e3"+
+		"\u00e5\5\30\r\5\u00e4\u00db\3\2\2\2\u00e4\u00de\3\2\2\2\u00e4\u00e1\3"+
+		"\2\2\2\u00e5\u00e8\3\2\2\2\u00e6\u00e4\3\2\2\2\u00e6\u00e7\3\2\2\2\u00e7"+
+		"\31\3\2\2\2\u00e8\u00e6\3\2\2\2\u00e9\u00ea\t\6\2\2\u00ea\33\3\2\2\2\u00eb"+
+		"\u00ec\7\'\2\2\u00ec\35\3\2\2\2\32 \"+\60LWgmvz\u0086\u008d\u0093\u009b"+
+		"\u00a2\u00a6\u00b8\u00c2\u00c4\u00ca\u00cf\u00d9\u00e4\u00e6";
 	public static final ATN _ATN =
-		ATNSimulator.deserialize(_serializedATN.toCharArray());
+		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
-	    _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
+		}
 	}
 }

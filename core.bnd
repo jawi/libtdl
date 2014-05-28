@@ -1,9 +1,10 @@
 # Core functionality for LibTDL
 -sourcepath: ${project}/src, ${project}/gen
-Private-Package: \
+Conditional-Package: \
     org.abego.treelayout.*,\
     org.antlr.*,\
-    org.stringtemplate.v4.*,\
+    org.stringtemplate.v4.*
+Private-Package: \
     nl.lxtreme.libtdl.grammar,\
     nl.lxtreme.libtdl.grammar.adv,\
     nl.lxtreme.libtdl.grammar.basic
@@ -17,4 +18,5 @@ Export-Package: \
     org.antlr.v4.runtime.dfa,\
     org.antlr.v4.runtime.misc,\
     org.antlr.v4.runtime.tree,\
+    org.antlr.v4.runtime.tree.pattern,\
     nl.lxtreme.libtdl

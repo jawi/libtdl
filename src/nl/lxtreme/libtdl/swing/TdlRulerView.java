@@ -38,7 +38,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
     /**
      * Creates a new {@link TdlRulerView} instance.
-     * 
+     *
      * @param editorPane
      *            the editor pane this ruler belongs to;
      * @param styleManager
@@ -201,7 +201,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
     /**
      * Returns the document.
-     * 
+     *
      * @return the document being edited, never <code>null</code>.
      */
     private TdlDocument getDocument() {
@@ -210,7 +210,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
 
     /**
      * Returns the number of lines in the given document.
-     * 
+     *
      * @param document
      *            the document to count the lines of, cannot be
      *            <code>null</code>.
@@ -231,7 +231,7 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
     /**
      * Updates the dimensions of this component according to the given line
      * count.
-     * 
+     *
      * @param newLineCount
      *            the new line count, >= 0.
      */
@@ -254,8 +254,8 @@ public class TdlRulerView extends JComponent implements PropertyChangeListener, 
             int width = (d * charWidth) + MARGIN_LEFT + MARGIN_RIGHT + insets.left + insets.right;
 
             setPreferredSize(new Dimension(width, height));
-
-            repaint(50L);
         }
+
+        repaint(50L);
     }
 }

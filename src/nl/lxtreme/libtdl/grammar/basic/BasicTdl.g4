@@ -10,16 +10,12 @@ grammar BasicTdl;
  */
 package nl.lxtreme.libtdl.grammar.basic;
 
-import nl.lxtreme.libtdl.grammar.*;
-}
-
-@parser::members {
 }
 
 /* PARSER RULES */
 
 prog
-    : ( decl | stageDef )* EOF!
+    : ( decl | stageDef )* EOF
     ;
 
 /* DECLARATION RULES */
@@ -179,4 +175,4 @@ TERM_NAME
     : 'term'? ('a'..'j' | 'A'..'J')
     ;
 
-// EOF
+/* EOF */
