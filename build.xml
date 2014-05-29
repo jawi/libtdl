@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="project" default="build">
-	<import file="../cnf/build.xml"/>
-	
+<project name="project">
 	<property name="project.gensourcepath" value="gen" />
-
-    <!--
-         COMPILE
-         Compile the sources - overridden to include the generated sources. 
-    -->
-    <target name="compile" depends="dependencies" if="project.sourcepath">
-        <mkdir dir="${project.output}"/>
-        <javac fork="yes" executable="${javac}" destdir="${project.output}" classpath="${project.buildpath}" bootclasspath="${project.bootclasspath}" deprecation="true" listfiles="true" target="${javac.target}" source="${javac.source}" debug="${javac.debug}" includeAntRuntime="no" verbose="${verbose}">
-        	<src path="${project.sourcepath}" />
-            <src path="${project.gensourcepath}" />
-    	</javac>
-        <copy todir="${project.output}" verbose="${verbose}" preservelastmodified="true">
-            <fileset dir="${project.sourcepath}">
-                <exclude name="**/*.java" />
-                <exclude name="**/*.class" />
-            </fileset>
-        </copy>
-    </target>
 
     <target name="run-antlr" description="Generate ANTLRv4 grammar files">
     	<property name="basepackage" value="nl/lxtreme/libtdl/grammar"/>
 
         <path id="classpath">
-            <pathelement location="lib/antlr-4.0-rc-1-complete.jar" />
+            <pathelement location="lib/antlr-4.2.2-complete.jar" />
         </path>
     	
     	<mkdir dir="${project.gensourcepath}" />
