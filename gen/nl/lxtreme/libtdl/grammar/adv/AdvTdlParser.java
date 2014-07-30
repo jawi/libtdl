@@ -1,4 +1,4 @@
-// Generated from AdvTdl.g4 by ANTLR 4.2.2
+// Generated from AdvTdl.g4 by ANTLR 4.4
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AdvTdlParser extends Parser {
+	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
+
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
@@ -70,18 +72,18 @@ public class AdvTdlParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgContext extends ParserRuleContext {
-		public StageDefContext stageDef(int i) {
-			return getRuleContext(StageDefContext.class,i);
+		public DeclContext decl(int i) {
+			return getRuleContext(DeclContext.class,i);
 		}
 		public TerminalNode EOF() { return getToken(AdvTdlParser.EOF, 0); }
-		public List<StageDefContext> stageDef() {
-			return getRuleContexts(StageDefContext.class);
-		}
 		public List<DeclContext> decl() {
 			return getRuleContexts(DeclContext.class);
 		}
-		public DeclContext decl(int i) {
-			return getRuleContext(DeclContext.class,i);
+		public List<StageDefContext> stageDef() {
+			return getRuleContexts(StageDefContext.class);
+		}
+		public StageDefContext stageDef(int i) {
+			return getRuleContext(StageDefContext.class,i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -144,21 +146,21 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class DeclContext extends ParserRuleContext {
-		public List<TerminalNode> WS() { return getTokens(AdvTdlParser.WS); }
-		public TermDeclContext termDecl() {
-			return getRuleContext(TermDeclContext.class,0);
-		}
-		public RangeDeclContext rangeDecl() {
-			return getRuleContext(RangeDeclContext.class,0);
-		}
-		public EdgeDeclContext edgeDecl() {
-			return getRuleContext(EdgeDeclContext.class,0);
-		}
 		public TerminalNode WS(int i) {
 			return getToken(AdvTdlParser.WS, i);
 		}
+		public TermDeclContext termDecl() {
+			return getRuleContext(TermDeclContext.class,0);
+		}
+		public List<TerminalNode> WS() { return getTokens(AdvTdlParser.WS); }
+		public EdgeDeclContext edgeDecl() {
+			return getRuleContext(EdgeDeclContext.class,0);
+		}
 		public TimerDeclContext timerDecl() {
 			return getRuleContext(TimerDeclContext.class,0);
+		}
+		public RangeDeclContext rangeDecl() {
+			return getRuleContext(RangeDeclContext.class,0);
 		}
 		public DeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -233,22 +235,22 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext mask;
 		public NumberContext value;
+		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
 		public List<NumberContext> number() {
 			return getRuleContexts(NumberContext.class);
 		}
 		public List<TerminalNode> EQUALS_TO() { return getTokens(AdvTdlParser.EQUALS_TO); }
-		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
-		public TerminalNode VALUE() { return getToken(AdvTdlParser.VALUE, 0); }
 		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
-		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
-		public NumberContext number(int i) {
-			return getRuleContext(NumberContext.class,i);
-		}
 		public TerminalNode COMMA() { return getToken(AdvTdlParser.COMMA, 0); }
 		public TerminalNode MASK() { return getToken(AdvTdlParser.MASK, 0); }
 		public TerminalNode EQUALS_TO(int i) {
 			return getToken(AdvTdlParser.EQUALS_TO, i);
 		}
+		public NumberContext number(int i) {
+			return getRuleContext(NumberContext.class,i);
+		}
+		public TerminalNode VALUE() { return getToken(AdvTdlParser.VALUE, 0); }
+		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
 		public TermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -285,7 +287,6 @@ public class AdvTdlParser extends Parser {
 				}
 				}
 				break;
-
 			case 2:
 				{
 				{
@@ -296,7 +297,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
-
 			case 3:
 				{
 				{
@@ -306,7 +306,6 @@ public class AdvTdlParser extends Parser {
 				}
 				}
 				break;
-
 			case 4:
 				{
 				{
@@ -315,7 +314,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
-
 			case 5:
 				{
 				 notifyErrorListeners("missing mask and value"); 
@@ -339,12 +337,12 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext value;
 		public Token unit;
+		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
 		public NumberContext number() {
 			return getRuleContext(NumberContext.class,0);
 		}
-		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
-		public TerminalNode TIME_UNIT() { return getToken(AdvTdlParser.TIME_UNIT, 0); }
 		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
+		public TerminalNode TIME_UNIT() { return getToken(AdvTdlParser.TIME_UNIT, 0); }
 		public TimerDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -372,14 +370,12 @@ public class AdvTdlParser extends Parser {
 				setState(79); ((TimerDeclContext)_localctx).unit = match(TIME_UNIT);
 				}
 				break;
-
 			case 2:
 				{
 				setState(81); number();
 				 notifyErrorListeners("missing time unit"); 
 				}
 				break;
-
 			case 3:
 				{
 				 notifyErrorListeners("missing time value and unit"); 
@@ -403,14 +399,14 @@ public class AdvTdlParser extends Parser {
 		public Token name;
 		public NumberContext lowerBound;
 		public NumberContext upperBound;
+		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
 		public List<NumberContext> number() {
 			return getRuleContexts(NumberContext.class);
 		}
-		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
 		public NumberContext number(int i) {
 			return getRuleContext(NumberContext.class,i);
 		}
-		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
 		public RangeDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -435,26 +431,23 @@ public class AdvTdlParser extends Parser {
 			case 1:
 				{
 				setState(89); ((RangeDeclContext)_localctx).lowerBound = number();
-				setState(90); match(1);
+				setState(90); match(T__0);
 				setState(91); ((RangeDeclContext)_localctx).upperBound = number();
 				}
 				break;
-
 			case 2:
 				{
 				setState(93); number();
-				setState(94); match(1);
+				setState(94); match(T__0);
 				 notifyErrorListeners("missing upper bound"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(97); number();
 				 notifyErrorListeners("missing upper bound"); 
 				}
 				break;
-
 			case 4:
 				{
 				 notifyErrorListeners("invalid range definition, needs lower and upper bound"); 
@@ -477,14 +470,14 @@ public class AdvTdlParser extends Parser {
 	public static class EdgeTermDeclContext extends ParserRuleContext {
 		public Token name;
 		public NumberContext mask;
-		public TerminalNode BOTH() { return getToken(AdvTdlParser.BOTH, 0); }
 		public NumberContext number() {
 			return getRuleContext(NumberContext.class,0);
 		}
-		public TerminalNode FALLING() { return getToken(AdvTdlParser.FALLING, 0); }
 		public TerminalNode EQUALS_TO() { return getToken(AdvTdlParser.EQUALS_TO, 0); }
-		public TerminalNode RISING() { return getToken(AdvTdlParser.RISING, 0); }
+		public TerminalNode BOTH() { return getToken(AdvTdlParser.BOTH, 0); }
 		public TerminalNode NEITHER() { return getToken(AdvTdlParser.NEITHER, 0); }
+		public TerminalNode RISING() { return getToken(AdvTdlParser.RISING, 0); }
+		public TerminalNode FALLING() { return getToken(AdvTdlParser.FALLING, 0); }
 		public EdgeTermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -554,16 +547,16 @@ public class AdvTdlParser extends Parser {
 		public EdgeTermDeclContext edgeTermDecl;
 		public List<EdgeTermDeclContext> terms = new ArrayList<EdgeTermDeclContext>();
 		public TerminalNode ASSIGN() { return getToken(AdvTdlParser.ASSIGN, 0); }
+		public List<EdgeTermDeclContext> edgeTermDecl() {
+			return getRuleContexts(EdgeTermDeclContext.class);
+		}
+		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
 		public List<TerminalNode> COMMA() { return getTokens(AdvTdlParser.COMMA); }
 		public EdgeTermDeclContext edgeTermDecl(int i) {
 			return getRuleContext(EdgeTermDeclContext.class,i);
 		}
-		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
 		public TerminalNode COMMA(int i) {
 			return getToken(AdvTdlParser.COMMA, i);
-		}
-		public List<EdgeTermDeclContext> edgeTermDecl() {
-			return getRuleContexts(EdgeTermDeclContext.class);
 		}
 		public EdgeDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -646,12 +639,16 @@ public class AdvTdlParser extends Parser {
 		public TermExprContext ifExpr;
 		public DecNumberContext occurrence;
 		public TermExprContext elseExpr;
-		public TerminalNode ON() { return getToken(AdvTdlParser.ON, 0); }
+		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
+		public List<TermExprContext> termExpr() {
+			return getRuleContexts(TermExprContext.class);
+		}
+		public TerminalNode ELSE() { return getToken(AdvTdlParser.ELSE, 0); }
 		public WhenActionContext whenAction() {
 			return getRuleContext(WhenActionContext.class,0);
 		}
-		public TerminalNode STAGE() { return getToken(AdvTdlParser.STAGE, 0); }
-		public TerminalNode ELSE() { return getToken(AdvTdlParser.ELSE, 0); }
+		public TerminalNode ON() { return getToken(AdvTdlParser.ON, 0); }
+		public TerminalNode COLON() { return getToken(AdvTdlParser.COLON, 0); }
 		public TerminalNode OCCURS() { return getToken(AdvTdlParser.OCCURS, 0); }
 		public List<DecNumberContext> decNumber() {
 			return getRuleContexts(DecNumberContext.class);
@@ -659,17 +656,13 @@ public class AdvTdlParser extends Parser {
 		public ElseActionContext elseAction() {
 			return getRuleContext(ElseActionContext.class,0);
 		}
+		public TerminalNode STAGE() { return getToken(AdvTdlParser.STAGE, 0); }
 		public DecNumberContext decNumber(int i) {
 			return getRuleContext(DecNumberContext.class,i);
 		}
-		public List<TermExprContext> termExpr() {
-			return getRuleContexts(TermExprContext.class);
-		}
-		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
 		public TermExprContext termExpr(int i) {
 			return getRuleContext(TermExprContext.class,i);
 		}
-		public TerminalNode COLON() { return getToken(AdvTdlParser.COLON, 0); }
 		public TerminalNode WHEN() { return getToken(AdvTdlParser.WHEN, 0); }
 		public StageDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -698,7 +691,6 @@ public class AdvTdlParser extends Parser {
 				setState(124); match(COLON);
 				}
 				break;
-
 			case 2:
 				{
 				setState(126); match(STAGE);
@@ -706,7 +698,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing colon"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(130); match(STAGE);
@@ -722,14 +713,12 @@ public class AdvTdlParser extends Parser {
 				setState(135); ((StageDefContext)_localctx).captureExpr = termExpr();
 				}
 				break;
-
 			case 2:
 				{
 				setState(136); match(CAPTURE);
 				 notifyErrorListeners("missing capture expression"); 
 				}
 				break;
-
 			case 3:
 				{
 				 notifyErrorListeners("missing capture clause"); 
@@ -754,7 +743,6 @@ public class AdvTdlParser extends Parser {
 				setState(147); whenAction();
 				}
 				break;
-
 			case 2:
 				{
 				setState(149); match(WHEN);
@@ -771,7 +759,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing when action"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(157); match(WHEN);
@@ -787,7 +774,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing when expression"); 
 				}
 				break;
-
 			case 4:
 				{
 				 notifyErrorListeners("missing when clause"); 
@@ -804,7 +790,6 @@ public class AdvTdlParser extends Parser {
 				setState(169); elseAction();
 				}
 				break;
-
 			case 2:
 				{
 				setState(171); match(ELSE);
@@ -813,7 +798,6 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing else action"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(176); match(ELSE);
@@ -821,14 +805,12 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing else expression"); 
 				}
 				break;
-
 			case 4:
 				{
 				setState(179); match(ELSE);
 				 notifyErrorListeners("missing on"); 
 				}
 				break;
-
 			case 5:
 				{
 				 notifyErrorListeners("missing else clause"); 
@@ -851,13 +833,13 @@ public class AdvTdlParser extends Parser {
 	public static class WhenActionContext extends ParserRuleContext {
 		public Token action;
 		public Token name;
-		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
+		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
 		public TerminalNode NEXT() { return getToken(AdvTdlParser.NEXT, 0); }
+		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
+		public TerminalNode GOTO() { return getToken(AdvTdlParser.GOTO, 0); }
 		public TerminalNode STOP() { return getToken(AdvTdlParser.STOP, 0); }
 		public TerminalNode START() { return getToken(AdvTdlParser.START, 0); }
 		public TerminalNode CLEAR() { return getToken(AdvTdlParser.CLEAR, 0); }
-		public TerminalNode CAPTURE() { return getToken(AdvTdlParser.CAPTURE, 0); }
-		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
 		public WhenActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -889,7 +871,6 @@ public class AdvTdlParser extends Parser {
 				setState(185); ((WhenActionContext)_localctx).name = match(TIMER_NAME);
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -903,7 +884,6 @@ public class AdvTdlParser extends Parser {
 				setState(187); ((WhenActionContext)_localctx).name = match(CAPTURE);
 				}
 				break;
-
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
@@ -915,7 +895,6 @@ public class AdvTdlParser extends Parser {
 					setState(189); match(NEXT);
 					}
 					break;
-
 				case 2:
 					{
 					setState(190); match(GOTO);
@@ -968,7 +947,6 @@ public class AdvTdlParser extends Parser {
 				setState(197); ((ElseActionContext)_localctx).n = decNumber();
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -994,8 +972,8 @@ public class AdvTdlParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode ANY() { return getToken(AdvTdlParser.ANY, 0); }
 		public TerminalNode NOP() { return getToken(AdvTdlParser.NOP, 0); }
+		public TerminalNode ANY() { return getToken(AdvTdlParser.ANY, 0); }
 		public TermExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1056,22 +1034,22 @@ public class AdvTdlParser extends Parser {
 		public Token op;
 		public ExprContext rhs;
 		public Token term;
-		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
+		public TerminalNode NOT() { return getToken(AdvTdlParser.NOT, 0); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
 		public TerminalNode XOR() { return getToken(AdvTdlParser.XOR, 0); }
-		public TerminalNode AND() { return getToken(AdvTdlParser.AND, 0); }
-		public TerminalNode OR() { return getToken(AdvTdlParser.OR, 0); }
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode RPAREN() { return getToken(AdvTdlParser.RPAREN, 0); }
-		public TerminalNode NOT() { return getToken(AdvTdlParser.NOT, 0); }
+		public TerminalNode LPAREN() { return getToken(AdvTdlParser.LPAREN, 0); }
 		public TerminalNode EDGE_NAME() { return getToken(AdvTdlParser.EDGE_NAME, 0); }
 		public TerminalNode TIMER_NAME() { return getToken(AdvTdlParser.TIMER_NAME, 0); }
-		public TerminalNode LPAREN() { return getToken(AdvTdlParser.LPAREN, 0); }
-		public TerminalNode RANGE_NAME() { return getToken(AdvTdlParser.RANGE_NAME, 0); }
+		public TerminalNode AND() { return getToken(AdvTdlParser.AND, 0); }
+		public TerminalNode RPAREN() { return getToken(AdvTdlParser.RPAREN, 0); }
+		public TerminalNode OR() { return getToken(AdvTdlParser.OR, 0); }
+		public TerminalNode TERM_NAME() { return getToken(AdvTdlParser.TERM_NAME, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1135,7 +1113,7 @@ public class AdvTdlParser extends Parser {
 			setState(228);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
-			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -1153,7 +1131,6 @@ public class AdvTdlParser extends Parser {
 						setState(219); ((ExprContext)_localctx).rhs = expr(5);
 						}
 						break;
-
 					case 2:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
@@ -1165,7 +1142,6 @@ public class AdvTdlParser extends Parser {
 						setState(222); ((ExprContext)_localctx).rhs = expr(4);
 						}
 						break;
-
 					case 3:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
@@ -1198,10 +1174,10 @@ public class AdvTdlParser extends Parser {
 	}
 
 	public static class NumberContext extends ParserRuleContext {
-		public TerminalNode OCT_LITERAL() { return getToken(AdvTdlParser.OCT_LITERAL, 0); }
+		public TerminalNode HEX_LITERAL() { return getToken(AdvTdlParser.HEX_LITERAL, 0); }
 		public TerminalNode BIN_LITERAL() { return getToken(AdvTdlParser.BIN_LITERAL, 0); }
 		public TerminalNode DEC_LITERAL() { return getToken(AdvTdlParser.DEC_LITERAL, 0); }
-		public TerminalNode HEX_LITERAL() { return getToken(AdvTdlParser.HEX_LITERAL, 0); }
+		public TerminalNode OCT_LITERAL() { return getToken(AdvTdlParser.OCT_LITERAL, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1281,9 +1257,7 @@ public class AdvTdlParser extends Parser {
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0: return precpred(_ctx, 4);
-
 		case 1: return precpred(_ctx, 3);
-
 		case 2: return precpred(_ctx, 2);
 		}
 		return true;

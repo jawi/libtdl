@@ -1,4 +1,4 @@
-// Generated from AdvTdl.g4 by ANTLR 4.2.2
+// Generated from AdvTdl.g4 by ANTLR 4.4
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -22,100 +22,87 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface AdvTdlVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#edgeDecl}.
+	 * Visit a parse tree produced by {@link AdvTdlParser#decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEdgeDecl(@NotNull AdvTdlParser.EdgeDeclContext ctx);
-
+	T visitDecl(@NotNull AdvTdlParser.DeclContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AdvTdlParser#elseAction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitElseAction(@NotNull AdvTdlParser.ElseActionContext ctx);
-
 	/**
 	 * Visit a parse tree produced by {@link AdvTdlParser#termExpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTermExpr(@NotNull AdvTdlParser.TermExprContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#decNumber}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDecNumber(@NotNull AdvTdlParser.DecNumberContext ctx);
-
 	/**
 	 * Visit a parse tree produced by {@link AdvTdlParser#timerDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTimerDecl(@NotNull AdvTdlParser.TimerDeclContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#number}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNumber(@NotNull AdvTdlParser.NumberContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpr(@NotNull AdvTdlParser.ExprContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#rangeDecl}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRangeDecl(@NotNull AdvTdlParser.RangeDeclContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#prog}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProg(@NotNull AdvTdlParser.ProgContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#termDecl}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTermDecl(@NotNull AdvTdlParser.TermDeclContext ctx);
-
 	/**
 	 * Visit a parse tree produced by {@link AdvTdlParser#edgeTermDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitEdgeTermDecl(@NotNull AdvTdlParser.EdgeTermDeclContext ctx);
-
 	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#stageDef}.
+	 * Visit a parse tree produced by {@link AdvTdlParser#rangeDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStageDef(@NotNull AdvTdlParser.StageDefContext ctx);
-
+	T visitRangeDecl(@NotNull AdvTdlParser.RangeDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#prog}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProg(@NotNull AdvTdlParser.ProgContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#termDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTermDecl(@NotNull AdvTdlParser.TermDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumber(@NotNull AdvTdlParser.NumberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#decNumber}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecNumber(@NotNull AdvTdlParser.DecNumberContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AdvTdlParser#whenAction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitWhenAction(@NotNull AdvTdlParser.WhenActionContext ctx);
-
 	/**
-	 * Visit a parse tree produced by {@link AdvTdlParser#decl}.
+	 * Visit a parse tree produced by {@link AdvTdlParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDecl(@NotNull AdvTdlParser.DeclContext ctx);
+	T visitExpr(@NotNull AdvTdlParser.ExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#stageDef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStageDef(@NotNull AdvTdlParser.StageDefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AdvTdlParser#edgeDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEdgeDecl(@NotNull AdvTdlParser.EdgeDeclContext ctx);
 }

@@ -1,4 +1,4 @@
-// Generated from AdvTdl.g4 by ANTLR 4.2.2
+// Generated from AdvTdl.g4 by ANTLR 4.4
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -28,8 +28,7 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitEdgeDecl(@NotNull AdvTdlParser.EdgeDeclContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitDecl(@NotNull AdvTdlParser.DeclContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -37,7 +36,6 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitElseAction(@NotNull AdvTdlParser.ElseActionContext ctx) { return visitChildren(ctx); }
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -45,15 +43,6 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitTermExpr(@NotNull AdvTdlParser.TermExprContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitDecNumber(@NotNull AdvTdlParser.DecNumberContext ctx) { return visitChildren(ctx); }
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -61,47 +50,6 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitTimerDecl(@NotNull AdvTdlParser.TimerDeclContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitNumber(@NotNull AdvTdlParser.NumberContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitExpr(@NotNull AdvTdlParser.ExprContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitRangeDecl(@NotNull AdvTdlParser.RangeDeclContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitProg(@NotNull AdvTdlParser.ProgContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitTermDecl(@NotNull AdvTdlParser.TermDeclContext ctx) { return visitChildren(ctx); }
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -109,15 +57,41 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitEdgeTermDecl(@NotNull AdvTdlParser.EdgeTermDeclContext ctx) { return visitChildren(ctx); }
-
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStageDef(@NotNull AdvTdlParser.StageDefContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitRangeDecl(@NotNull AdvTdlParser.RangeDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitProg(@NotNull AdvTdlParser.ProgContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitTermDecl(@NotNull AdvTdlParser.TermDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitNumber(@NotNull AdvTdlParser.NumberContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDecNumber(@NotNull AdvTdlParser.DecNumberContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -125,12 +99,25 @@ public class AdvTdlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitWhenAction(@NotNull AdvTdlParser.WhenActionContext ctx) { return visitChildren(ctx); }
-
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDecl(@NotNull AdvTdlParser.DeclContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExpr(@NotNull AdvTdlParser.ExprContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStageDef(@NotNull AdvTdlParser.StageDefContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitEdgeDecl(@NotNull AdvTdlParser.EdgeDeclContext ctx) { return visitChildren(ctx); }
 }

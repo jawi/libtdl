@@ -1,4 +1,4 @@
-// Generated from BasicTdl.g4 by ANTLR 4.2.2
+// Generated from BasicTdl.g4 by ANTLR 4.4
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BasicTdlParser extends Parser {
+	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
+
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
@@ -66,18 +68,18 @@ public class BasicTdlParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgContext extends ParserRuleContext {
-		public StageDefContext stageDef(int i) {
-			return getRuleContext(StageDefContext.class,i);
+		public DeclContext decl(int i) {
+			return getRuleContext(DeclContext.class,i);
 		}
 		public TerminalNode EOF() { return getToken(BasicTdlParser.EOF, 0); }
-		public List<StageDefContext> stageDef() {
-			return getRuleContexts(StageDefContext.class);
-		}
 		public List<DeclContext> decl() {
 			return getRuleContexts(DeclContext.class);
 		}
-		public DeclContext decl(int i) {
-			return getRuleContext(DeclContext.class,i);
+		public List<StageDefContext> stageDef() {
+			return getRuleContexts(StageDefContext.class);
+		}
+		public StageDefContext stageDef(int i) {
+			return getRuleContext(StageDefContext.class,i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -137,13 +139,13 @@ public class BasicTdlParser extends Parser {
 	}
 
 	public static class DeclContext extends ParserRuleContext {
-		public List<TerminalNode> WS() { return getTokens(BasicTdlParser.WS); }
-		public TermDeclContext termDecl() {
-			return getRuleContext(TermDeclContext.class,0);
-		}
 		public TerminalNode WS(int i) {
 			return getToken(BasicTdlParser.WS, i);
 		}
+		public TermDeclContext termDecl() {
+			return getRuleContext(TermDeclContext.class,0);
+		}
+		public List<TerminalNode> WS() { return getTokens(BasicTdlParser.WS); }
 		public DeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -193,22 +195,22 @@ public class BasicTdlParser extends Parser {
 		public Token name;
 		public NumberContext mask;
 		public NumberContext value;
+		public TerminalNode ASSIGN() { return getToken(BasicTdlParser.ASSIGN, 0); }
 		public List<NumberContext> number() {
 			return getRuleContexts(NumberContext.class);
 		}
 		public List<TerminalNode> EQUALS_TO() { return getTokens(BasicTdlParser.EQUALS_TO); }
-		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
-		public TerminalNode VALUE() { return getToken(BasicTdlParser.VALUE, 0); }
 		public TerminalNode XOR() { return getToken(BasicTdlParser.XOR, 0); }
-		public TerminalNode ASSIGN() { return getToken(BasicTdlParser.ASSIGN, 0); }
-		public NumberContext number(int i) {
-			return getRuleContext(NumberContext.class,i);
-		}
 		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
 		public TerminalNode MASK() { return getToken(BasicTdlParser.MASK, 0); }
 		public TerminalNode EQUALS_TO(int i) {
 			return getToken(BasicTdlParser.EQUALS_TO, i);
 		}
+		public NumberContext number(int i) {
+			return getRuleContext(NumberContext.class,i);
+		}
+		public TerminalNode VALUE() { return getToken(BasicTdlParser.VALUE, 0); }
+		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
 		public TermDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -245,7 +247,6 @@ public class BasicTdlParser extends Parser {
 				}
 				}
 				break;
-
 			case 2:
 				{
 				{
@@ -256,7 +257,6 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
-
 			case 3:
 				{
 				{
@@ -266,7 +266,6 @@ public class BasicTdlParser extends Parser {
 				}
 				}
 				break;
-
 			case 4:
 				{
 				{
@@ -275,7 +274,6 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
-
 			case 5:
 				{
 				 notifyErrorListeners("missing mask and value"); 
@@ -297,23 +295,23 @@ public class BasicTdlParser extends Parser {
 
 	public static class StageDefContext extends ParserRuleContext {
 		public DecNumberContext n;
-		public WhenActionContext whenAction() {
-			return getRuleContext(WhenActionContext.class,0);
-		}
 		public TerminalNode STAGE() { return getToken(BasicTdlParser.STAGE, 0); }
-		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
-		public DecNumberContext decNumber() {
-			return getRuleContext(DecNumberContext.class,0);
-		}
 		public TermExprContext termExpr() {
 			return getRuleContext(TermExprContext.class,0);
 		}
+		public WhenActionContext whenAction() {
+			return getRuleContext(WhenActionContext.class,0);
+		}
+		public TerminalNode COMMA() { return getToken(BasicTdlParser.COMMA, 0); }
+		public TerminalNode COLON() { return getToken(BasicTdlParser.COLON, 0); }
+		public TerminalNode ACTIVATE() { return getToken(BasicTdlParser.ACTIVATE, 0); }
 		public ActiveClauseContext activeClause() {
 			return getRuleContext(ActiveClauseContext.class,0);
 		}
-		public TerminalNode COLON() { return getToken(BasicTdlParser.COLON, 0); }
 		public TerminalNode WHEN() { return getToken(BasicTdlParser.WHEN, 0); }
-		public TerminalNode ACTIVATE() { return getToken(BasicTdlParser.ACTIVATE, 0); }
+		public DecNumberContext decNumber() {
+			return getRuleContext(DecNumberContext.class,0);
+		}
 		public StageDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -340,7 +338,6 @@ public class BasicTdlParser extends Parser {
 				setState(65); match(COLON);
 				}
 				break;
-
 			case 2:
 				{
 				setState(67); match(STAGE);
@@ -348,7 +345,6 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing colon"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(71); match(STAGE);
@@ -365,7 +361,6 @@ public class BasicTdlParser extends Parser {
 				setState(77); match(COMMA);
 				}
 				break;
-
 			case 2:
 				{
 				setState(79); match(ACTIVATE);
@@ -373,14 +368,12 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing comma"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(83); match(ACTIVATE);
 				 notifyErrorListeners("missing activate clause"); 
 				}
 				break;
-
 			case 4:
 				{
 				 notifyErrorListeners("missing activate clause"); 
@@ -396,7 +389,6 @@ public class BasicTdlParser extends Parser {
 				setState(90); whenAction();
 				}
 				break;
-
 			case 2:
 				{
 				setState(92); match(WHEN);
@@ -404,14 +396,12 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing when action"); 
 				}
 				break;
-
 			case 3:
 				{
 				setState(96); match(WHEN);
 				 notifyErrorListeners("missing when expression"); 
 				}
 				break;
-
 			case 4:
 				{
 				 notifyErrorListeners("missing when clause"); 
@@ -473,7 +463,6 @@ public class BasicTdlParser extends Parser {
 					setState(103); ((ActiveClauseContext)_localctx).n = decNumber();
 					}
 					break;
-
 				case 2:
 					{
 					setState(104); match(ON);
@@ -481,14 +470,12 @@ public class BasicTdlParser extends Parser {
 					 notifyErrorListeners("missing level ID"); 
 					}
 					break;
-
 				case 3:
 					{
 					setState(107); match(ON);
 					 notifyErrorListeners("missing level"); 
 					}
 					break;
-
 				case 4:
 					{
 					 notifyErrorListeners("missing on level"); 
@@ -520,15 +507,15 @@ public class BasicTdlParser extends Parser {
 
 	public static class WhenActionContext extends ParserRuleContext {
 		public DecNumberContext n;
-		public TerminalNode GOTO() { return getToken(BasicTdlParser.GOTO, 0); }
+		public TerminalNode CAPTURE() { return getToken(BasicTdlParser.CAPTURE, 0); }
 		public TerminalNode NEXT() { return getToken(BasicTdlParser.NEXT, 0); }
+		public TerminalNode GOTO() { return getToken(BasicTdlParser.GOTO, 0); }
 		public TerminalNode DELAY() { return getToken(BasicTdlParser.DELAY, 0); }
 		public TerminalNode START() { return getToken(BasicTdlParser.START, 0); }
-		public TerminalNode SAMPLES() { return getToken(BasicTdlParser.SAMPLES, 0); }
 		public DecNumberContext decNumber() {
 			return getRuleContext(DecNumberContext.class,0);
 		}
-		public TerminalNode CAPTURE() { return getToken(BasicTdlParser.CAPTURE, 0); }
+		public TerminalNode SAMPLES() { return getToken(BasicTdlParser.SAMPLES, 0); }
 		public WhenActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -560,7 +547,6 @@ public class BasicTdlParser extends Parser {
 					setState(119); match(SAMPLES);
 					}
 					break;
-
 				case 2:
 					{
 					setState(121); match(DELAY);
@@ -582,7 +568,6 @@ public class BasicTdlParser extends Parser {
 					setState(128); match(NEXT);
 					}
 					break;
-
 				case 2:
 					{
 					setState(129); match(GOTO);
@@ -609,13 +594,13 @@ public class BasicTdlParser extends Parser {
 
 	public static class TermExprContext extends ParserRuleContext {
 		public DecNumberContext n;
+		public TerminalNode AT() { return getToken(BasicTdlParser.AT, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public DecNumberContext decNumber() {
 			return getRuleContext(DecNumberContext.class,0);
 		}
-		public TerminalNode AT() { return getToken(BasicTdlParser.AT, 0); }
 		public TermExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -659,14 +644,14 @@ public class BasicTdlParser extends Parser {
 
 	public static class ExprContext extends ParserRuleContext {
 		public Token term;
-		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
+		public List<TerminalNode> NOT() { return getTokens(BasicTdlParser.NOT); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode NOT(int i) {
 			return getToken(BasicTdlParser.NOT, i);
 		}
-		public List<TerminalNode> NOT() { return getTokens(BasicTdlParser.NOT); }
+		public TerminalNode TERM_NAME() { return getToken(BasicTdlParser.TERM_NAME, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -695,7 +680,6 @@ public class BasicTdlParser extends Parser {
 					setState(141); expr();
 					}
 					break;
-
 				case 2:
 					{
 					setState(142); match(NOT);
@@ -729,10 +713,10 @@ public class BasicTdlParser extends Parser {
 	}
 
 	public static class NumberContext extends ParserRuleContext {
-		public TerminalNode OCT_LITERAL() { return getToken(BasicTdlParser.OCT_LITERAL, 0); }
+		public TerminalNode HEX_LITERAL() { return getToken(BasicTdlParser.HEX_LITERAL, 0); }
 		public TerminalNode BIN_LITERAL() { return getToken(BasicTdlParser.BIN_LITERAL, 0); }
 		public TerminalNode DEC_LITERAL() { return getToken(BasicTdlParser.DEC_LITERAL, 0); }
-		public TerminalNode HEX_LITERAL() { return getToken(BasicTdlParser.HEX_LITERAL, 0); }
+		public TerminalNode OCT_LITERAL() { return getToken(BasicTdlParser.OCT_LITERAL, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
