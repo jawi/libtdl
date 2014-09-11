@@ -1,4 +1,4 @@
-// Generated from BasicTdl.g4 by ANTLR 4.4
+// Generated from BasicTdl.g4 by ANTLR 4.2.2
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -21,8 +21,6 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BasicTdlParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
-
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
@@ -247,6 +245,7 @@ public class BasicTdlParser extends Parser {
 				}
 				}
 				break;
+
 			case 2:
 				{
 				{
@@ -257,6 +256,7 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
+
 			case 3:
 				{
 				{
@@ -266,6 +266,7 @@ public class BasicTdlParser extends Parser {
 				}
 				}
 				break;
+
 			case 4:
 				{
 				{
@@ -274,6 +275,7 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
+
 			case 5:
 				{
 				 notifyErrorListeners("missing mask and value"); 
@@ -338,6 +340,7 @@ public class BasicTdlParser extends Parser {
 				setState(65); match(COLON);
 				}
 				break;
+
 			case 2:
 				{
 				setState(67); match(STAGE);
@@ -345,6 +348,7 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing colon"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(71); match(STAGE);
@@ -361,6 +365,7 @@ public class BasicTdlParser extends Parser {
 				setState(77); match(COMMA);
 				}
 				break;
+
 			case 2:
 				{
 				setState(79); match(ACTIVATE);
@@ -368,12 +373,14 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing comma"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(83); match(ACTIVATE);
 				 notifyErrorListeners("missing activate clause"); 
 				}
 				break;
+
 			case 4:
 				{
 				 notifyErrorListeners("missing activate clause"); 
@@ -389,6 +396,7 @@ public class BasicTdlParser extends Parser {
 				setState(90); whenAction();
 				}
 				break;
+
 			case 2:
 				{
 				setState(92); match(WHEN);
@@ -396,12 +404,14 @@ public class BasicTdlParser extends Parser {
 				 notifyErrorListeners("missing when action"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(96); match(WHEN);
 				 notifyErrorListeners("missing when expression"); 
 				}
 				break;
+
 			case 4:
 				{
 				 notifyErrorListeners("missing when clause"); 
@@ -463,6 +473,7 @@ public class BasicTdlParser extends Parser {
 					setState(103); ((ActiveClauseContext)_localctx).n = decNumber();
 					}
 					break;
+
 				case 2:
 					{
 					setState(104); match(ON);
@@ -470,12 +481,14 @@ public class BasicTdlParser extends Parser {
 					 notifyErrorListeners("missing level ID"); 
 					}
 					break;
+
 				case 3:
 					{
 					setState(107); match(ON);
 					 notifyErrorListeners("missing level"); 
 					}
 					break;
+
 				case 4:
 					{
 					 notifyErrorListeners("missing on level"); 
@@ -547,6 +560,7 @@ public class BasicTdlParser extends Parser {
 					setState(119); match(SAMPLES);
 					}
 					break;
+
 				case 2:
 					{
 					setState(121); match(DELAY);
@@ -568,6 +582,7 @@ public class BasicTdlParser extends Parser {
 					setState(128); match(NEXT);
 					}
 					break;
+
 				case 2:
 					{
 					setState(129); match(GOTO);
@@ -680,6 +695,7 @@ public class BasicTdlParser extends Parser {
 					setState(141); expr();
 					}
 					break;
+
 				case 2:
 					{
 					setState(142); match(NOT);

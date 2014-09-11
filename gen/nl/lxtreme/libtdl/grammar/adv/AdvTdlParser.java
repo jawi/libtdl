@@ -1,4 +1,4 @@
-// Generated from AdvTdl.g4 by ANTLR 4.4
+// Generated from AdvTdl.g4 by ANTLR 4.2.2
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -21,8 +21,6 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AdvTdlParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
-
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
@@ -34,12 +32,12 @@ public class AdvTdlParser extends Parser {
 		RPAREN=33, BIN_LITERAL=34, HEX_LITERAL=35, OCT_LITERAL=36, DEC_LITERAL=37, 
 		TIME_UNIT=38, TERM_NAME=39, TIMER_NAME=40, RANGE_NAME=41, EDGE_NAME=42;
 	public static final String[] tokenNames = {
-		"<INVALID>", "'..'", "COMMENT", "NL", "WS", "':='", "'='", "'mask'", "'value'", 
-		"'rising'", "'falling'", "'both'", "'neither'", "'stage'", "'capture'", 
-		"'nop'", "'any'", "'when'", "'occurs'", "'start'", "'stop'", "'clear'", 
-		"'goto'", "'next'", "'else'", "'on'", "','", "':'", "'~'", "'^'", "'&'", 
-		"'|'", "'('", "')'", "BIN_LITERAL", "HEX_LITERAL", "OCT_LITERAL", "DEC_LITERAL", 
-		"TIME_UNIT", "TERM_NAME", "TIMER_NAME", "RANGE_NAME", "EDGE_NAME"
+		"<INVALID>", "'..'", "COMMENT", "NL", "WS", "ASSIGN", "'='", "'mask'", 
+		"'value'", "'rising'", "'falling'", "'both'", "'neither'", "'stage'", 
+		"'capture'", "'nop'", "'any'", "'when'", "'occurs'", "'start'", "'stop'", 
+		"'clear'", "'goto'", "'next'", "'else'", "'on'", "','", "':'", "'~'", 
+		"'^'", "'&'", "'|'", "'('", "')'", "BIN_LITERAL", "HEX_LITERAL", "OCT_LITERAL", 
+		"DEC_LITERAL", "TIME_UNIT", "TERM_NAME", "TIMER_NAME", "RANGE_NAME", "EDGE_NAME"
 	};
 	public static final int
 		RULE_prog = 0, RULE_decl = 1, RULE_termDecl = 2, RULE_timerDecl = 3, RULE_rangeDecl = 4, 
@@ -287,6 +285,7 @@ public class AdvTdlParser extends Parser {
 				}
 				}
 				break;
+
 			case 2:
 				{
 				{
@@ -297,6 +296,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
+
 			case 3:
 				{
 				{
@@ -306,6 +306,7 @@ public class AdvTdlParser extends Parser {
 				}
 				}
 				break;
+
 			case 4:
 				{
 				{
@@ -314,6 +315,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing term value"); 
 				}
 				break;
+
 			case 5:
 				{
 				 notifyErrorListeners("missing mask and value"); 
@@ -370,12 +372,14 @@ public class AdvTdlParser extends Parser {
 				setState(79); ((TimerDeclContext)_localctx).unit = match(TIME_UNIT);
 				}
 				break;
+
 			case 2:
 				{
 				setState(81); number();
 				 notifyErrorListeners("missing time unit"); 
 				}
 				break;
+
 			case 3:
 				{
 				 notifyErrorListeners("missing time value and unit"); 
@@ -431,23 +435,26 @@ public class AdvTdlParser extends Parser {
 			case 1:
 				{
 				setState(89); ((RangeDeclContext)_localctx).lowerBound = number();
-				setState(90); match(T__0);
+				setState(90); match(1);
 				setState(91); ((RangeDeclContext)_localctx).upperBound = number();
 				}
 				break;
+
 			case 2:
 				{
 				setState(93); number();
-				setState(94); match(T__0);
+				setState(94); match(1);
 				 notifyErrorListeners("missing upper bound"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(97); number();
 				 notifyErrorListeners("missing upper bound"); 
 				}
 				break;
+
 			case 4:
 				{
 				 notifyErrorListeners("invalid range definition, needs lower and upper bound"); 
@@ -691,6 +698,7 @@ public class AdvTdlParser extends Parser {
 				setState(124); match(COLON);
 				}
 				break;
+
 			case 2:
 				{
 				setState(126); match(STAGE);
@@ -698,6 +706,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing colon"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(130); match(STAGE);
@@ -713,12 +722,14 @@ public class AdvTdlParser extends Parser {
 				setState(135); ((StageDefContext)_localctx).captureExpr = termExpr();
 				}
 				break;
+
 			case 2:
 				{
 				setState(136); match(CAPTURE);
 				 notifyErrorListeners("missing capture expression"); 
 				}
 				break;
+
 			case 3:
 				{
 				 notifyErrorListeners("missing capture clause"); 
@@ -743,6 +754,7 @@ public class AdvTdlParser extends Parser {
 				setState(147); whenAction();
 				}
 				break;
+
 			case 2:
 				{
 				setState(149); match(WHEN);
@@ -759,6 +771,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing when action"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(157); match(WHEN);
@@ -774,6 +787,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing when expression"); 
 				}
 				break;
+
 			case 4:
 				{
 				 notifyErrorListeners("missing when clause"); 
@@ -790,6 +804,7 @@ public class AdvTdlParser extends Parser {
 				setState(169); elseAction();
 				}
 				break;
+
 			case 2:
 				{
 				setState(171); match(ELSE);
@@ -798,6 +813,7 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing else action"); 
 				}
 				break;
+
 			case 3:
 				{
 				setState(176); match(ELSE);
@@ -805,12 +821,14 @@ public class AdvTdlParser extends Parser {
 				 notifyErrorListeners("missing else expression"); 
 				}
 				break;
+
 			case 4:
 				{
 				setState(179); match(ELSE);
 				 notifyErrorListeners("missing on"); 
 				}
 				break;
+
 			case 5:
 				{
 				 notifyErrorListeners("missing else clause"); 
@@ -871,6 +889,7 @@ public class AdvTdlParser extends Parser {
 				setState(185); ((WhenActionContext)_localctx).name = match(TIMER_NAME);
 				}
 				break;
+
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -884,6 +903,7 @@ public class AdvTdlParser extends Parser {
 				setState(187); ((WhenActionContext)_localctx).name = match(CAPTURE);
 				}
 				break;
+
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
@@ -895,6 +915,7 @@ public class AdvTdlParser extends Parser {
 					setState(189); match(NEXT);
 					}
 					break;
+
 				case 2:
 					{
 					setState(190); match(GOTO);
@@ -947,6 +968,7 @@ public class AdvTdlParser extends Parser {
 				setState(197); ((ElseActionContext)_localctx).n = decNumber();
 				}
 				break;
+
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -1113,7 +1135,7 @@ public class AdvTdlParser extends Parser {
 			setState(228);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -1131,6 +1153,7 @@ public class AdvTdlParser extends Parser {
 						setState(219); ((ExprContext)_localctx).rhs = expr(5);
 						}
 						break;
+
 					case 2:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
@@ -1142,6 +1165,7 @@ public class AdvTdlParser extends Parser {
 						setState(222); ((ExprContext)_localctx).rhs = expr(4);
 						}
 						break;
+
 					case 3:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
@@ -1257,7 +1281,9 @@ public class AdvTdlParser extends Parser {
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0: return precpred(_ctx, 4);
+
 		case 1: return precpred(_ctx, 3);
+
 		case 2: return precpred(_ctx, 2);
 		}
 		return true;

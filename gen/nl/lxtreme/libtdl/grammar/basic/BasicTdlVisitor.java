@@ -1,4 +1,4 @@
-// Generated from BasicTdl.g4 by ANTLR 4.4
+// Generated from BasicTdl.g4 by ANTLR 4.2.2
 
 /*
  * LibTDL - Library for parsing/handling the "Trigger Definition Language".
@@ -27,54 +27,63 @@ public interface BasicTdlVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTermDecl(@NotNull BasicTdlParser.TermDeclContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#number}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNumber(@NotNull BasicTdlParser.NumberContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#decNumber}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDecNumber(@NotNull BasicTdlParser.DecNumberContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDecl(@NotNull BasicTdlParser.DeclContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#termExpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTermExpr(@NotNull BasicTdlParser.TermExprContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#whenAction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitWhenAction(@NotNull BasicTdlParser.WhenActionContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExpr(@NotNull BasicTdlParser.ExprContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#activeClause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitActiveClause(@NotNull BasicTdlParser.ActiveClauseContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#stageDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStageDef(@NotNull BasicTdlParser.StageDefContext ctx);
+
 	/**
 	 * Visit a parse tree produced by {@link BasicTdlParser#prog}.
 	 * @param ctx the parse tree

@@ -20,13 +20,13 @@ public class AdvTdlParserTest extends BaseTdlTestCase {
 
     // @formatter:off
     private static final String[] VALID_INPUTS = {
-        "termA := mask = 0b11, value = 0b10", 
+        "termA := mask = 0b11, value = 0b10",
         "termA := 0b11 ^ 0b10",
-        "timer1 := 20us", 
+        "timer1 := 20us",
         "range1 := 10..20",
         "edge1 := neither = 0x45, rising = 0x12, both = 0x34, falling = 0x23",
         "termA := mask = 1, value = 2\ntermB := mask = 3, value = 4",
-        "stage 1: capture a & b when a goto next else on b goto 1", 
+        "stage 1: capture a & b when a goto next else on b goto 1",
     };
     private static final String[] VALID_RESULTS = {
         "(prog (decl (termDecl termA := mask = (number 0b11) , value = (number 0b10))) <EOF>)",
@@ -47,7 +47,7 @@ public class AdvTdlParserTest extends BaseTdlTestCase {
         "range1 := 10..",
         "range1 := 10",
         "range1 := ",
-        "edge1 := neither = ", 
+        "edge1 := neither = ",
         "edge1 :=",
         "a := 2^1 stage 1: capture when a start capture else on any goto 1",
         "a := 2^1 stage 1: when a start capture else on any goto 1",
@@ -56,15 +56,15 @@ public class AdvTdlParserTest extends BaseTdlTestCase {
         "a := 2^1 stage 1: capture a when a start capture else on any",
         "a := 2^1 stage 1: capture a when a start capture else on goto 1",
         "a := 2^1 stage 1: capture a when a start capture else",
-        "a := 2^1 stage 1: capture a when a start capture", 
+        "a := 2^1 stage 1: capture a when a start capture",
     };
     private static final String[][] INVALID_RESULTS = {
-        { "missing ':=' at '<EOF>'", "missing mask and value" }, 
-        { "missing mask and value" }, 
-        { "missing term value" }, 
+        { "missing ASSIGN at '<EOF>'", "missing mask and value" },
+        { "missing mask and value" },
         { "missing term value" },
-        { "missing time unit" }, 
-        { "missing time value and unit" }, 
+        { "missing term value" },
+        { "missing time unit" },
+        { "missing time value and unit" },
         { "missing upper bound" },
         { "missing upper bound" },
         { "invalid range definition, needs lower and upper bound" },

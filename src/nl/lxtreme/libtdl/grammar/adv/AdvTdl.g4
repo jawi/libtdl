@@ -1,3 +1,7 @@
+/** 
+ * <h1>Advanced Triggers</h1>
+ * <p>Grammar for specifying advanced (or HP165xx-style) triggers.</p>
+ */
 grammar AdvTdl;
 
 @header {
@@ -14,6 +18,7 @@ package nl.lxtreme.libtdl.grammar.adv;
 
 /* PARSER RULES */
 
+/** Main entry point, defines the various terms and stages. */
 prog
     : ( decl | stageDef )* EOF
     ;
@@ -24,6 +29,7 @@ decl
     : ( termDecl | timerDecl | rangeDecl | edgeDecl ) WS*
     ;
 
+/** Defines a trigger term comparing the sampled input against a defined value and if a match is found, it signals a 'hit'. */
 termDecl
     : name=TERM_NAME ASSIGN
       ( ( MASK EQUALS_TO mask=number ) COMMA ( VALUE EQUALS_TO value=number )
@@ -34,6 +40,7 @@ termDecl
       )
     ;
 
+/** Defines a timer term that can be controlled from a stage and a signals a 'hit' after a defined timeout. */
 timerDecl
     : name=TIMER_NAME ASSIGN
       ( value=number unit=TIME_UNIT
@@ -42,6 +49,7 @@ timerDecl
       )
     ;
 
+/** Defines a range term in which the sampled input must fall inside a defined range. */
 rangeDecl
     : name=RANGE_NAME ASSIGN
       ( lowerBound=number '..' upperBound=number
@@ -51,6 +59,7 @@ rangeDecl
       )
     ;
 
+/** Defines an edge term in which bit-changes can be detected. */
 edgeTermDecl
     : name=( RISING | FALLING | BOTH | NEITHER ) EQUALS_TO 
       ( mask=number
@@ -67,6 +76,7 @@ edgeDecl
 
 /* STAGE DEFINITION RULES */
 
+/** Defines a trigger stage that captures the sampled inputs for given conditions. */
 stageDef
     : ( STAGE n=decNumber COLON
       | STAGE decNumber { notifyErrorListeners("missing colon"); }
@@ -141,6 +151,7 @@ WS
     :   (' ' | '\t')+ -> channel(HIDDEN)
     ;
 
+/** value assignment */
 ASSIGN      : ':=' ;
 EQUALS_TO   : '=' ;
 MASK        : 'mask' ;
